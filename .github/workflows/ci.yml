@@ -240,6 +240,8 @@ jobs:
           RABBITMQ_DEFAULT_VHOST: deadpool
       memcached:
         image: memcached:1.6
+        ports:
+          - 11211:11211
     steps:
       - uses: actions/checkout@v3
       - uses: actions-rs/toolchain@v1
@@ -260,8 +262,7 @@ jobs:
           REDIS_SENTINEL__MASTER_NAME: "mymaster"
           REDIS_CLUSTER__URLS: redis://127.0.0.1:7000,redis://127.0.0.1:7001
           AMQP__URL: amqp://deadpool:deadpool@127.0.0.1/deadpool
-
-
+          MEMCACHED__ADDR: 127.0.0.1:11211
 
 
   ############

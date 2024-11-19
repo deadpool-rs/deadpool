@@ -1,13 +1,20 @@
 //! Basic tests for deadpool-memcached
 
+use std::env;
+
 use deadpool_memcached::{Manager, Pool};
+
+fn create_pool() -> Pool {
+    let addr = env::var("MEMCACHED__ADDR").unwrap();
+    let manager = Manager::new(addr);
+    Pool::builder(manager).build().unwrap()
+}
 
 #[tokio::test]
 async fn test_set_get() {
     let test_key = "test:basic:test_set_get";
     let test_value = "answer_42";
-    let manager = Manager::new("memcached:11211");
-    let pool = Pool::builder(manager).build().unwrap();
+    let pool = create_pool();
     let mut conn = pool.get().await.unwrap();
     let _ = conn.delete(test_key).await;
     assert_eq!(conn.get(test_key).await.unwrap(), None);
