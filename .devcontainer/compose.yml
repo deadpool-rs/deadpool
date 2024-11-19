@@ -63,12 +63,16 @@ services:
       - redis-sentinel-data:/bitnami
 
   rabbitmq:
-    # https://hub.docker.com/_/rabbitmq
+    # https://hub.docker.c,i,om/_/rabbitmq
     image: rabbitmq:4.0-alpine
     env_file:
       - rabbitmq.env
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
+
+  memcached:
+    # https://hub.docker.com/_/memcached
+    image: memcached:1.6
 
 volumes:
   postgres-data:

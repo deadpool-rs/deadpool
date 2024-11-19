@@ -236,6 +236,8 @@ jobs:
           RABBITMQ_DEFAULT_USER: deadpool
           RABBITMQ_DEFAULT_PASS: deadpool
           RABBITMQ_DEFAULT_VHOST: deadpool
+      memcached:
+        image: memcached:1.6
     steps:
       - uses: actions/checkout@v3
       - uses: actions-rs/toolchain@v1
