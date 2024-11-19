@@ -17,7 +17,13 @@ type RecycleResult = deadpool::managed::RecycleResult<Error>;
 type ConfigError = Infallible;
 
 pub use deadpool::managed::reexports::*;
-deadpool::managed_reexports!("memcached", Manager, Client, Error, ConfigError);
+deadpool::managed_reexports!(
+    "memcached",
+    Manager,
+    deadpool::managed::Object<Manager>,
+    Error,
+    ConfigError
+);
 
 /// The manager for creating and recyling memcache connections
 pub struct Manager {
@@ -26,8 +32,8 @@ pub struct Manager {
 
 impl Manager {
     /// Create a new manager for the given address.
-    pub fn new(addr: String) -> Self {
-        Self { addr }
+    pub fn new(addr: impl Into<String>) -> Self {
+        Self { addr: addr.into() }
     }
 }
 

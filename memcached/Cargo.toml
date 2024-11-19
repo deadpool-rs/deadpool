@@ -22,7 +22,7 @@ default = ["tcp"]
 tcp = ["async-memcached/tcp"]
 
 [dependencies]
-async-memcached = { version = "0.1", default-features = false }
+async-memcached = { version = "0.4", default-features = false }
 deadpool = { path = "../", version = "0.12.0", default-features = false, features = [
     "managed",
 ] }
@@ -31,6 +31,9 @@ deadpool = { path = "../", version = "0.12.0", default-features = false, feature
 # dependency. Once async-memcached is fixed this dependency can be removed
 # again.
 tokio = { version = "1.0", default-features = false, features = ["net"] }
+
+[dev-dependencies]
+tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
 
 [package.metadata.cargo-machete]
 ignored = ["tokio"]
