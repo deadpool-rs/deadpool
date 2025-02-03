@@ -34,7 +34,6 @@ jobs:
           # Examples
           - example-postgres-actix-web
           - example-postgres-benchmark
-          - example-postgres-hyper
           - example-redis-actix-web
     runs-on: ubuntu-latest
     steps:
