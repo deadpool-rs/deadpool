@@ -12,11 +12,15 @@ readme = "README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[features]
+async-std_1 = ["dep:async-std_1"]
+tokio_1 = ["dep:tokio_1"]
+
 [dependencies]
-async-std_1 = { package = "async-std", version = "1.0", features = [
+async-std_1 = { package = "async-std", version = "1.13", features = [
     "unstable",
 ], optional = true }
-tokio_1 = { package = "tokio", version = "1.0", features = [
+tokio_1 = { package = "tokio", version = "1.27", features = [
     "time",
     "rt",
 ], optional = true }

@@ -30,7 +30,7 @@ deadpool = { path = "../", version = "0.12.0", default-features = false, feature
 # broke the build by forgetting to add the "net" feature to the tokio
 # dependency. Once async-memcached is fixed this dependency can be removed
 # again.
-tokio = { version = "1.0", default-features = false, features = ["net"] }
+tokio = { version = "1.27", default-features = false, features = ["net"] }
 
 [package.metadata.cargo-machete]
 ignored = ["tokio"]

@@ -26,21 +26,15 @@ deadpool = { path = "../", version = "0.12.0", default-features = false, feature
     "managed",
 ] }
 lapin = { version = "2.0", default-features = false }
-serde = { package = "serde", version = "1.0.103", features = [
+serde = { package = "serde", version = "1.0.145", features = [
     "derive",
 ], optional = true }
 tokio-executor-trait = { version = "2.1.0", optional = true }
 
-# Not really used, added to survive `minimal-versions` check only.
-# TODO: Remove once new `async-std` version above 1.12.0 is released,
-#       as it's already fixed in their `main` branch. This, of course,
-#       will require bumping minimal version of `async-std` across the workspace.
-async-global-executor = { version = "2.3.1", optional = true, default-features = false }
-
 [dev-dependencies]
-config = { version = "0.14", features = ["json"] }
+config = { version = "0.15", features = ["json"] }
 dotenvy = "0.15"
-tokio = { version = "1.0", features = ["sync", "macros", "rt-multi-thread"] }
+tokio = { version = "1.27", features = ["sync", "macros", "rt-multi-thread"] }
 
 [package.metadata.cargo-machete]
 ignored = ["async-global-executor"]

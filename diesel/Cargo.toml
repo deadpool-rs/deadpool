@@ -33,4 +33,4 @@ diesel = { version = "2.2.3", default-features = false }
 
 [dev-dependencies]
 diesel = { version = "2.2.3", default-features = false, features = ["sqlite"] }
-tokio = { version = "1.0", features = ["macros", "rt", "rt-multi-thread"] }
+tokio = { version = "1.27", features = ["macros", "rt", "rt-multi-thread"] }

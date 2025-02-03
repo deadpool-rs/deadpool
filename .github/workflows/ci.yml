@@ -32,7 +32,9 @@ jobs:
           - deadpool-redis
           - deadpool-sqlite
           # Examples
+          - example-diesel
           - example-postgres-actix-web
+          - example-postgres-axum
           - example-postgres-benchmark
           - example-redis-actix-web
     runs-on: ubuntu-latest
@@ -157,8 +159,7 @@ jobs:
           - { crate: deadpool-runtime, msrv: '1.75.0' }
           - { crate: deadpool-sync, msrv: '1.75.0' }
           - { crate: deadpool, msrv: '1.75.0' }
-          # Disable Diesel MSRV check as it keeps failing for no obvious reason.
-          #- { crate: deadpool-diesel, msrv: '1.78.0' }
+          - { crate: deadpool-diesel, msrv: '1.78.0' }
           - { crate: deadpool-lapin, msrv: '1.75.0' }
           - { crate: deadpool-postgres, msrv: '1.75.0' }
           - { crate: deadpool-redis, msrv: '1.75.0' }
@@ -176,7 +177,7 @@ jobs:
           toolchain: ${{ matrix.msrv }}
           override: true
 
-      - run: cargo +nightly update -Z minimal-versions
+      - run: cargo +nightly update -Z direct-minimal-versions
 
       - run: cargo check -p ${{ matrix.crate }} --all-features
 
