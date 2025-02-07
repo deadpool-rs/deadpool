@@ -26,7 +26,7 @@ cluster = ["redis/cluster-async"]
 sentinel = ["redis/sentinel", "tokio/sync"]
 
 [dependencies]
-deadpool = { path = "../", version = "0.12.0", default-features = false, features = [
+deadpool = { path = "../deadpool", version = "0.12.0", default-features = false, features = [
     "managed",
 ] }
 redis = { version = "0.28", default-features = false, features = ["aio"] }

@@ -22,7 +22,7 @@ serde = ["deadpool/serde", "dep:serde"]
 
 [dependencies]
 async-executor-trait = { version = "2.1", optional = true }
-deadpool = { path = "../", version = "0.12.0", default-features = false, features = [
+deadpool = { path = "../deadpool", version = "0.12.0", default-features = false, features = [
     "managed",
 ] }
 lapin = { version = "2.0", default-features = false }

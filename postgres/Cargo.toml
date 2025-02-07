@@ -21,7 +21,7 @@ serde = ["deadpool/serde", "dep:serde"]
 
 [dependencies]
 async-trait = "0.1.80"
-deadpool = { path = "../", version = "0.12.0", default-features = false, features = [
+deadpool = { path = "../deadpool", version = "0.12.0", default-features = false, features = [
     "managed",
 ] }
 serde = { package = "serde", version = "1.0.145", features = [

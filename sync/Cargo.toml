@@ -17,5 +17,5 @@ deadpool-runtime = { version = "0.1.2", path = "../runtime" }
 tracing = { version = "0.1.37", optional = true }
 
 [dev-dependencies]
-deadpool = { version = "0.12", path = "..", features = ["rt_tokio_1"] }
+deadpool = { version = "0.12", path = "../deadpool", features = ["rt_tokio_1"] }
 tokio = { version = "1.27", features = ["macros", "rt-multi-thread"] }
