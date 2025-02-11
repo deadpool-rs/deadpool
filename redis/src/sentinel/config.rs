@@ -57,6 +57,12 @@ pub struct Config {
     pub connections: Option<Vec<ConnectionInfo>>,
     /// [`redis::sentinel::SentinelNodeConnectionInfo`] structures.
     pub node_connection_info: Option<SentinelNodeConnectionInfo>,
+
+    /// [`Manager`] configuration.
+    ///
+    /// [`Manager`]: super::Manager
+    pub manager: Option<ManagerConfig>,
+
     /// Pool configuration.
     pub pool: Option<PoolConfig>,
 }
@@ -123,11 +129,12 @@ impl Config {
     ) -> Config {
         Config {
             urls: Some(urls.into()),
-            connections: None,
-            master_name,
             server_type,
-            pool: None,
+            master_name,
+            connections: None,
             node_connection_info: None,
+            manager: None,
+            pool: None,
         }
     }
 
@@ -150,11 +157,12 @@ impl Default for Config {
 
         Self {
             urls: None,
-            connections: Some(vec![default_connection_info.clone()]),
             server_type: SentinelServerType::Master,
             master_name: default_master_name(),
-            pool: None,
+            connections: Some(vec![default_connection_info.clone()]),
             node_connection_info: None,
+            manager: None,
+            pool: None,
         }
     }
 }

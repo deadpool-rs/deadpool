@@ -42,7 +42,8 @@ use redis::{
 pub use redis;
 
 pub use self::config::{
-    Config, ConfigError, ConnectionAddr, ConnectionInfo, ProtocolVersion, RedisConnectionInfo,
+    Config, ConfigError, ConnectionAddr, ConnectionInfo, ManagerConfig, ProtocolVersion,
+    RecyclingMethod, RedisConnectionInfo,
 };
 
 pub use deadpool::managed::reexports::*;
@@ -127,20 +128,11 @@ impl ConnectionLike for Connection {
 /// [`Manager`] for creating and recycling [`redis`] connections.
 ///
 /// [`Manager`]: managed::Manager
+#[derive(Debug)]
 pub struct Manager {
+    config: ManagerConfig,
     client: Client,
     ping_number: AtomicUsize,
-    connection_config: AsyncConnectionConfig,
-}
-
-// `redis::AsyncConnectionConfig: !Debug`
-impl std::fmt::Debug for Manager {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("Manager")
-            .field("client", &self.client)
-            .field("ping_number", &self.ping_number)
-            .finish()
-    }
 }
 
 impl Manager {
@@ -150,22 +142,22 @@ impl Manager {
     ///
     /// If establishing a new [`Client`] fails.
     pub fn new<T: IntoConnectionInfo>(params: T) -> RedisResult<Self> {
-        Self::from_config(params, AsyncConnectionConfig::default())
+        Self::from_config(params, ManagerConfig::default())
     }
 
-    /// Creates a new [`Manager`] from the given `params` and [`AsyncConnectionConfig`].
+    /// Creates a new [`Manager`] from the given `params` and [`ManagerConfig`].
     ///
     /// # Errors
     ///
     /// If establishing a new [`Client`] fails.
     pub fn from_config<T: IntoConnectionInfo>(
         params: T,
-        connection_config: AsyncConnectionConfig,
+        config: ManagerConfig,
     ) -> RedisResult<Self> {
         Ok(Self {
+            config,
             client: Client::open(params)?,
             ping_number: AtomicUsize::new(0),
-            connection_config,
         })
     }
 }
@@ -177,25 +169,29 @@ impl managed::Manager for Manager {
     async fn create(&self) -> Result<MultiplexedConnection, RedisError> {
         let conn = self
             .client
-            .get_multiplexed_async_connection_with_config(&self.connection_config)
+            .get_multiplexed_async_connection_with_config(&AsyncConnectionConfig::default())
             .await?;
         Ok(conn)
     }
 
     async fn recycle(&self, conn: &mut MultiplexedConnection, _: &Metrics) -> RecycleResult {
-        let ping_number = self.ping_number.fetch_add(1, Ordering::Relaxed).to_string();
-        // Using pipeline to avoid roundtrip for UNWATCH
-        let (n,) = redis::Pipeline::with_capacity(2)
-            .cmd("UNWATCH")
-            .ignore()
-            .cmd("PING")
-            .arg(&ping_number)
-            .query_async::<(String,)>(conn)
-            .await?;
-        if n == ping_number {
-            Ok(())
-        } else {
-            Err(managed::RecycleError::message("Invalid PING response"))
+        match self.config.recycling_method {
+            RecyclingMethod::Clean => {
+                let ping_number = self.ping_number.fetch_add(1, Ordering::Relaxed).to_string();
+                // Using pipeline to avoid roundtrip for UNWATCH
+                let (n,) = redis::Pipeline::with_capacity(2)
+                    .cmd("UNWATCH")
+                    .ignore()
+                    .cmd("PING")
+                    .arg(&ping_number)
+                    .query_async::<(String,)>(conn)
+                    .await?;
+                if n == ping_number {
+                    Ok(())
+                } else {
+                    Err(managed::RecycleError::message("Invalid PING response"))
+                }
+            }
         }
     }
 }
