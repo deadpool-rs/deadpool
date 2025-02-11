@@ -47,6 +47,11 @@ pub struct Config {
     /// [`redis::ConnectionInfo`] structures.
     pub connections: Option<Vec<ConnectionInfo>>,
 
+    /// [`Manager`] configuration.
+    ///
+    /// [`Manager`]: super::Manager
+    pub manager: Option<ManagerConfig>,
+
     /// Pool configuration.
     pub pool: Option<PoolConfig>,
 
@@ -114,6 +119,7 @@ impl Config {
         Config {
             urls: Some(urls.into()),
             connections: None,
+            manager: None,
             pool: None,
             read_from_replicas: false,
         }
@@ -125,6 +131,7 @@ impl Default for Config {
         Self {
             urls: None,
             connections: Some(vec![ConnectionInfo::default()]),
+            manager: None,
             pool: None,
             read_from_replicas: false,
         }

@@ -45,6 +45,11 @@ pub struct Config {
     /// [`redis::ConnectionInfo`] structure.
     pub connection: Option<ConnectionInfo>,
 
+    /// [`Manager`] configuration.
+    ///
+    /// [`Manager`]: super::Manager
+    pub manager: Option<ManagerConfig>,
+
     /// Pool configuration.
     pub pool: Option<PoolConfig>,
 }
@@ -93,6 +98,7 @@ impl Config {
         Config {
             url: Some(url.into()),
             connection: None,
+            manager: None,
             pool: None,
         }
     }
@@ -104,6 +110,7 @@ impl Config {
         Config {
             url: None,
             connection: Some(connection_info.into()),
+            manager: None,
             pool: None,
         }
     }
@@ -114,6 +121,7 @@ impl Default for Config {
         Self {
             url: None,
             connection: Some(ConnectionInfo::default()),
+            manager: None,
             pool: None,
         }
     }
@@ -328,3 +336,32 @@ impl fmt::Display for ConfigError {
 }
 
 impl std::error::Error for ConfigError {}
+
+/// Configuration object for a [`Manager`].
+///
+/// This currently only makes it possible to specify which [`RecyclingMethod`]
+/// should be used when retrieving existing objects from the [`Pool`].
+///
+/// [`Manager`]: super::Manager
+#[derive(Clone, Copy, Debug, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+pub struct ManagerConfig {
+    /// Method of how a connection is recycled. See [`RecyclingMethod`].
+    pub recycling_method: RecyclingMethod,
+}
+
+/// Possible methods of how a connection is recycled.
+///
+/// The default is [`Fast`] which does not check the connection health or
+/// perform any clean-up queries.
+///
+/// [`Fast`]: RecyclingMethod::Fast
+/// [`Verified`]: RecyclingMethod::Verified
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+pub enum RecyclingMethod {
+    /// Run `UNWATCH` to discard transaction state, then send a ping to verify
+    /// the connection is still alive.
+    #[default]
+    Clean,
+}
