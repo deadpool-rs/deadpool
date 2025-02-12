@@ -7,6 +7,5 @@ authors = ["Tomas Hromada <tomas@hey.com>"]
 publish = false
 
 [dependencies]
-actix-web = "4.0.0-beta.8"
+actix-web = "4"
 deadpool-redis = { path = "../../redis" }
-redis = { version = "0.25", features = ["tokio-comp"] }

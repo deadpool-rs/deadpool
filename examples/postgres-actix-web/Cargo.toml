@@ -7,11 +7,11 @@ authors = ["Michael P. Jung <michael.jung@terreon.de>"]
 publish = false
 
 [dependencies]
-actix-web = "4.0.1"
-config = "0.14"
+actix-web = "4"
+config = "0.15"
 deadpool-postgres = { path = "../../postgres", features = ["serde"] }
 dotenvy = "0.15"
-serde = { version = "1.0", features = ["derive"] }
-thiserror = "1.0"
-tokio-postgres = { version = "0.7", features = ["with-uuid-1"] }
+serde = { version = "1.0.145", features = ["derive"] }
+thiserror = "2"
+tokio-postgres = { version = "0.7.9", features = ["with-uuid-1"] }
 uuid = { version = "1", features = ["serde"] }

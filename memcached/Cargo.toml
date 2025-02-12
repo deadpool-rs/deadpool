@@ -23,14 +23,14 @@ tcp = ["async-memcached/tcp"]
 
 [dependencies]
 async-memcached = { version = "0.1", default-features = false }
-deadpool = { path = "../", version = "0.12.0", default-features = false, features = [
+deadpool = { path = "../deadpool", version = "0.12.0", default-features = false, features = [
     "managed",
 ] }
 # This crate doesn't directly depend on tokio but async-memcached 0.1.7
 # broke the build by forgetting to add the "net" feature to the tokio
 # dependency. Once async-memcached is fixed this dependency can be removed
 # again.
-tokio = { version = "1.0", default-features = false, features = ["net"] }
+tokio = { version = "1.27", default-features = false, features = ["net"] }
 
 [package.metadata.cargo-machete]
 ignored = ["tokio"]
