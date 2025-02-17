@@ -257,6 +257,19 @@ jobs:
           REDIS_CLUSTER__URLS: redis://127.0.0.1:7000,redis://127.0.0.1:7001
           AMQP__URL: amqp://deadpool:deadpool@127.0.0.1/deadpool
 
+  redis-features:
+    name: Redis features
+    strategy:
+      fail-fast: false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+      - uses: dcarbone/install-jq-action@v3
+      - run: .github/check-redis-features/compare-features.sh
 
 
 
