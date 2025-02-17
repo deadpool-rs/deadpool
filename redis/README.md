@@ -14,6 +14,7 @@ manager for [`redis`](https://crates.io/crates/redis).
 | `rt_async-std_1` | Enable support for [async-std](https://crates.io/crates/config) crate | `deadpool/rt_async-std_1`, `redis/async-std-comp` | no      |
 | `serde`          | Enable support for [serde](https://crates.io/crates/serde) crate      | `deadpool/serde`, `serde/derive`                  | no      |
 | `cluster`        | Enable support for Redis Cluster                                      | `redis/cluster-async`                             | no      |
+| `sentinel`       | Enable high-level interfaces for communication with Redis sentinels   | `redis/sentinel`, `tokio/sync`                    | no      |
 
 All of the features of [redis](https://crates.io/crates/redis) are also reexposed with a `redis-` prefix.
 For example, the feature `redis-tls-rustls` is using `redis/tls-rustls`.
