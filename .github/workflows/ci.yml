@@ -165,6 +165,7 @@ jobs:
           # Disable Diesel MSRV check as it keeps failing for no obvious reason.
           #- { crate: deadpool-diesel, msrv: '1.78.0' }
           - { crate: deadpool-lapin, msrv: '1.75.0' }
+          - { crate: deadpool-memcached, msrv: '1.75.0' }
           - { crate: deadpool-postgres, msrv: '1.75.0' }
           - { crate: deadpool-redis, msrv: '1.75.0' }
           - { crate: deadpool-sqlite, msrv: '1.77.0' }
@@ -195,6 +196,7 @@ jobs:
           - deadpool
           - deadpool-diesel
           - deadpool-lapin
+          - deadpool-memcached
           - deadpool-postgres
           - deadpool-redis
           - deadpool-sqlite
@@ -236,6 +238,10 @@ jobs:
           RABBITMQ_DEFAULT_USER: deadpool
           RABBITMQ_DEFAULT_PASS: deadpool
           RABBITMQ_DEFAULT_VHOST: deadpool
+      memcached:
+        image: memcached:1.6
+        ports:
+          - 11211:11211
     steps:
       - uses: actions/checkout@v3
       - uses: actions-rs/toolchain@v1
@@ -256,8 +262,7 @@ jobs:
           REDIS_SENTINEL__MASTER_NAME: "mymaster"
           REDIS_CLUSTER__URLS: redis://127.0.0.1:7000,redis://127.0.0.1:7001
           AMQP__URL: amqp://deadpool:deadpool@127.0.0.1/deadpool
-
-
+          MEMCACHED__ADDR: 127.0.0.1:11211
 
 
   ############
@@ -274,6 +279,7 @@ jobs:
           - deadpool
           - deadpool-diesel
           - deadpool-lapin
+          - deadpool-memcached
           - deadpool-postgres
           - deadpool-redis
           - deadpool-sqlite
