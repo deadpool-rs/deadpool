@@ -15,6 +15,9 @@ manager for [`redis`](https://crates.io/crates/redis).
 | `serde`          | Enable support for [serde](https://crates.io/crates/serde) crate      | `deadpool/serde`, `serde/derive`                  | no      |
 | `cluster`        | Enable support for Redis Cluster                                      | `redis/cluster-async`                             | no      |
 
+All of the features of [redis](https://crates.io/crates/redis) are also reexposed with a `redis-` prefix.
+For example, the feature `redis-tls-rustls` is using `redis/tls-rustls`.
+
 ## Example
 
 ```rust
@@ -171,20 +174,6 @@ async fn main() {
     }
 }
 ```
-
-## FAQ
-
-- **How can I enable features of the `redis` crate?**
-
-  Make sure that you depend on the same version of `redis` as
-  `deadpool-redis` does and enable the needed features in your own
-  `Crate.toml` file:
-
-  ```toml
-  [dependencies]
-  deadpool-redis = { version = "0.9", features = ["serde"] }
-  redis = { version = "0.21", default-features = false, features = ["tls"] }
-  ```
 
 ## License
 
