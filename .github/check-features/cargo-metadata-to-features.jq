@@ -1,6 +1,6 @@
 [
   .packages[]
-  | select(.id == $redis_id)
+  | select(.id == $dependency_id)
   | .features
   | to_entries[]
   | # All direct dependency 'a' is considered a feature 'a' with 'dep:a'

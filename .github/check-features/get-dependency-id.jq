@@ -3,5 +3,5 @@
 | .nodes[]
 | select(.id == $root)
 | .deps[]
-| select(.name == "redis")
+| select(.name == $dependency)
 | .pkg

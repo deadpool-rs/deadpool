@@ -257,10 +257,13 @@ jobs:
           REDIS_CLUSTER__URLS: redis://127.0.0.1:7000,redis://127.0.0.1:7001
           AMQP__URL: amqp://deadpool:deadpool@127.0.0.1/deadpool
 
-  check-redis-features:
-    name: Redis features
+  check-features:
+    name: Check features
     strategy:
       fail-fast: false
+      matrix:
+        - deadpool_member: redis
+          crate_name: redis
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -269,7 +272,7 @@ jobs:
           profile: minimal
           toolchain: stable
       - uses: dcarbone/install-jq-action@v3
-      - run: .github/check-redis-features/compare-features.sh
+      - run: .github/check-features/compare-features.sh ${{ matrix.deadpool_member }} ${{ matrix.crate_name }}
 
 
 

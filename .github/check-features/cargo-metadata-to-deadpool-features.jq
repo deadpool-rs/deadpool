@@ -1,6 +1,6 @@
 [
   .packages[]
-  | select(.name == "deadpool-redis")
+  | select(.name == $deadpool_crate)
   | .features
   | keys[]
 ]
