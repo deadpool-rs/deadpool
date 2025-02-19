@@ -20,6 +20,16 @@ rt_tokio_1 = ["deadpool/rt_tokio_1", "tokio-executor-trait"]
 rt_async-std_1 = ["deadpool/rt_async-std_1", "async-executor-trait"]
 serde = ["deadpool/serde", "dep:serde"]
 
+# Re-export of lapin features
+codegen = ["lapin/codegen"]
+codegen-internal = ["lapin/codegen-internal"]
+native-tls = ["lapin/native-tls"]
+openssl = ["lapin/openssl"]
+rustls = ["lapin/rustls"]
+rustls-native-certs = ["lapin/rustls-native-certs"]
+rustls-webpki-roots-certs = ["lapin/rustls-webpki-roots-certs"]
+vendored-openssl = ["lapin/vendored-openssl"]
+
 [dependencies]
 async-executor-trait = { version = "2.1", optional = true }
 deadpool = { path = "../", version = "0.12.0", default-features = false, features = [

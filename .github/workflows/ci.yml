@@ -266,6 +266,8 @@ jobs:
           crate_name: redis
         - deadpool_member: postgres
           crate_name: tokio_postgres
+        - deadpool_member: lapin
+          crate_name: lapin
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

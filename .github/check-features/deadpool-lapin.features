@@ -1,0 +1,6 @@
+"async-executor-trait"
+"async-global-executor"
+"rt_async-std_1"
+"rt_tokio_1"
+"serde"
+"tokio-executor-trait"
