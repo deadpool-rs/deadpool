@@ -290,6 +290,7 @@ jobs:
           - deadpool-postgres
           - deadpool-redis
           - deadpool-sqlite
+          - deadpool-r2d2
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
