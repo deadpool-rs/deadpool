@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Re-export `tokio_postgres` features
+
 ## [0.14.1] - 2024-12-18
 
 - Add missing re-export of `LoadBalanceHosts`
