@@ -4,6 +4,7 @@ fn create_pool() -> Pool {
     let cfg = Config {
         path: "db.sqlite3".into(),
         pool: None,
+        open_flags: None,
     };
     cfg.create_pool(Runtime::Tokio1).unwrap()
 }
