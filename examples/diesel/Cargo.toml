@@ -9,4 +9,4 @@ publish = false
 [dependencies]
 deadpool-diesel = { path = "../../diesel", features = ["postgres"] }
 dotenvy = "0.15"
-thiserror = "1.0"
+thiserror = "2"

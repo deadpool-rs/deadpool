@@ -81,7 +81,7 @@ pub trait GenericClient: Sync + private::Sealed {
     async fn prepare_typed_cached(&self, query: &str, types: &[Type]) -> Result<Statement, Error>;
 
     /// Like `Client::transaction`.
-    async fn transaction(&mut self) -> Result<Transaction<'_>, Error>;
+    async fn transaction<'a>(&'a mut self) -> Result<Transaction<'a>, Error>;
 
     /// Like `Client::batch_execute`.
     async fn batch_execute(&self, query: &str) -> Result<(), Error>;
@@ -167,7 +167,7 @@ impl GenericClient for Client {
         ClientWrapper::prepare_typed_cached(self, query, types).await
     }
 
-    async fn transaction(&mut self) -> Result<Transaction<'_>, Error> {
+    async fn transaction<'a>(&'a mut self) -> Result<Transaction<'a>, Error> {
         ClientWrapper::transaction(self).await
     }
 

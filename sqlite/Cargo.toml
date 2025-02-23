@@ -57,15 +57,15 @@ window = ["rusqlite/window"]
 with-asan = ["rusqlite/with-asan"]
 
 [dependencies]
-deadpool = { path = "../", version = "0.12.0", default-features = false, features = [
+deadpool = { path = "../deadpool", version = "0.12.0", default-features = false, features = [
     "managed",
 ] }
 deadpool-sync = { path = "../sync", version = "0.1.1" }
 rusqlite = "0.33.0"
-serde = { package = "serde", version = "1.0", features = [
+serde = { package = "serde", version = "1.0.145", features = [
     "derive",
 ], optional = true }
 
 [dev-dependencies]
-config = { version = "0.14", features = ["json"] }
-tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
+config = { version = "0.15", features = ["json"] }
+tokio = { version = "1.27", features = ["macros", "rt-multi-thread"] }
