@@ -99,6 +99,7 @@ Backend | Crate | Latest Version |
 [tiberius](https://crates.io/crates/tiberius) | [deadpool-tiberius](https://crates.io/crates/deadpool-tiberius) | [![Latest Version](https://img.shields.io/crates/v/deadpool-tiberius.svg)](https://crates.io/crates/deadpool-tiberius) |
 [r2d2](https://crates.io/crates/r2d2) | [deadpool-r2d2](https://crates.io/crates/deadpool-r2d2) | [![Latest Version](https://img.shields.io/crates/v/deadpool-r2d2.svg)](https://crates.io/crates/deadpool-r2d2) |
 [rbatis](https://crates.io/crates/rbatis) | [rbatis](https://crates.io/crates/rbatis) | [![Latest Version](https://img.shields.io/crates/v/rbatis.svg)](https://crates.io/crates/rbatis) |
+[ldap3](https://crates.io/crates/ldap3) | [deadpool-ldap3](https://crates.io/crates/deadpool-ldap3) | [![Latest Version](https://img.shields.io/crates/v/deadpool-ldap3.svg)](https://crates.io/crates/deadpool-ldap3) |
 
 ### Reasons for yet another connection pool
 
