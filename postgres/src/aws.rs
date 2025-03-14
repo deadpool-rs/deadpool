@@ -79,7 +79,12 @@ impl AwsRdsSignerConfigBuilder {
     ///
     /// Returns the builder instance for method chaining.
     pub fn region(mut self, region: impl Into<String>) -> Self {
-        self.region = Some(region.into());
+        let region = region.into();
+        if region.is_empty() {
+            self.region = None;
+        } else {
+            self.region = Some(region);
+        }
         self
     }
 
