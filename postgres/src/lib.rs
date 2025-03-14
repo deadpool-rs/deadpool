@@ -20,8 +20,13 @@
     unused_results
 )]
 
+mod auth;
 mod config;
 mod generic_client;
+
+#[cfg(feature = "aws")]
+/// AWS RDS IAM authentication support for PostgreSQL connections.
+pub mod aws;
 
 use std::{
     borrow::Cow,
@@ -36,10 +41,11 @@ use std::{
     },
 };
 
+use auth::AuthTokenFetcher;
 use deadpool::managed;
 #[cfg(not(target_arch = "wasm32"))]
 use tokio::spawn;
-use tokio::task::JoinHandle;
+use tokio::{task::JoinHandle, time::Instant};
 use tokio_postgres::{
     types::Type, Client as PgClient, Config as PgConfig, Error, IsolationLevel, Statement,
     Transaction as PgTransaction, TransactionBuilder as PgTransactionBuilder,
@@ -112,7 +118,15 @@ impl Manager {
         T::TlsConnect: Sync + Send,
         <T::TlsConnect as TlsConnect<Socket>>::Future: Send,
     {
-        Self::from_connect(pg_config, ConfigConnectImpl { tls }, config)
+        let auth_token_fetcher = AuthTokenFetcher::for_config(&config, &pg_config);
+        Self::from_connect(
+            pg_config,
+            ConfigConnectImpl {
+                auth_token_fetcher,
+                tls,
+            },
+            config,
+        )
     }
 
     /// Create a new [`Manager`] using the given [`tokio_postgres::Config`], and
@@ -159,6 +173,12 @@ impl managed::Manager for Manager {
             tracing::warn!(target: "deadpool.postgres", "Connection could not be recycled: Connection closed");
             return Err(RecycleError::message("Connection closed"));
         }
+        if let Some(max_age) = self.config.max_age {
+            if client.created_at().elapsed() > max_age {
+                tracing::debug!(target: "deadpool.postgres", "Connection could not be recycled: Connection expired");
+                return Err(RecycleError::message("Connection expired"));
+            }
+        }
         match self.config.recycling_method.query() {
             Some(sql) => match client.simple_query(sql).await {
                 Ok(_) => Ok(()),
@@ -201,6 +221,7 @@ where
 {
     /// The TLS connector to use for the connection.
     pub tls: T,
+    auth_token_fetcher: AuthTokenFetcher,
 }
 
 #[cfg(not(target_arch = "wasm32"))]
@@ -216,8 +237,13 @@ where
         pg_config: &PgConfig,
     ) -> BoxFuture<'_, Result<(PgClient, JoinHandle<()>), Error>> {
         let tls = self.tls.clone();
-        let pg_config = pg_config.clone();
+        let mut pg_config = pg_config.clone();
         Box::pin(async move {
+            if self.auth_token_fetcher.is_fetch_needed().await {
+                tracing::debug!(target: "deadpool.postgres", "Fetching token");
+                self.auth_token_fetcher.fetch_token().await;
+            }
+            let _ = pg_config.password(self.auth_token_fetcher.token().await);
             let fut = pg_config.connect(tls);
             let (client, connection) = fut.await?;
             let conn_task = spawn(async move {
@@ -415,6 +441,8 @@ pub struct ClientWrapper {
     /// wrapper is dropped.
     conn_task: JoinHandle<()>,
 
+    created_at: Instant,
+
     /// [`StatementCache`] of this client.
     pub statement_cache: Arc<StatementCache>,
 }
@@ -427,8 +455,14 @@ impl ClientWrapper {
         Self {
             client,
             conn_task,
+            created_at: Instant::now(),
             statement_cache: Arc::new(StatementCache::new()),
         }
+    }
+
+    /// Returns the timestamp when this client was created.
+    pub fn created_at(&self) -> Instant {
+        self.created_at
     }
 
     /// Like [`tokio_postgres::Client::prepare()`], but uses an existing
