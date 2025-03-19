@@ -40,6 +40,7 @@ async fn main() {
     cfg.dbname = Some("deadpool".to_string());
     cfg.manager = Some(ManagerConfig {
         recycling_method: RecyclingMethod::Fast,
+        ..Default::default()
     });
     let pool = cfg.create_pool(Some(Runtime::Tokio1), NoTls).unwrap();
     for i in 1..10i32 {
@@ -114,6 +115,7 @@ async fn main() {
     pg_config.dbname("deadpool");
     let mgr_config = ManagerConfig {
         recycling_method: RecyclingMethod::Fast,
+        ..Default::default()
     };
     let mgr = Manager::from_config(pg_config, NoTls, mgr_config);
     let pool = Pool::builder(mgr).max_size(16).build().unwrap();
