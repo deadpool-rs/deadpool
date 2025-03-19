@@ -48,7 +48,7 @@ impl AuthTokenFetcher {
         match self {
             #[cfg(feature = "aws")]
             AuthTokenFetcher::AwsRds(inner) => crate::aws::fetch_token_if_needed(inner).await,
-            _ => {},
+            _ => {}
         }
     }
 
