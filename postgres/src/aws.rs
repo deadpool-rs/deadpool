@@ -280,7 +280,7 @@ pub(super) async fn fetch_token(
     }
     let inner = inner.read().await;
     let token = inner.token();
-    tracing::debug!(target: "deadpool.postgres", "Setting password to RDS token: {}", &token[..5]);
+    tracing::debug!(target: "deadpool.postgres", "Setting password to RDS token: {}", &token[..10]);
     let _ = pg_config.password(token);
 }
 
