@@ -72,7 +72,7 @@ impl AuthTokenFetcher {
         match self {
             AuthTokenFetcher::Default(token) => f(token),
             #[cfg(feature = "aws")]
-            AuthTokenFetcher::AwsRds(inner) => f(inner.read().await.token().as_bytes()),
+            AuthTokenFetcher::AwsRds(inner) => f(inner.read().await.token().as_ref()),
         }
     }
 }
