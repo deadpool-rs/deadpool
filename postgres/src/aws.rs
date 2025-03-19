@@ -271,10 +271,15 @@ impl AuthTokenFetcherInner {
 /// # Arguments
 ///
 /// * `inner` - The AuthTokenFetcherInner containing token state
-pub(super) async fn fetch_token_if_needed(inner: &AwsRdsInner) {
+pub(super) async fn fetch_token(
+    inner: &AwsRdsInner,
+    pg_config: &mut tokio_postgres::Config,
+) {
     if inner.read().await.is_fetch_needed() {
         inner.write().await.fetch_token().await;
     }
+    let inner = inner.read().await;
+    let _ = pg_config.password(inner.token());
 }
 
 pub(super) fn for_config(

@@ -44,35 +44,16 @@ impl AuthTokenFetcher {
     ///
     /// For AWS RDS authentication, this will fetch a new token if the current one
     /// has expired. For default authentication, this is a no-op.
-    pub(super) async fn fetch_token_if_needed(&self) {
+    /// 
+    pub(super) async fn fetch_token(&self, pg_config: &mut super::PgConfig) {
         match self {
             #[cfg(feature = "aws")]
-            AuthTokenFetcher::AwsRds(inner) => crate::aws::fetch_token_if_needed(inner).await,
-            _ => {}
-        }
-    }
-
-    /// Executes a provided function with the current authentication token.
-    ///
-    /// This method retrieves the current authentication token and passes it to the provided
-    /// function `f`. The function `f` is then executed with the token as its argument.
-    ///
-    /// # Arguments
-    ///
-    /// * `f` - A closure or function that takes a byte slice (`&[u8]`) representing the
-    ///         authentication token and returns a value of type `R`.
-    ///
-    /// # Returns
-    ///
-    /// Returns the result of the provided function `f` executed with the current authentication token.
-    pub(super) async fn with_token<F, R>(&self, f: F) -> R
-    where
-        F: FnOnce(&[u8]) -> R,
-    {
-        match self {
-            AuthTokenFetcher::Default(token) => f(token),
-            #[cfg(feature = "aws")]
-            AuthTokenFetcher::AwsRds(inner) => f(inner.read().await.token().as_ref()),
+            AuthTokenFetcher::AwsRds(inner) => {
+                crate::aws::fetch_token(inner, pg_config).await;
+            }
+            AuthTokenFetcher::Default(token) => {
+                let _ = pg_config.password(token);
+            }
         }
     }
 }
