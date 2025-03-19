@@ -271,7 +271,7 @@ impl AuthTokenFetcherInner {
 /// # Arguments
 ///
 /// * `inner` - The AuthTokenFetcherInner containing token state
-pub(super) async fn fetch_token(inner: &AwsRdsInner) {
+pub(super) async fn fetch_token_if_needed(inner: &AwsRdsInner) {
     if inner.read().await.is_fetch_needed() {
         inner.write().await.fetch_token().await;
     }

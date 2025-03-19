@@ -239,11 +239,10 @@ where
         let tls = self.tls.clone();
         let mut pg_config = pg_config.clone();
         Box::pin(async move {
-            if self.auth_token_fetcher.is_fetch_needed().await {
-                tracing::debug!(target: "deadpool.postgres", "Fetching token");
-                self.auth_token_fetcher.fetch_token().await;
-            }
-            let _ = pg_config.password(self.auth_token_fetcher.token().await);
+            self.auth_token_fetcher.fetch_token_if_needed().await;
+            self.auth_token_fetcher.with_token(|token| {
+                let _ = pg_config.password(token);
+            }).await;
             let fut = pg_config.connect(tls);
             let (client, connection) = fut.await?;
             let conn_task = spawn(async move {
