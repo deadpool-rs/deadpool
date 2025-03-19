@@ -145,6 +145,7 @@ impl ManagerConfig {
         if let Some(user) = &config.get_user() {
             signer = signer.user(user.to_string());
         }
+        tracing::debug!(target: "deadpool.postgres", "AWS RDS signer: {:?}", signer);
         signer.build()
     }
 
@@ -226,6 +227,9 @@ impl AuthTokenFetcherInner {
             if last_token_fetch.elapsed() < self.expires_in {
                 return false;
             }
+            tracing::debug!(target: "deadpool.postgres", "Token expired, fetch needed");
+        } else {
+            tracing::debug!(target: "deadpool.postgres", "No token found, fetch needed");
         }
         true
     }
@@ -235,10 +239,16 @@ impl AuthTokenFetcherInner {
     /// Updates the internal token and last fetch timestamp if successful.
     /// Logs an error if token fetching fails.
     pub(super) async fn fetch_token(&mut self) {
+        tracing::debug!(target: "deadpool.postgres", "Fetching RDS token");
         match self.signer.fetch_token().await {
             Ok(token) => {
                 self.token = token;
                 self.last_token_fetch = Some(Instant::now());
+                tracing::debug!(
+                    target: "deadpool.postgres",
+                    "RDS token fetched successfully at {:?}",
+                    self.last_token_fetch
+                );
             }
             Err(e) => {
                 tracing::error!(target: "deadpool.postgres", "Failed to fetch RDS signer token: {}", e);
@@ -274,6 +284,7 @@ pub(super) fn for_config(
     config.aws_rds_signer_config.as_ref().map_or(
         AuthTokenFetcher::default(pg_config),
         |signer_config| {
+            tracing::debug!(target: "deadpool.postgres", "Creating AuthTokenFetcher with config: {:?}", signer_config);
             AuthTokenFetcher::aws_rds(signer_config.expires_in(), config.get_rds_signer(pg_config))
         },
     )
