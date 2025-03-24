@@ -11,7 +11,7 @@ manager for [`redis`](https://crates.io/crates/redis).
 | Feature          | Description                                                           | Extra dependencies                                | Default |
 | ---------------- | --------------------------------------------------------------------- | ------------------------------------------------- | ------- |
 | `rt_tokio_1`     | Enable support for [tokio](https://crates.io/crates/tokio) crate      | `deadpool/rt_tokio_1`, `redis/tokio-comp`         | yes     |
-| `rt_async-std_1` | Enable support for [async-std](https://crates.io/crates/config) crate | `deadpool/rt_async-std_1`, `redis/async-std-comp` | no      |
+| `rt_async-std_1` | Enable support for [async-std](https://crates.io/crates/async-std) crate | `deadpool/rt_async-std_1`, `redis/async-std-comp` | no      |
 | `serde`          | Enable support for [serde](https://crates.io/crates/serde) crate      | `deadpool/serde`, `serde/derive`                  | no      |
 | `cluster`        | Enable support for Redis Cluster                                      | `redis/cluster-async`                             | no      |
 | `sentinel`       | Enable high-level interfaces for communication with Redis sentinels   | `redis/sentinel`, `tokio/sync`                    | no      |

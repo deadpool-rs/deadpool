@@ -14,7 +14,7 @@ manager for [`diesel`](https://crates.io/crates/diesel) connections.
 | `postgres` | Enable `postgres` feature in `diesel` crate | `diesel/postgres` | no |
 | `mysql` | Enable `mysql` feature in `diesel` crate | `diesel/mysql` | no |
 | `rt_tokio_1` | Enable support for [tokio](https://crates.io/crates/tokio) crate | `deadpool/rt_tokio_1` | yes |
-| `rt_async-std_1` | Enable support for [async-std](https://crates.io/crates/config) crate | `deadpool/rt_async-std_1` | no |
+| `rt_async-std_1` | Enable support for [async-std](https://crates.io/crates/async-std) crate | `deadpool/rt_async-std_1` | no |
 | `serde` | Enable support for [serde](https://crates.io/crates/serde) crate | `deadpool/serde` | no |
 | `tracing` | Enable support for [tracing](https://github.com/tokio-rs/tracing) by propagating Spans in the `interact()` calls. Enable this if you use the `tracing` crate and you want to get useful traces from within `interact()` calls. | `deadpool-sync/tracing`, `tracing` | no |
 
