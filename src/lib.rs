@@ -39,7 +39,7 @@ pub use deadpool_runtime::{Runtime, SpawnBlockingError};
 /// off when accessing the status of a pool under heavy load. These numbers
 /// are meant for an overall insight.
 ///
-/// [1]: (https://en.wikipedia.org/wiki/Eventual_consistency)
+/// [1]: https://en.wikipedia.org/wiki/Eventual_consistency
 #[derive(Clone, Copy, Debug)]
 pub struct Status {
     /// The maximum size of the pool.
