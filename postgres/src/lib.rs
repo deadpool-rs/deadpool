@@ -37,6 +37,7 @@ use std::{
 };
 
 use deadpool::managed;
+use deadpool::managed::ClientConfigProvider;
 #[cfg(not(target_arch = "wasm32"))]
 use tokio::spawn;
 use tokio::task::JoinHandle;
@@ -77,18 +78,23 @@ pub type Client = Object;
 type RecycleResult = managed::RecycleResult<Error>;
 type RecycleError = managed::RecycleError<Error>;
 
-/// [`Manager`] for creating and recycling PostgreSQL connections.
+/// [`BaseManager`] for creating and recycling PostgreSQL connections with custom config providers.
 ///
-/// [`Manager`]: managed::Manager
-pub struct Manager {
+/// [`BaseManager`]: managed::Manager
+pub struct BaseManager<C: ClientConfigProvider<tokio_postgres::Config, Error>  + Send + Sync> {
     config: ManagerConfig,
-    pg_config: PgConfig,
+    pg_config: C,
     connect: Box<dyn Connect>,
     /// [`StatementCaches`] of [`Client`]s handed out by the [`Pool`].
     pub statement_caches: StatementCaches,
 }
 
-impl Manager {
+/// [`Manager`] for creating and recycling PostgreSQL connections.
+///
+/// [`Manager`]: managed::Manager
+pub type Manager = BaseManager<config::StaticPostgresConfigProvider>;
+
+impl BaseManager<config::StaticPostgresConfigProvider> {
     #[cfg(not(target_arch = "wasm32"))]
     /// Creates a new [`Manager`] using the given [`tokio_postgres::Config`] and
     /// `tls` connector.
@@ -124,7 +130,56 @@ impl Manager {
     ) -> Self {
         Self {
             config,
-            pg_config,
+            pg_config: config::StaticPostgresConfigProvider {
+                config: Arc::new(pg_config),
+            },
+            connect: Box::new(connect),
+            statement_caches: StatementCaches::default(),
+        }
+    }
+}
+
+impl<C: ClientConfigProvider<tokio_postgres::Config, Error>  + Send + Sync> BaseManager<C> {
+
+    #[cfg(not(target_arch = "wasm32"))]
+    /// Creates a new [`Manager`] using the given  type implementing
+    /// [`ClientConfigProvider<tokio_postgres::Config, Error>`],
+    /// `tls` connector.
+    pub fn new_provider<T>(pg_config_provider: C, tls: T) -> Self
+    where
+        T: MakeTlsConnect<Socket> + Clone + Sync + Send + 'static,
+        T::Stream: Sync + Send,
+        T::TlsConnect: Sync + Send,
+        <T::TlsConnect as TlsConnect<Socket>>::Future: Send,
+    {
+        Self::from_config_provider(pg_config_provider, tls, ManagerConfig::default())
+    }
+    
+    #[cfg(not(target_arch = "wasm32"))]
+    /// Create a new [`Manager`] using the given type implementing
+    /// [`ClientConfigProvider<tokio_postgres::Config, Error>`], and
+    /// `tls` connector and [`ManagerConfig`].
+    pub fn from_config_provider<T>(pg_config_provider: C, tls: T, config: ManagerConfig) -> Self
+    where
+        T: MakeTlsConnect<Socket> + Clone + Sync + Send + 'static,
+        T::Stream: Sync + Send,
+        T::TlsConnect: Sync + Send,
+        <T::TlsConnect as TlsConnect<Socket>>::Future: Send,
+    {
+        Self::from_connect_provider(pg_config_provider, ConfigConnectImpl { tls }, config)
+    }
+
+    /// Create a new [`Manager`] using the given type implementing
+    /// [`ClientConfigProvider<tokio_postgres::Config, Error>`], and
+    /// `connect` impl and [`ManagerConfig`].
+    pub fn from_connect_provider(
+        pg_config_provider: C,
+        connect: impl Connect + 'static,
+        config: ManagerConfig,
+    ) -> Self {
+        Self {
+            config,
+            pg_config: pg_config_provider,
             connect: Box::new(connect),
             statement_caches: StatementCaches::default(),
         }
@@ -135,19 +190,20 @@ impl fmt::Debug for Manager {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("Manager")
             .field("config", &self.config)
-            .field("pg_config", &self.pg_config)
+            //.field("pg_config", &self.pg_config.get_config())
             //.field("connect", &self.connect)
             .field("statement_caches", &self.statement_caches)
             .finish()
     }
 }
 
-impl managed::Manager for Manager {
+impl<C: ClientConfigProvider<tokio_postgres::Config, Error> + Send + Sync> managed::Manager for BaseManager<C> {
     type Type = ClientWrapper;
     type Error = Error;
 
     async fn create(&self) -> Result<ClientWrapper, Error> {
-        let (client, conn_task) = self.connect.connect(&self.pg_config).await?;
+        let config = self.pg_config.get_config().await?;
+        let (client, conn_task) = self.connect.connect(&config).await?;
         let client_wrapper = ClientWrapper::new(client, conn_task);
         self.statement_caches
             .attach(&client_wrapper.statement_cache);

@@ -89,6 +89,14 @@ pub use self::{
 /// Result type of the [`Manager::recycle()`] method.
 pub type RecycleResult<E> = Result<(), RecycleError<E>>;
 
+/// Abstract trait to be refined into traits that can be implemented 
+/// by types that can be used as a [`ClientConfigProvider`] for short 
+/// lived client configurations.
+pub trait ClientConfigProvider<T, E> {
+    /// Tries to get a configuration for the client that can be used to create new connections.
+    fn get_config(&self) -> impl Future<Output = Result<Arc<T>, E>> + Send;
+}
+
 /// Manager responsible for creating new [`Object`]s or recycling existing ones.
 pub trait Manager: Sync + Send {
     /// Type of [`Object`]s that this [`Manager`] creates and recycles.
