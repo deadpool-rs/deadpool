@@ -202,7 +202,7 @@ impl<C: ClientConfigProvider<tokio_postgres::Config, Error> + Send + Sync> manag
     type Error = Error;
 
     async fn create(&self) -> Result<ClientWrapper, Error> {
-        let config = self.pg_config.get_config().await?.clone();
+        let config = self.pg_config.get_config().await?;
         let (client, conn_task) = self.connect.connect(&config).await?;
         let client_wrapper = ClientWrapper::new(client, conn_task);
         self.statement_caches
