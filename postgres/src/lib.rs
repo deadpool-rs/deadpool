@@ -80,7 +80,7 @@ type RecycleError = managed::RecycleError<Error>;
 
 /// [`BaseManager`] for creating and recycling PostgreSQL connections with custom config providers.
 ///
-/// [`BaseManager`]: managed::BaseManager<C>
+/// [`BaseManager`]: managed::Manager
 pub struct BaseManager<C: ClientConfigProvider<tokio_postgres::Config, Error>  + Send + Sync> {
     config: ManagerConfig,
     pg_config: C,
