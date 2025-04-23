@@ -281,6 +281,15 @@ jobs:
       - uses: dcarbone/install-jq-action@v3
       - run: .github/check-features/compare-features.sh ${{ matrix.deadpool_member }} ${{ matrix.crate_name }}
 
+  #################
+  # Code coverage #
+  #################
+
+  # https://github.com/codecov/codecov-action
+  codecov:
+    steps:
+      - uses: actions/checkout@master
+      - uses: codecov/codecov-action@v2
 
 
   ############
