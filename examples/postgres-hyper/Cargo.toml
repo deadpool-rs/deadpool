@@ -7,7 +7,7 @@ authors = ["Michael P. Jung <michael.jung@terreon.de>"]
 publish = false
 
 [dependencies]
-config = "0.14"
+config = "0.15"
 deadpool-postgres = { path = "../../postgres", features = ["serde"] }
 dotenvy = "0.15"
 hyper = { version = "0.14", features = ["http1", "http2", "server", "runtime"] }

@@ -67,5 +67,5 @@ serde = { package = "serde", version = "1.0", features = [
 ], optional = true }
 
 [dev-dependencies]
-config = { version = "0.14", features = ["json"] }
+config = { version = "0.15", features = ["json"] }
 tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
