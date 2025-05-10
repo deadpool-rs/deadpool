@@ -34,7 +34,7 @@ tokio = { version = "1.0", features = ["sync"] }
 
 [dev-dependencies]
 async-std = { version = "1.0", features = ["attributes"] }
-config = { version = "0.14", features = ["json"] }
+config = { version = "0.15", features = ["json"] }
 criterion = { version = "0.5", features = ["html_reports", "async_tokio"] }
 itertools = "0.13"
 tokio = { version = "1.5.0", features = [
