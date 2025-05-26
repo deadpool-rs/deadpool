@@ -164,7 +164,10 @@ async fn recycling_methods() {
     ];
     let mut cfg = Config::from_env();
     for recycling_method in recycling_methods {
-        cfg.pg.manager = Some(ManagerConfig { recycling_method });
+        cfg.pg.manager = Some(ManagerConfig {
+            recycling_method,
+            ..Default::default()
+        });
         let pool = cfg
             .pg
             .create_pool(Some(Runtime::Tokio1), tokio_postgres::NoTls)

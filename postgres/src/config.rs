@@ -1,5 +1,4 @@
 //! Configuration used for [`Pool`] creation.
-
 use std::{env, fmt, net::IpAddr, str::FromStr, time::Duration};
 
 use tokio_postgres::config::{
@@ -387,6 +386,13 @@ impl RecyclingMethod {
 #[derive(Clone, Debug, Default)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 pub struct ManagerConfig {
+    #[cfg(feature = "aws")]
+    /// AWS RDS signer mode.
+    pub aws_rds_signer_config: Option<super::aws::AwsRdsSignerConfig>,
+
+    /// Maximum age of a connection.
+    pub max_age: Option<Duration>,
+
     /// Method of how a connection is recycled. See [`RecyclingMethod`].
     pub recycling_method: RecyclingMethod,
 }
