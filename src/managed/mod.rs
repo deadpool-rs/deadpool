@@ -594,9 +594,8 @@ impl<M: Manager, W: From<Object<M>>> Pool<M, W> {
 struct PoolInner<M: Manager> {
     manager: M,
     slots: Mutex<Slots<ObjectInner<M>>>,
-    /// Number of available [`Object`]s in the [`Pool`]. If there are no
-    /// [`Object`]s in the [`Pool`] this number can become negative and store
-    /// the number of [`Future`]s waiting for an [`Object`].
+    /// Number of ['Pool'] users. A user is both a future which is waiting for an ['Object'] or one
+    /// with an ['Object'] which hasn't been returned, yet.
     users: AtomicUsize,
     semaphore: Semaphore,
     config: PoolConfig,
