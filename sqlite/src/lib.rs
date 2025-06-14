@@ -74,7 +74,11 @@ impl managed::Manager for Manager {
 
     async fn create(&self) -> Result<Self::Type, Self::Error> {
         let path = self.config.path.clone();
-        SyncWrapper::new(self.runtime, move || rusqlite::Connection::open(path)).await
+        let flags = self.config.open_flags.unwrap_or_default();
+        SyncWrapper::new(self.runtime, move || {
+            rusqlite::Connection::open_with_flags(path, flags)
+        })
+        .await
     }
 
     async fn recycle(
