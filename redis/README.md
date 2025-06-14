@@ -176,6 +176,102 @@ async fn main() {
 }
 ```
 
+## Example (Sentinel)
+
+```rust
+use std::env;
+use deadpool_redis::{redis::{cmd, FromRedisValue}, sentinel::SentinelServerType};
+use deadpool_redis::sentinel::{Config, Runtime};
+use dotenvy::dotenv;
+
+#[tokio::main]
+async fn main() {
+    dotenv().ok();
+    use deadpool_redis::redis::pipe;
+    let redis_urls = env::var("REDIS_SENTINEL__URLS")
+        .unwrap()
+        .split(',')
+        .map(String::from)
+        .collect::<Vec<_>>();
+
+    let master_name = env::var("REDIS_SENTINEL__MASTER_NAME").unwrap();
+    let mut cfg = Config::from_urls(redis_urls, master_name, SentinelServerType::Master);
+    let pool = cfg.create_pool(Some(Runtime::Tokio1)).unwrap();
+
+    let mut conn = pool.get().await.unwrap();
+    let (value,): (String,) = pipe()
+        .cmd("SET")
+        .arg("deadpool/pipeline_test_key")
+        .arg("42")
+        .ignore()
+        .cmd("GET")
+        .arg("deadpool/pipeline_test_key")
+        .query_async(&mut conn)
+        .await
+        .unwrap();
+    assert_eq!(value, "42".to_string());
+}
+```
+
+
+### Example with `config` and `dotenvy` crate
+```rust
+use redis::cmd;
+use serde::{Deserialize, Serialize};
+use deadpool_redis::Runtime;
+
+#[derive(Debug, Default, Deserialize, Serialize)]
+struct Config {
+    #[serde(default)]
+    redis_sentinel: deadpool_redis::sentinel::Config,
+}
+
+impl Config {
+    pub fn from_env() -> Self {
+        config::Config::builder()
+            .add_source(
+                config::Environment::default()
+                    .separator("__")
+                    .try_parsing(true)
+                    .list_separator(",")
+                    .with_list_parse_key("redis_sentinel.urls"),
+            )
+            .build()
+            .unwrap()
+            .try_deserialize()
+            .unwrap()
+    }
+}
+
+fn create_pool() -> deadpool_redis::sentinel::Pool {
+    let cfg = Config::from_env();
+
+    cfg.redis_sentinel
+        .create_pool(Some(Runtime::Tokio1))
+        .unwrap()
+}
+
+#[tokio::test]
+async fn main() {
+    dotenv().ok();
+    use deadpool_redis::redis::pipe;
+    let pool = create_pool();
+    let mut conn = pool.get().await.unwrap();
+    let (value,): (String,) = pipe()
+        .cmd("SET")
+        .arg("deadpool/pipeline_test_key")
+        .arg("42")
+        .ignore()
+        .cmd("GET")
+        .arg("deadpool/pipeline_test_key")
+        .query_async(&mut conn)
+        .await
+        .unwrap();
+    assert_eq!(value, "42".to_string());
+}
+
+```
+
 ## License
 
 Licensed under either of
