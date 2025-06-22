@@ -23,13 +23,13 @@
 
 use std::{
     convert::Infallible,
-    sync::atomic::{AtomicUsize, Ordering},
+    sync::atomic::{AtomicU64, Ordering},
 };
 
 use deadpool::managed::{self, RecycleError};
 
 pub use libsql;
-use libsql::{params, Database};
+use libsql::Database;
 
 type ConfigError = Infallible;
 
@@ -45,7 +45,7 @@ pub type Connection = managed::Object<Manager>;
 #[derive(Debug)]
 pub struct Manager {
     database: Database,
-    recycle_count: AtomicUsize,
+    recycle_count: AtomicU64,
 }
 
 impl Manager {
@@ -53,7 +53,7 @@ impl Manager {
     pub fn new(database: Database) -> Self {
         Self {
             database,
-            recycle_count: AtomicUsize::new(0),
+            recycle_count: AtomicU64::new(0),
         }
     }
 }
@@ -76,7 +76,7 @@ impl managed::Manager for Manager {
 
         // A call to the database to check that it is accessible
         let row = conn
-            .query("SELECT ?", params![recycle_count.to_string()])
+            .query("SELECT ?", [recycle_count])
             .await?
             .next()
             .await?
@@ -86,7 +86,7 @@ impl managed::Manager for Manager {
 
         let value: u64 = row.get(0)?;
 
-        if value == recycle_count as u64 {
+        if value == recycle_count {
             Ok(())
         } else {
             Err(RecycleError::message("Recycle count mismatch"))
