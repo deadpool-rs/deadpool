@@ -1,0 +1,50 @@
+[package]
+name = "deadpool-libsql"
+version = "0.12.1"
+edition = "2021"
+rust-version = "1.75"
+authors = ["Michael P. Jung <michael.jung@terreon.de>"]
+description = "Dead simple async pool for libsql"
+keywords = ["async", "lapin", "pool", "amqp", "rabbitmq"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/bikeshedder/deadpool"
+readme = "README.md"
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
+[features]
+default = ["rt_tokio_1", "core"]
+rt_tokio_1 = ["deadpool/rt_tokio_1", "tokio-executor-trait"]
+rt_async-std_1 = ["deadpool/rt_async-std_1", "async-executor-trait"]
+serde = ["deadpool/serde", "dep:serde", "libsql/serde"]
+
+# Re-export of libsql features
+core = ["libsql/core"]
+stream = ["libsql/stream"]
+parser = ["libsql/parser"]
+replication = ["libsql/replication"]
+sync = ["libsql/sync"]
+hrana = ["libsql/hrana"]
+remote = ["libsql/remote"]
+encryption = ["libsql/encryption"]
+
+[dependencies]
+async-executor-trait = { version = "2.1", optional = true }
+deadpool = { path = "../", version = "0.12.0", default-features = false, features = [
+    "managed",
+] }
+libsql = { version = "0.9.11" }
+serde = { package = "serde", version = "1.0.103", features = [
+    "derive",
+], optional = true }
+tokio-executor-trait = { version = "2.1.0", optional = true }
+
+[dev-dependencies]
+config = { version = "0.15", features = ["json"] }
+dotenvy = "0.15"
+tokio = { version = "1.0", features = ["sync", "macros", "rt-multi-thread"] }
+
+[package.metadata.cargo-machete]
+ignored = ["async-global-executor"]
