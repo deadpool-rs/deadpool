@@ -21,17 +21,15 @@
 )]
 #![allow(clippy::uninlined_format_args)]
 
-use std::{
-    convert::Infallible,
-    sync::atomic::{AtomicU64, Ordering},
-};
+use std::sync::atomic::{AtomicU64, Ordering};
 
 use deadpool::managed::{self, RecycleError};
 
+mod config;
+pub use self::config::{Config, ConfigError};
+
 pub use libsql;
 use libsql::Database;
-
-type ConfigError = Infallible;
 
 pub use deadpool::managed::reexports::*;
 deadpool::managed_reexports!("libsql", Manager, Connection, libsql::Error, ConfigError);
@@ -49,12 +47,17 @@ pub struct Manager {
 }
 
 impl Manager {
-    /// Creates a new [`Manager`] using the given libsql database
+    /// Creates a new [`Manager`] using the given libsql database.
     pub fn new(database: Database) -> Self {
         Self {
             database,
             recycle_count: AtomicU64::new(0),
         }
+    }
+
+    /// Creates a new [`Manager`] using the given [`Config`].
+    pub fn from_config(config: Config) -> Self {
+        Self::new(config.database)
     }
 }
 
