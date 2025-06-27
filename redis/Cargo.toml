@@ -50,7 +50,7 @@ disable-client-setinfo = ["redis/disable-client-setinfo"]
 cache-aio = ["redis/cache-aio"]
 
 [dependencies]
-deadpool = { path = "../", version = "0.13.0", default-features = false, features = [
+deadpool = { version = "0.12.2", default-features = false, features = [
     "managed",
 ] }
 redis = { version = "0.32.2", default-features = false, features = ["aio"] }

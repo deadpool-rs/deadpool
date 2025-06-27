@@ -22,13 +22,13 @@ serde = ["deadpool/serde"]
 tracing = ["deadpool-sync/tracing"]
 
 [dependencies]
-deadpool = { path = "../", version = "0.13.0", default-features = false, features = [
+deadpool = { version = "0.12.2", default-features = false, features = [
     "managed",
 ] }
-deadpool-sync = { path = "../sync", version = "0.1.4" }
+deadpool-sync = { version = "0.1.4" }
 r2d2 = { version = "0.8.9", default-features = false }
 
 [dev-dependencies]
 tokio = { version = "1.0", features = ["macros", "rt", "rt-multi-thread"] }
-deadpool = { path = "../", version = "0.13", features = ["rt_tokio_1"] }
+deadpool = { version = "0.12", features = ["rt_tokio_1"] }
 r2d2_postgres = "0.18"

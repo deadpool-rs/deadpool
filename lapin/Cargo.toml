@@ -32,7 +32,7 @@ vendored-openssl = ["lapin/vendored-openssl"]
 
 [dependencies]
 async-executor-trait = { version = "2.1", optional = true }
-deadpool = { path = "../", version = "0.13.0", default-features = false, features = [
+deadpool = { version = "0.12.2", default-features = false, features = [
     "managed",
 ] }
 lapin = { version = "2.0", default-features = false }

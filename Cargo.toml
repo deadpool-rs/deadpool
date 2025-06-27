@@ -26,7 +26,7 @@ num_cpus = "1.17.0"
 # `serde` feature
 serde = { version = "1.0.219", features = ["derive"], optional = true }
 # `rt_async-std_1` feature
-deadpool-runtime = { version = "0.1", path = "./runtime" }
+deadpool-runtime = { version = "0.1.4" }
 # The dependency of tokio::sync is non-optional. Deadpool depends on
 # `tokio::sync::Semaphore`. No other features of `tokio` are enabled or used
 # unless the `rt_tokio_1` feature is enabled.
@@ -51,17 +51,3 @@ harness = false
 [[bench]]
 name = "unmanaged"
 harness = false
-
-[workspace]
-members = [
-    "diesel",
-    "lapin",
-    "memcached",
-    "postgres",
-    "r2d2",
-    "redis",
-    "runtime",
-    "sqlite",
-    "sync",
-    "examples/*",
-]

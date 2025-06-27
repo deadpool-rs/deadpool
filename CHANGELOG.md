@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **BREAKING**: Removed workspace structure to enable independent crate builds
+  - Each deadpool crate now operates as a standalone project
+  - All path dependencies converted to published crate versions
+  - Resolves MSRV conflicts between crates
+  - Eliminates libsqlite3-sys version conflicts between diesel and rusqlite
+  - Enables focused CI/CD and independent development cycles
+  - Prepares for potential repository splitting in the future
+
 ## [0.12.2] - 2025-02-02
 
 - Update `itertools` dependency to version `0.13.0`
