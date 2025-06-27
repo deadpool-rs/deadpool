@@ -51,17 +51,3 @@ harness = false
 [[bench]]
 name = "unmanaged"
 harness = false
-
-[workspace]
-members = [
-    "diesel",
-    "lapin",
-    "memcached",
-    "postgres",
-    "r2d2",
-    "redis",
-    "runtime",
-    "sqlite",
-    "sync",
-    "examples/*",
-]
