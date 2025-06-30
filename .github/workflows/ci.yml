@@ -45,7 +45,24 @@ jobs:
           toolchain: stable
           components: clippy
 
-      - run: cargo clippy -p ${{ matrix.crate }} --no-deps --all-features -- -D warnings
+      - run: |
+          case "${{ matrix.crate }}" in
+            deadpool-runtime) cd runtime ;;
+            deadpool-sync) cd sync ;;
+            deadpool) cd . ;;
+            deadpool-diesel) cd diesel ;;
+            deadpool-lapin) cd lapin ;;
+            deadpool-memcached) cd memcached ;;
+            deadpool-postgres) cd postgres ;;
+            deadpool-r2d2) cd r2d2 ;;
+            deadpool-redis) cd redis ;;
+            deadpool-sqlite) cd sqlite ;;
+            example-postgres-actix-web) cd examples/postgres-actix-web ;;
+            example-postgres-benchmark) cd examples/postgres-benchmark ;;
+            example-postgres-hyper) cd examples/postgres-hyper ;;
+            example-redis-actix-web) cd examples/redis-actix-web ;;
+          esac
+          cargo clippy --no-deps --all-features -- -D warnings
 
   rustfmt:
     runs-on: ubuntu-latest
@@ -86,7 +103,7 @@ jobs:
           profile: minimal
           toolchain: stable
 
-      - run: cargo check -p deadpool
+      - run: cd . && cargo check
           --no-default-features
           --features ${{ matrix.feature1 }},${{ matrix.feature2 }}
 
@@ -122,8 +139,9 @@ jobs:
 
       # We don't use `--no-default-features` here as integration crates don't
       # work with it at all.
-      - run: cargo check -p deadpool-${{ matrix.crate }}
-          --features ${{ matrix.feature }}
+      - run: |
+          cd ${{ matrix.crate }}
+          cargo check --features ${{ matrix.feature }}
 
   check-integration-wasm:
     # Don't run WASM checks as they are broken at the moment.
@@ -146,10 +164,9 @@ jobs:
           toolchain: stable
           target: wasm32-unknown-unknown
 
-      - run: cargo check -p deadpool-${{ matrix.crate }}
-          --no-default-features
-          ${{ matrix.feature }}
-          --target wasm32-unknown-unknown
+      - run: |
+          cd ${{ matrix.crate }}
+          cargo check --no-default-features ${{ matrix.feature }} --target wasm32-unknown-unknown
 
   msrv:
     # Don't run MSRV checks as they are broken at the moment.
@@ -183,7 +200,20 @@ jobs:
 
       - run: cargo +nightly update -Z minimal-versions
 
-      - run: cargo check -p ${{ matrix.crate }} --all-features
+      - run: |
+          case "${{ matrix.crate }}" in
+            deadpool-runtime) cd runtime ;;
+            deadpool-sync) cd sync ;;
+            deadpool) cd . ;;
+            deadpool-diesel) cd diesel ;;
+            deadpool-lapin) cd lapin ;;
+            deadpool-memcached) cd memcached ;;
+            deadpool-postgres) cd postgres ;;
+            deadpool-r2d2) cd r2d2 ;;
+            deadpool-redis) cd redis ;;
+            deadpool-sqlite) cd sqlite ;;
+          esac
+          cargo check --all-features
 
   test:
     strategy:
@@ -243,7 +273,20 @@ jobs:
           profile: minimal
           toolchain: stable
 
-      - run: cargo test -p ${{ matrix.crate }} --all-features
+      - run: |
+          case "${{ matrix.crate }}" in
+            deadpool-runtime) cd runtime ;;
+            deadpool-sync) cd sync ;;
+            deadpool) cd . ;;
+            deadpool-diesel) cd diesel ;;
+            deadpool-lapin) cd lapin ;;
+            deadpool-memcached) cd memcached ;;
+            deadpool-postgres) cd postgres ;;
+            deadpool-r2d2) cd r2d2 ;;
+            deadpool-redis) cd redis ;;
+            deadpool-sqlite) cd sqlite ;;
+          esac
+          cargo test --all-features
         env:
           PG__HOST: 127.0.0.1
           PG__PORT: 5432
@@ -309,4 +352,17 @@ jobs:
           profile: minimal
           toolchain: stable
 
-      - run: cargo doc -p ${{ matrix.crate }} --no-deps --all-features
+      - run: |
+          case "${{ matrix.crate }}" in
+            deadpool-runtime) cd runtime ;;
+            deadpool-sync) cd sync ;;
+            deadpool) cd . ;;
+            deadpool-diesel) cd diesel ;;
+            deadpool-lapin) cd lapin ;;
+            deadpool-memcached) cd memcached ;;
+            deadpool-postgres) cd postgres ;;
+            deadpool-r2d2) cd r2d2 ;;
+            deadpool-redis) cd redis ;;
+            deadpool-sqlite) cd sqlite ;;
+          esac
+          cargo doc --no-deps --all-features
