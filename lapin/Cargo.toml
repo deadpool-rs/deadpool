@@ -1,8 +1,8 @@
 [package]
 name = "deadpool-lapin"
-version = "0.12.1"
+version = "0.13.0"
 edition = "2021"
-rust-version = "1.75"
+rust-version = "1.85"
 authors = ["Michael P. Jung <michael.jung@terreon.de>"]
 description = "Dead simple async pool for lapin"
 keywords = ["async", "lapin", "pool", "amqp", "rabbitmq"]
@@ -35,7 +35,7 @@ async-executor-trait = { version = "2.1", optional = true }
 deadpool = { path = "../", version = "0.12.0", default-features = false, features = [
     "managed",
 ] }
-lapin = { version = "2.0", default-features = false }
+lapin = { version = "3", default-features = false }
 serde = { package = "serde", version = "1.0.103", features = [
     "derive",
 ], optional = true }
