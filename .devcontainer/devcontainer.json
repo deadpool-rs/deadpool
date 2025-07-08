@@ -25,7 +25,8 @@
         "rust-lang.rust-analyzer",
         "tamasfe.even-better-toml",
         "ms-azuretools.vscode-docker",
-        "GitHub.vscode-github-actions"
+        "GitHub.vscode-github-actions",
+        "Grafana.vscode-jsonnet"
       ]
     }
   },
