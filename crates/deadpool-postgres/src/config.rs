@@ -131,7 +131,7 @@ pub enum ConfigError {
 impl fmt::Display for ConfigError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::InvalidUrl(e) => write!(f, "configuration property \"url\" is invalid: {}", e),
+            Self::InvalidUrl(e) => write!(f, "configuration property \"url\" is invalid: {e}"),
             Self::DbnameMissing => write!(f, "configuration property \"dbname\" not found"),
             Self::DbnameEmpty => write!(
                 f,

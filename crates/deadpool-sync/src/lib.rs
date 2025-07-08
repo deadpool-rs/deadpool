@@ -96,7 +96,7 @@ where
             // In order to handle this properly the Manager::create
             // methods needs to support a custom error enum which
             // supports a Panic variant.
-            Err(SpawnBlockingError::Panic(e)) => panic!("{:?}", e),
+            Err(SpawnBlockingError::Panic(e)) => panic!("{e:?}"),
             Ok(obj) => obj,
         };
         result.map(|obj| Self {
