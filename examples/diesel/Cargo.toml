@@ -7,6 +7,6 @@ authors = ["Michael P. Jung <michael.jung@terreon.de>"]
 publish = false
 
 [dependencies]
-deadpool-diesel = { path = "../../diesel", features = ["postgres"] }
+deadpool-diesel = { path = "../../crates/deadpool-diesel", features = ["postgres"] }
 dotenvy = "0.15"
 thiserror = "2.0"
