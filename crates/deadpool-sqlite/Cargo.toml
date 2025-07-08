@@ -1,0 +1,74 @@
+[package]
+name = "deadpool-sqlite"
+version = "0.12.1"
+edition = "2021"
+rust-version = "1.80"
+authors = ["Michael P. Jung <michael.jung@terreon.de>"]
+description = "Dead simple async pool for rusqlite"
+keywords = ["async", "database", "pool", "sqlite"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/bikeshedder/deadpool"
+readme = "README.md"
+
+[package.metadata.docs.rs]
+all-features = false
+features = ["serde"]
+rustdoc-args = ["--cfg", "docsrs"]
+
+[features]
+default = ["rt_tokio_1"]
+rt_tokio_1 = ["deadpool/rt_tokio_1"]
+rt_async-std_1 = ["deadpool/rt_async-std_1"]
+serde = ["deadpool/serde", "dep:serde"]
+tracing = ["deadpool-sync/tracing"]
+
+# Re-export of sqlite features
+array = ["rusqlite/array"]
+backup = ["rusqlite/backup"]
+blob = ["rusqlite/blob"]
+buildtime_bindgen = ["rusqlite/buildtime_bindgen"]
+bundled = ["rusqlite/bundled"]
+bundled-full = ["rusqlite/bundled-full"]
+bundled-sqlcipher = ["rusqlite/bundled-sqlcipher"]
+bundled-sqlcipher-vendored-openssl = [
+    "rusqlite/bundled-sqlcipher-vendored-openssl",
+]
+bundled-windows = ["rusqlite/bundled-windows"]
+collation = ["rusqlite/collation"]
+column_decltype = ["rusqlite/column_decltype"]
+csvtab = ["rusqlite/csvtab"]
+extra_check = ["rusqlite/extra_check"]
+functions = ["rusqlite/functions"]
+hooks = ["rusqlite/hooks"]
+i128_blob = ["rusqlite/i128_blob"]
+in_gecko = ["rusqlite/in_gecko"]
+limits = ["rusqlite/limits"]
+load_extension = ["rusqlite/load_extension"]
+loadable_extension = ["rusqlite/loadable_extension"]
+modern-full = ["rusqlite/modern-full"]
+modern_sqlite = ["rusqlite/modern_sqlite"]
+preupdate_hook = ["rusqlite/preupdate_hook"]
+serialize = ["rusqlite/serialize"]
+series = ["rusqlite/series"]
+session = ["rusqlite/session"]
+sqlcipher = ["rusqlite/sqlcipher"]
+trace = ["rusqlite/trace"]
+unlock_notify = ["rusqlite/unlock_notify"]
+vtab = ["rusqlite/vtab"]
+wasm32-wasi-vfs = ["rusqlite/wasm32-wasi-vfs"]
+window = ["rusqlite/window"]
+with-asan = ["rusqlite/with-asan"]
+
+[dependencies]
+deadpool = { path = "../deadpool", version = "0.12.0", default-features = false, features = [
+    "managed",
+] }
+deadpool-sync = { path = "../deadpool-sync", version = "0.1.1" }
+rusqlite = "0.37.0"
+serde = { package = "serde", version = "1.0", features = [
+    "derive",
+], optional = true }
+
+[dev-dependencies]
+config = { version = "0.15", features = ["json"] }
+tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
