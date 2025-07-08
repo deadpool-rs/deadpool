@@ -1,4 +1,4 @@
-# Deadpool [![Latest Version](https://img.shields.io/crates/v/deadpool.svg)](https://crates.io/crates/deadpool) [![Build Status](https://img.shields.io/github/actions/workflow/status/bikeshedder/deadpool/ci.yml?branch=master)](https://github.com/bikeshedder/deadpool/actions?query=workflow%3ARust) ![Unsafe forbidden](https://img.shields.io/badge/unsafe-forbidden-success.svg "Unsafe forbidden") [![Rust 1.75+](https://img.shields.io/badge/rustc-1.75+-lightgray.svg "Rust 1.75+")](https://blog.rust-lang.org/2023/12/28/Rust-1.75.0.html)
+# Deadpool [![Latest Version](https://img.shields.io/crates/v/deadpool.svg)](https://crates.io/crates/deadpool) [![Build Status](https://img.shields.io/github/actions/workflow/status/bikeshedder/deadpool/ci.yml?branch=main)](https://github.com/bikeshedder/deadpool/actions?query=workflow%3ARust) ![Unsafe forbidden](https://img.shields.io/badge/unsafe-forbidden-success.svg "Unsafe forbidden") [![Rust 1.75+](https://img.shields.io/badge/rustc-1.75+-lightgray.svg "Rust 1.75+")](https://blog.rust-lang.org/2023/12/28/Rust-1.75.0.html)
 
 
 Deadpool is a dead simple async pool for connections and objects
@@ -102,7 +102,7 @@ Database (Protocol) | Backend | Crate | Latest Version | Official [deadpool-rs](
 [LDAP v3](https://www.rfc-editor.org/rfc/rfc4511.txt) | [ldap3](https://crates.io/crates/ldap3) | [deadpool-ldap3](https://crates.io/crates/deadpool-ldap3) | [![Latest Version](https://img.shields.io/crates/v/deadpool-ldap3.svg)](https://crates.io/crates/deadpool-ldap3) | |
 [ClickHouse](https://clickhouse.com/) | [clickhouse](https://crates.io/crates/clickhouse) | [clickhouse-connection-pool](https://crates.io/crates/clickhouse-connection-pool) | [![Latest Version](https://img.shields.io/crates/v/clickhouse-connection-pool.svg)](https://crates.io/crates/clickhouse-connection-pool) | |
 
-¹ "Official deadpool-rs crates" marks crates maintained by the [deadpool-rs](https://github.com/deadpool-rs/) project. This shows ownership only, not quality or support level. Third-party crates are welcome to join the deadpool-rs umbrella for centralized maintenance and collaboration.  
+¹ "Official deadpool-rs crates" marks crates maintained by the [deadpool-rs](https://github.com/deadpool-rs/) project. This shows ownership only, not quality or support level. Third-party crates are welcome to join the deadpool-rs umbrella for centralized maintenance and collaboration.
 
 ### Reasons for yet another connection pool
 
