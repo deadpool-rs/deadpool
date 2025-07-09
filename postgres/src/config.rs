@@ -1,6 +1,6 @@
 //! Configuration used for [`Pool`] creation.
 
-use std::{env, fmt, net::IpAddr, str::FromStr, time::Duration};
+use std::{env, fmt, net::IpAddr, str::FromStr, sync::Arc, time::Duration};
 
 use tokio_postgres::config::{
     ChannelBinding as PgChannelBinding, LoadBalanceHosts as PgLoadBalanceHosts,
@@ -115,6 +115,19 @@ pub struct Config {
 
     /// [`Pool`] configuration.
     pub pool: Option<PoolConfig>,
+}
+
+/// A [`deadpool::managed::ClientConfigProvider`] that returns a static
+/// configuration for tokio_postgres.
+#[derive(Debug)]
+pub struct StaticPostgresConfigProvider {
+    pub config: Arc<tokio_postgres::Config>,
+}
+
+impl deadpool::managed::ClientConfigProvider<tokio_postgres::Config, tokio_postgres::Error> for StaticPostgresConfigProvider {
+    async fn get_config(&self) -> Result<Arc<tokio_postgres::Config>, tokio_postgres::Error> {
+        Ok(self.config.clone())
+    }
 }
 
 /// This error is returned if there is something wrong with the configuration
