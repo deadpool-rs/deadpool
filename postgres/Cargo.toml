@@ -14,6 +14,7 @@ readme = "README.md"
 all-features = true
 
 [features]
+aws = ["dep:aws-rds-signer"]
 default = ["rt_tokio_1"]
 rt_tokio_1 = ["deadpool/rt_tokio_1"]
 rt_async-std_1 = ["deadpool/rt_async-std_1"]
@@ -42,6 +43,7 @@ with-uuid-1 = ["tokio-postgres/with-uuid-1"]
 
 [dependencies]
 async-trait = "0.1.80"
+aws-rds-signer = { version = "0.2", optional = true }
 deadpool = { path = "../", version = "0.12.0", default-features = false, features = [
     "managed",
 ] }
