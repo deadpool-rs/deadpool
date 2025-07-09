@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **BREAKING**: Remove workspace structure to enable independent crate builds
+  - Each deadpool crate now operates independently with its own Cargo.lock
+  - Resolves dependency version conflicts (e.g., libsqlite3-sys between diesel and sqlite)
+  - Enables independent MSRV and dependency management per crate
+  - Workspace-level commands (`cargo build --workspace`) no longer work
+  - Each crate must be built individually
+
 ## [0.12.2] - 2025-02-02
 
 - Update `itertools` dependency to version `0.13.0`
