@@ -1,6 +1,6 @@
-use std::{convert::Infallible, path::PathBuf};
-
 use crate::{CreatePoolError, Manager, Pool, PoolBuilder, PoolConfig, Runtime};
+use rusqlite::OpenFlags;
+use std::{convert::Infallible, path::PathBuf};
 
 /// Configuration object.
 ///
@@ -36,6 +36,11 @@ pub struct Config {
 
     /// [`Pool`] configuration.
     pub pool: Option<PoolConfig>,
+
+    /// Sqlite OpenFlags
+    pub open_flags: Option<OpenFlags>,
+    // Sqlite VFS name (TODO)
+    // pub vfs: Option<String>,
 }
 
 impl Config {
@@ -45,6 +50,17 @@ impl Config {
         Self {
             path: path.into(),
             pool: None,
+            open_flags: None,
+        }
+    }
+
+    /// Create a new [`Config`] with the given `path` of SQLite database file and `flags`.
+    #[must_use]
+    pub fn new_with_flags(path: impl Into<PathBuf>, flags: OpenFlags) -> Self {
+        Self {
+            path: path.into(),
+            pool: None,
+            open_flags: Some(flags),
         }
     }
 
