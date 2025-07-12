@@ -53,8 +53,6 @@ impl Config {
     /// # Errors
     ///
     /// See [`CreatePoolError`] for details.
-    ///
-    /// [`RedisError`]: redis::RedisError
     pub fn create_pool(&self, runtime: Runtime) -> Result<Pool, CreatePoolError> {
         self.builder(runtime)
             .map_err(CreatePoolError::Config)?
@@ -68,8 +66,6 @@ impl Config {
     /// # Errors
     ///
     /// See [`ConfigError`] for details.
-    ///
-    /// [`RedisError`]: redis::RedisError
     pub fn builder(&self, runtime: Runtime) -> Result<PoolBuilder, ConfigError> {
         let manager = Manager::from_config(self, runtime);
         Ok(Pool::builder(manager)
