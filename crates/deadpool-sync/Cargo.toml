@@ -14,7 +14,7 @@ readme = "README.md"
 
 [dependencies]
 deadpool-runtime = { version = "0.1.2", path = "../deadpool-runtime" }
-tracing = { version = "0.1", optional = true }
+tracing = { version = "0.1.2", optional = true }
 
 [dev-dependencies]
 deadpool = { version = "0.12", path = "../deadpool", features = ["rt_tokio_1"] }

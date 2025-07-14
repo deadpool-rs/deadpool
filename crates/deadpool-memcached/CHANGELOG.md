@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Update `async-memcached` dependency to version `0.5`
+- Bump up MSRV to `1.82`
 
 ## [0.3.2] - 2024-05-04
 

@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Bump up MSRV to `1.82`
+
 ## [0.12.1] - 2025-07-09
 
 - Fix `docs.rs` documentation compilation
@@ -25,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.10.0] - 2025-02-12
 
 - Update `rusqlite` dependency to version `0.33`
-- Bump up MSRV to `1.18` to match the one of `rusqlite`
+- Bump up MSRV to `1.80` to match the one of `rusqlite`
 
 ## [0.9.0] - 2024-10-24
 

@@ -2,7 +2,7 @@
 name = "deadpool-diesel"
 version = "0.6.1"
 edition = "2021"
-rust-version = "1.78"
+rust-version = "1.84"
 authors = ["Michael P. Jung <michael.jung@terreon.de>"]
 description = "Dead simple async pool for diesel"
 keywords = ["async", "database", "pool", "diesel"]

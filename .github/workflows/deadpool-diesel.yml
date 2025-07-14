@@ -61,8 +61,8 @@ jobs:
         with:
           override: "true"
           profile: minimal
-          toolchain: "1.78"
-      - run: ../../tools/cargo-update-minimal-versions.sh 1.78
+          toolchain: "1.84"
+      - run: ../../tools/cargo-update-minimal-versions.sh 1.84
       - run: cargo check --features serde,tracing,rt_tokio_1,rt_async-std_1,mysql,postgres,sqlite
   rustdoc:
     name: Doc

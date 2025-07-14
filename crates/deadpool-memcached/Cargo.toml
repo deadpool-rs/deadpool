@@ -2,7 +2,7 @@
 name = "deadpool-memcached"
 version = "0.3.2"
 edition = "2021"
-rust-version = "1.75"
+rust-version = "1.82"
 authors = [
     "Toby Lawrence <toby@nuclearfurnace.com>",
     "Michael P. Jung <michael.jung@terreon.de>",
@@ -30,7 +30,7 @@ deadpool = { path = "../deadpool", version = "0.12.0", default-features = false,
 # broke the build by forgetting to add the "net" feature to the tokio
 # dependency. Once async-memcached is fixed this dependency can be removed
 # again.
-tokio = { version = "1.0", default-features = false, features = ["net"] }
+tokio = { version = "1.29", default-features = false, features = ["net"] }
 
 [package.metadata.cargo-machete]
 ignored = ["tokio"]
