@@ -24,6 +24,26 @@ rt_async-std_1 = ["deadpool/rt_async-std_1"]
 serde = ["deadpool/serde"]
 tracing = ["deadpool-sync/tracing"]
 
+# Re-export of diesel features
+128-column-tables = ["diesel/128-column-tables"]
+32-column-tables = ["diesel/32-column-tables"]
+64-column-tables = ["diesel/64-column-tables"]
+__with_asan_tests = ["diesel/__with_asan_tests"]
+chrono = ["diesel/chrono"]
+extras = ["diesel/extras"]
+huge-tables = ["diesel/huge-tables"]
+ipnet-address = ["diesel/ipnet-address"]
+large-tables = ["diesel/large-tables"]
+mysql_backend = ["diesel/mysql_backend"]
+network-address = ["diesel/network-address"]
+postgres_backend = ["diesel/postgres_backend"]
+numeric = ["diesel/numeric"]
+returning_clauses_for_sqlite_3_35 = ["diesel/returning_clauses_for_sqlite_3_35"]
+time = ["diesel/time"]
+unstable = ["diesel/unstable"]
+with-deprecated = ["diesel/with-deprecated"]
+without-deprecated = ["diesel/without-deprecated"]
+
 [dependencies]
 deadpool = { path = "../deadpool", version = "0.12.0", default-features = false, features = [
     "managed",

@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Re-export `lapin` features:
+    - `default-runtime`
+    - `rustls--aws_lc_rs`
+    - `rustls--ring`
+    - `unstable`
+
 ## [0.13.0] - 2024-07-07
 
 - Re-export `lapin` features

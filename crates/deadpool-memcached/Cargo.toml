@@ -19,7 +19,11 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [features]
 default = ["tcp"]
+
+# Re-export of async-memcached features
+polonius = ["async-memcached/polonius"]
 tcp = ["async-memcached/tcp"]
+udp = ["async-memcached/udp"]
 
 [dependencies]
 async-memcached = { version = "0.5", default-features = false }

@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Bump up MSRV to `1.82`
+- Re-export `redis` features:
+  - `safe_iterators`
+  - `smol-comp`
+  - `smol-native-tls-comp`
+  - `smol-rustls-comp`
+  - `vector-sets`
 
 ## [0.22.0] - 2025-07-07
 

@@ -36,6 +36,7 @@ bundled-sqlcipher-vendored-openssl = [
 bundled-windows = ["rusqlite/bundled-windows"]
 collation = ["rusqlite/collation"]
 column_decltype = ["rusqlite/column_decltype"]
+column_metadata = ["rusqlite/column_metadata"]
 csvtab = ["rusqlite/csvtab"]
 extra_check = ["rusqlite/extra_check"]
 functions = ["rusqlite/functions"]
