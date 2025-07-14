@@ -1,0 +1,118 @@
+defaults:
+  run:
+    working-directory: ./crates/deadpool-lapin
+env:
+  RUST_BACKTRACE: 1
+jobs:
+  check-integration:
+    name: Check integration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+      - run: cargo check --features ${{ matrix.feature }}
+    strategy:
+      fail-fast: false
+      matrix:
+        feature:
+          - serde
+          - rt_async-std_1
+          - rt_tokio_1
+  check-reexported-features:
+    name: Check re-exported features
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+      - uses: dcarbone/install-jq-action@v3
+      - uses: dcarbone/install-yq-action@v1
+      - run: ../../tools/check-reexported-features.sh
+  clippy:
+    name: Clippy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          components: clippy
+          profile: minimal
+          toolchain: stable
+      - run: cargo clippy --no-deps --features serde,rt_async-std_1,rt_tokio_1 -- -D warnings
+  msrv:
+    name: MSRV
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+      - uses: actions-rs/toolchain@v1
+        with:
+          override: "true"
+          profile: minimal
+          toolchain: "1.85"
+      - run: ../../tools/cargo-update-minimal-versions.sh 1.85
+      - run: cargo check --features serde,rt_async-std_1,rt_tokio_1
+  rustdoc:
+    name: Doc
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+      - run: cargo doc --no-deps --features serde,rt_async-std_1,rt_tokio_1
+  rustfmt:
+    name: rustfmt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          components: rustfmt
+          profile: minimal
+          toolchain: stable
+      - run: cargo fmt --check
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    services:
+      rabbitmq:
+        env:
+          RABBITMQ_DEFAULT_PASS: deadpool
+          RABBITMQ_DEFAULT_USER: deadpool
+          RABBITMQ_DEFAULT_VHOST: deadpool
+        image: rabbitmq:3.11-alpine
+        ports:
+          - 5672:5672
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+      - env:
+          AMQP__URL: amqp://deadpool:deadpool@127.0.0.1/deadpool
+        run: cargo test --features serde,rt_async-std_1,rt_tokio_1
+name: deadpool-lapin
+"on":
+  pull_request:
+    branches:
+      - main
+    paths:
+      - crates/deadpool-lapin/**
+  push:
+    branches:
+      - main
+    paths:
+      - crates/deadpool-lapin/**
+    tags:
+      - deadpool-lapin-v*

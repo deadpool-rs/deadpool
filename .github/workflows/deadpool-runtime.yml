@@ -1,0 +1,80 @@
+defaults:
+  run:
+    working-directory: ./crates/deadpool-runtime
+env:
+  RUST_BACKTRACE: 1
+jobs:
+  clippy:
+    name: Clippy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          components: clippy
+          profile: minimal
+          toolchain: stable
+      - run: cargo clippy --no-deps --all-features -- -D warnings
+  msrv:
+    name: MSRV
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+      - uses: actions-rs/toolchain@v1
+        with:
+          override: "true"
+          profile: minimal
+          toolchain: "1.75"
+      - run: ../../tools/cargo-update-minimal-versions.sh 1.75
+      - run: cargo check --all-features
+  rustdoc:
+    name: Doc
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+      - run: cargo doc --no-deps --all-features
+  rustfmt:
+    name: rustfmt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          components: rustfmt
+          profile: minimal
+          toolchain: stable
+      - run: cargo fmt --check
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    services: {}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+      - env: {}
+        run: cargo test --all-features
+name: deadpool-runtime
+"on":
+  pull_request:
+    branches:
+      - main
+    paths:
+      - crates/deadpool-runtime/**
+  push:
+    branches:
+      - main
+    paths:
+      - crates/deadpool-runtime/**
+    tags:
+      - deadpool-runtime-v*

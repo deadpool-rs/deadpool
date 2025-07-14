@@ -1,0 +1,20 @@
+backend: lapin
+
+features:
+  own:
+    - serde
+    - rt_async-std_1
+    - rt_tokio_1
+
+test:
+  services:
+    rabbitmq:
+      image: rabbitmq:3.11-alpine
+      ports:
+        - 5672:5672
+      env:
+        RABBITMQ_DEFAULT_USER: deadpool
+        RABBITMQ_DEFAULT_PASS: deadpool
+        RABBITMQ_DEFAULT_VHOST: deadpool
+  env:
+    AMQP__URL: amqp://deadpool:deadpool@127.0.0.1/deadpool

@@ -1,0 +1,130 @@
+defaults:
+  run:
+    working-directory: ./crates/deadpool-redis
+env:
+  RUST_BACKTRACE: 1
+jobs:
+  check-integration:
+    name: Check integration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+      - run: cargo check --features ${{ matrix.feature }}
+    strategy:
+      fail-fast: false
+      matrix:
+        feature:
+          - serde
+          - rt_tokio_1
+          - rt_async-std_1
+          - cluster
+          - sentinel
+  check-reexported-features:
+    name: Check re-exported features
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+      - uses: dcarbone/install-jq-action@v3
+      - uses: dcarbone/install-yq-action@v1
+      - run: ../../tools/check-reexported-features.sh
+  clippy:
+    name: Clippy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          components: clippy
+          profile: minimal
+          toolchain: stable
+      - run: cargo clippy --no-deps --features serde,rt_tokio_1,rt_async-std_1,cluster,sentinel -- -D warnings
+  msrv:
+    name: MSRV
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+      - uses: actions-rs/toolchain@v1
+        with:
+          override: "true"
+          profile: minimal
+          toolchain: "1.82"
+      - run: ../../tools/cargo-update-minimal-versions.sh 1.82
+      - run: cargo check --features serde,rt_tokio_1,rt_async-std_1,cluster,sentinel
+  rustdoc:
+    name: Doc
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+      - run: cargo doc --no-deps --features serde,rt_tokio_1,rt_async-std_1,cluster,sentinel
+  rustfmt:
+    name: rustfmt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          components: rustfmt
+          profile: minimal
+          toolchain: stable
+      - run: cargo fmt --check
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis:7.0-alpine
+        ports:
+          - 6379:6379
+      redis-cluster:
+        image: grokzen/redis-cluster:7.0.10
+        ports:
+          - 7000-7005:7000-7005
+      redis-sentinel:
+        env:
+          ALLOW_EMPTY_PASSWORD: "yes"
+        image: bitnami/redis-sentinel:latest
+        ports:
+          - 26379:26379
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+      - env:
+          REDIS_CLUSTER__URLS: redis://127.0.0.1:7000,redis://127.0.0.1:7001
+          REDIS_SENTINEL__MASTER_NAME: mymaster
+          REDIS_SENTINEL__SERVER_TYPE: Master
+          REDIS_SENTINEL__URLS: redis://127.0.0.1:26379
+          REDIS__URL: redis://127.0.0.1/
+        run: cargo test --features serde,rt_tokio_1,rt_async-std_1,cluster,sentinel
+name: deadpool-redis
+"on":
+  pull_request:
+    branches:
+      - main
+    paths:
+      - crates/deadpool-redis/**
+  push:
+    branches:
+      - main
+    paths:
+      - crates/deadpool-redis/**
+    tags:
+      - deadpool-redis-v*

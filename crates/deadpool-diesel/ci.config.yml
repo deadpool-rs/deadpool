@@ -1,0 +1,23 @@
+backend: diesel
+
+features:
+  own:
+    - serde
+    - tracing
+    - rt_tokio_1
+    - rt_async-std_1
+  required:
+    - mysql
+    - postgres
+    - sqlite
+  exclude:
+    # These features don't make sense with deadpool-diesel:
+    - r2d2
+    - i-implement-a-third-party-backend-and-opt-into-breaking-changes
+
+test:
+  features:
+    - serde
+    - tracing
+    - rt_tokio_1
+    - sqlite

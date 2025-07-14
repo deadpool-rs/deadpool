@@ -1,0 +1,140 @@
+defaults:
+  run:
+    working-directory: ./crates/deadpool-postgres
+env:
+  RUST_BACKTRACE: 1
+jobs:
+  check-integration:
+    name: Check integration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+      - run: cargo check --features ${{ matrix.feature }}
+    strategy:
+      fail-fast: false
+      matrix:
+        feature:
+          - serde
+          - rt_tokio_1
+          - rt_async-std_1
+  check-integration-wasm:
+    name: Check integration (WebAssembly)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          target: wasm32-unknown-unknown
+          toolchain: stable
+      - run: cargo check --no-default-features ${{ matrix.feature }} --target wasm32-unknown-unknown
+    strategy:
+      fail-fast: false
+      matrix:
+        feature:
+          - --features rt_tokio_1
+          - --features rt_tokio_1,serde
+  check-reexported-features:
+    name: Check re-exported features
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+      - uses: dcarbone/install-jq-action@v3
+      - uses: dcarbone/install-yq-action@v1
+      - run: ../../tools/check-reexported-features.sh
+  clippy:
+    name: Clippy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          components: clippy
+          profile: minimal
+          toolchain: stable
+      - run: cargo clippy --no-deps --features serde,rt_tokio_1,rt_async-std_1 -- -D warnings
+  msrv:
+    name: MSRV
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+      - uses: actions-rs/toolchain@v1
+        with:
+          override: "true"
+          profile: minimal
+          toolchain: "1.75"
+      - run: ../../tools/cargo-update-minimal-versions.sh 1.75
+      - run: cargo check --features serde,rt_tokio_1,rt_async-std_1
+  rustdoc:
+    name: Doc
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+      - run: cargo doc --no-deps --features serde,rt_tokio_1,rt_async-std_1
+  rustfmt:
+    name: rustfmt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          components: rustfmt
+          profile: minimal
+          toolchain: stable
+      - run: cargo fmt --check
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        env:
+          POSTGRES_DB: deadpool
+          POSTGRES_PASSWORD: deadpool
+          POSTGRES_USER: deadpool
+        image: postgres:17-alpine
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+        ports:
+          - 5432:5432
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+      - env:
+          PG__DBNAME: deadpool
+          PG__HOST: 127.0.0.1
+          PG__PASSWORD: deadpool
+          PG__PORT: 5432
+          PG__USER: deadpool
+        run: cargo test --features serde,rt_tokio_1,rt_async-std_1
+name: deadpool-postgres
+"on":
+  pull_request:
+    branches:
+      - main
+    paths:
+      - crates/deadpool-postgres/**
+  push:
+    branches:
+      - main
+    paths:
+      - crates/deadpool-postgres/**
+    tags:
+      - deadpool-postgres-v*

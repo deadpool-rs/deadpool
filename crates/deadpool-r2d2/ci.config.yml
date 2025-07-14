@@ -1,0 +1,31 @@
+backend: r2d2
+
+features:
+  own:
+    - rt_async-std_1
+    - rt_tokio_1
+    - serde
+    - tracing
+
+test:
+  services:
+    postgres:
+      image: postgres:17-alpine
+      ports:
+        - 5432:5432
+      env:
+        POSTGRES_USER: deadpool
+        POSTGRES_PASSWORD: deadpool
+        POSTGRES_DB: deadpool
+      # Health checks to wait until Postgres has started.
+      options: >-
+        --health-cmd pg_isready
+        --health-interval 10s
+        --health-timeout 5s
+        --health-retries 5
+  env:
+    PG__HOST: 127.0.0.1
+    PG__PORT: 5432
+    PG__USER: deadpool
+    PG__PASSWORD: deadpool
+    PG__DBNAME: deadpool

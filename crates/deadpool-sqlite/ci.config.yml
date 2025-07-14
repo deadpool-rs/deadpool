@@ -1,0 +1,8 @@
+backend: rusqlite
+
+features:
+  own:
+    - serde
+    - tracing
+    - rt_tokio_1
+    - rt_async-std_1

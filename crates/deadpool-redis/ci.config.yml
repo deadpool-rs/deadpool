@@ -1,0 +1,37 @@
+backend: redis
+
+features:
+  own:
+    - serde
+    - rt_tokio_1
+    - rt_async-std_1
+  required:
+    - cluster
+    - sentinel
+  exclude:
+    - tls
+    - async-std-tls-comp
+    - aio
+
+test:
+  services:
+    redis-sentinel:
+      image: 'bitnami/redis-sentinel:latest'
+      env:
+        ALLOW_EMPTY_PASSWORD: yes
+      ports:
+        - 26379:26379
+    redis:
+      image: redis:7.0-alpine
+      ports:
+        - 6379:6379
+    redis-cluster:
+      image: grokzen/redis-cluster:7.0.10
+      ports:
+        - 7000-7005:7000-7005
+  env:
+    REDIS__URL: redis://127.0.0.1/
+    REDIS_SENTINEL__URLS: redis://127.0.0.1:26379
+    REDIS_SENTINEL__SERVER_TYPE: "Master"
+    REDIS_SENTINEL__MASTER_NAME: "mymaster"
+    REDIS_CLUSTER__URLS: redis://127.0.0.1:7000,redis://127.0.0.1:7001
