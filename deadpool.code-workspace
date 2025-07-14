@@ -1,0 +1,75 @@
+{
+	"folders": [
+		{
+			"name": "workspace",
+			"path": "."
+		},
+		{
+			"name": "deadpool",
+			"path": "crates/deadpool"
+		},
+		{
+			"name": "deadpool-diesel",
+			"path": "crates/deadpool-diesel"
+		},
+		{
+			"name": "deadpool-lapin",
+			"path": "crates/deadpool-lapin"
+		},
+		{
+			"name": "deadpool-memcached",
+			"path": "crates/deadpool-memcached"
+		},
+		{
+			"name": "deadpool-postgres",
+			"path": "crates/deadpool-postgres"
+		},
+		{
+			"name": "deadpool-r2d2",
+			"path": "crates/deadpool-r2d2"
+		},
+		{
+			"name": "deadpool-redis",
+			"path": "crates/deadpool-redis"
+		},
+		{
+			"name": "deadpool-runtime",
+			"path": "crates/deadpool-runtime"
+		},
+		{
+			"name": "deadpool-sqlite",
+			"path": "crates/deadpool-sqlite"
+		},
+		{
+			"name": "deadpool-sync",
+			"path": "crates/deadpool-sync"
+		},
+		{
+			"name": "example-diesel",
+			"path": "examples/diesel"
+		},
+		{
+			"name": "example-postgres-actix-web",
+			"path": "examples/postgres-actix-web"
+		},
+		{
+			"name": "example-postgres-axum",
+			"path": "examples/postgres-axum"
+		},
+		{
+			"name": "example-postgres-benchmark",
+			"path": "examples/postgres-benchmark"
+		},
+		{
+			"name": "example-redis-actix-web",
+			"path": "examples/redis-actix-web",
+		},
+	],
+	"settings": {
+		"rust-analyzer.cargo.features": "all",
+		"rust-analyzer.checkOnSave": true,
+		"rust-analyzer.diagnostics.disabled": [
+			"unresolved-extern-crate"
+		]
+	}
+}
