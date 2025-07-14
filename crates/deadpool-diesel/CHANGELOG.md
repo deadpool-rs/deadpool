@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update `diesel` dependency to version `2.2.0`
 - Bump up MSRV to `1.84`
 - Re-export `diesel` features
+- Mimick `default` features of `diesel` crate
 
 ## [0.6.1] - 2024-05-04
 

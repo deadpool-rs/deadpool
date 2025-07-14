@@ -15,7 +15,7 @@ all-features = true
 rustdoc-args = ["--cfg", "docsrs"]
 
 [features]
-default = ["rt_tokio_1"]
+default = ["rt_tokio_1", "with-deprecated", "32-column-tables"]
 mysql = ["diesel/mysql"]
 postgres = ["diesel/postgres"]
 sqlite = ["diesel/sqlite"]
