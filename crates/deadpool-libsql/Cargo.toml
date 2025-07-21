@@ -1,0 +1,51 @@
+[package]
+name = "deadpool-libsql"
+version = "0.0.0"
+edition = "2021"
+rust-version = "1.81"
+authors = ["Michael P. Jung <michael.jung@terreon.de>"]
+description = "Dead simple async pool for libsql"
+keywords = ["async", "libsql", "database", "pool"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/bikeshedder/deadpool"
+readme = "README.md"
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
+[features]
+default = ["rt_tokio_1", "core", "replication", "remote", "sync", "tls"]
+rt_tokio_1 = ["deadpool/rt_tokio_1"]
+rt_async-std_1 = ["deadpool/rt_async-std_1"]
+serde = ["deadpool/serde", "dep:serde", "libsql/serde"]
+
+# Re-export of libsql features
+cloudflare = ["libsql/cloudflare"]
+core = ["libsql/core"]
+stream = ["libsql/stream"]
+parser = ["libsql/parser"]
+replication = ["libsql/replication"]
+sync = ["libsql/sync"]
+hrana = ["libsql/hrana"]
+remote = ["libsql/remote"]
+encryption = ["libsql/encryption"]
+tls = ["libsql/tls"]
+wasm = ["libsql/wasm"]
+
+[dependencies]
+async-executor-trait = { version = "2.1", optional = true }
+bytes = "1.10.1"
+deadpool = { path = "../deadpool", version = "0.12.0", default-features = false, features = [
+    "managed",
+] }
+libsql = { version = "0.9.18", default-features = false}
+serde = { package = "serde", version = "1.0.103", features = [
+    "derive",
+], optional = true }
+thiserror = "2.0.12"
+
+[dev-dependencies]
+config = { version = "0.15", features = ["json"] }
+dotenvy = "0.15"
+tokio = { version = "1.0", features = ["sync", "macros", "rt-multi-thread"] }

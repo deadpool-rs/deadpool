@@ -1,0 +1,15 @@
+backend: libsql
+
+features:
+  own:
+    - rt_async-std_1
+    - rt_tokio_1
+    - serde
+
+check:
+  features:
+    - serde
+    - core
+    - remote
+    - replication
+    - sync

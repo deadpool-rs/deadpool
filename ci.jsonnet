@@ -24,6 +24,7 @@ local features =
     (if features_required != null then features_required else [])
   else
     null;
+local check_features = getConfig("check.features", features);
 local test_features = getConfig("test.features", features);
 local test_services = getConfig("test.services", {});
 local test_env = getConfig("test.env", {});
@@ -111,12 +112,12 @@ local genFeaturesFlag(features) =
     ###########
 
     # FIXME The check integration job should be enabled for all crates with a backend
-    [if std.member(["deadpool-diesel", "deadpool-lapin", "deadpool-postgres", "deadpool-redis", "deadpool-sqlite"], crate) then "check-integration"]: {
+    [if std.member(["deadpool-diesel", "deadpool-lapin", "deadpool-postgres", "deadpool-redis", "deadpool-sqlite", "deadpool-libsql"], crate) then "check-integration"]: {
       name: "Check integration",
       strategy: {
         "fail-fast": false,
         matrix: {
-          feature: features,
+          feature: check_features,
         }
       },
       "runs-on": "ubuntu-latest",

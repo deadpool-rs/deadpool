@@ -3,6 +3,7 @@
 set -eu
 
 TEMP_DIR=$(mktemp -d)
+# shellcheck disable=SC2064
 trap "rm -r ${TEMP_DIR}" EXIT
 
 METADATA=$TEMP_DIR/metadata.json

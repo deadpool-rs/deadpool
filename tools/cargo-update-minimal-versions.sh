@@ -52,4 +52,4 @@ for dep in $deps; do
   fi
 done
 
-cargo +$RUST_VERSION update
+cargo "+$RUST_VERSION" update

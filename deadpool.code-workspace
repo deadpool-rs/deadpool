@@ -45,6 +45,10 @@
 			"path": "crates/deadpool-sync"
 		},
 		{
+			"name": "deadpool-libsql",
+			"path": "crates/deadpool-libsql"
+		},
+		{
 			"name": "example-diesel",
 			"path": "examples/diesel"
 		},
