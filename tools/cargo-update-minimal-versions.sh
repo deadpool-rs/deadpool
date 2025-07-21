@@ -42,7 +42,9 @@ for dep in $deps; do
     # skip deadpool dependencies
     continue
   fi
-  version=$(yq e --input-format=toml --output-format=toml ".package[] | select(.name == \"$dep\") | .version" Cargo.lock)
+  # FIXME "tail -n 1" is really just a quick fix! This code should
+  # find the correct version via the semantic version rules.
+  version=$(yq e --input-format=toml --output-format=toml ".package[] | select(.name == \"$dep\") | .version" Cargo.lock | tail -n 1)
   if [[ -n $version ]]; then
     echo "Pinning $dep to $version"
     cargo add "$dep@=$version"
