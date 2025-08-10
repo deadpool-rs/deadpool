@@ -89,7 +89,7 @@ impl Config {
             #[cfg(feature = "rt_tokio_1")]
             Some(Runtime::Tokio1) => {
                 #[cfg(not(windows))]
-                let conn_props = conn_props.with_reactor(tokio_reactor_trait::Tokio);
+                let conn_props = conn_props.with_reactor(tokio_reactor_trait::Tokio::current());
                 conn_props.with_executor(tokio_executor_trait::Tokio::current())
             }
             #[cfg(feature = "rt_async-std_1")]
