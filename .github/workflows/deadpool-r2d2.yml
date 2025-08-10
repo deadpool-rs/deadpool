@@ -4,6 +4,27 @@ defaults:
 env:
   RUST_BACKTRACE: 1
 jobs:
+  check-integration:
+    name: Check integration
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+      - run: cargo check --features ${{ matrix.feature }}
+    strategy:
+      fail-fast: false
+      matrix:
+        feature:
+          - rt_async-std_1
+          - rt_tokio_1
+          - serde
+          - tracing
+        os:
+          - ubuntu-latest
+          - windows-latest
   check-reexported-features:
     name: Check re-exported features
     runs-on: ubuntu-latest

@@ -112,7 +112,7 @@ local genFeaturesFlag(features) =
     ###########
 
     # FIXME The check integration job should be enabled for all crates with a backend
-    [if std.member(["deadpool-diesel", "deadpool-lapin", "deadpool-postgres", "deadpool-redis", "deadpool-sqlite", "deadpool-libsql"], crate) then "check-integration"]: {
+    [if check_features != null then "check-integration"]: {
       name: "Check integration",
       strategy: {
         "fail-fast": false,
