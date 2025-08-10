@@ -107,10 +107,12 @@ name: deadpool-diesel
       - main
     paths:
       - crates/deadpool-diesel/**
+      - .github/workflows/deadpool-diesel.yml
   push:
     branches:
       - main
     paths:
       - crates/deadpool-diesel/**
+      - .github/workflows/deadpool-diesel.yml
     tags:
       - deadpool-diesel-v*

@@ -112,10 +112,12 @@ name: deadpool-lapin
       - main
     paths:
       - crates/deadpool-lapin/**
+      - .github/workflows/deadpool-lapin.yml
   push:
     branches:
       - main
     paths:
       - crates/deadpool-lapin/**
+      - .github/workflows/deadpool-lapin.yml
     tags:
       - deadpool-lapin-v*

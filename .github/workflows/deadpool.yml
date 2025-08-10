@@ -91,10 +91,12 @@ name: deadpool
       - main
     paths:
       - crates/deadpool/**
+      - .github/workflows/deadpool.yml
   push:
     branches:
       - main
     paths:
       - crates/deadpool/**
+      - .github/workflows/deadpool.yml
     tags:
       - deadpool-v*

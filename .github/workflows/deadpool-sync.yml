@@ -71,10 +71,12 @@ name: deadpool-sync
       - main
     paths:
       - crates/deadpool-sync/**
+      - .github/workflows/deadpool-sync.yml
   push:
     branches:
       - main
     paths:
       - crates/deadpool-sync/**
+      - .github/workflows/deadpool-sync.yml
     tags:
       - deadpool-sync-v*

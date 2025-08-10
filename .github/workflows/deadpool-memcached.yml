@@ -83,10 +83,12 @@ name: deadpool-memcached
       - main
     paths:
       - crates/deadpool-memcached/**
+      - .github/workflows/deadpool-memcached.yml
   push:
     branches:
       - main
     paths:
       - crates/deadpool-memcached/**
+      - .github/workflows/deadpool-memcached.yml
     tags:
       - deadpool-memcached-v*

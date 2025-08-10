@@ -118,10 +118,12 @@ name: deadpool-r2d2
       - main
     paths:
       - crates/deadpool-r2d2/**
+      - .github/workflows/deadpool-r2d2.yml
   push:
     branches:
       - main
     paths:
       - crates/deadpool-r2d2/**
+      - .github/workflows/deadpool-r2d2.yml
     tags:
       - deadpool-r2d2-v*

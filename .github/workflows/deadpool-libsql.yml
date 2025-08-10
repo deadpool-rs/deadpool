@@ -105,10 +105,12 @@ name: deadpool-libsql
       - main
     paths:
       - crates/deadpool-libsql/**
+      - .github/workflows/deadpool-libsql.yml
   push:
     branches:
       - main
     paths:
       - crates/deadpool-libsql/**
+      - .github/workflows/deadpool-libsql.yml
     tags:
       - deadpool-libsql-v*

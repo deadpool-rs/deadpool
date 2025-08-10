@@ -134,10 +134,12 @@ name: deadpool-postgres
       - main
     paths:
       - crates/deadpool-postgres/**
+      - .github/workflows/deadpool-postgres.yml
   push:
     branches:
       - main
     paths:
       - crates/deadpool-postgres/**
+      - .github/workflows/deadpool-postgres.yml
     tags:
       - deadpool-postgres-v*

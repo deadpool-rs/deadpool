@@ -45,11 +45,11 @@ local genFeaturesFlag(features) =
     push: {
         branches: [ "main" ],
         tags: [ std.format("%s-v*", crate) ],
-        paths: [ std.format("crates/%s/**", crate) ]
+        paths: [ std.format("crates/%s/**", crate), std.format(".github/workflows/%s.yml", crate) ]
     },
     pull_request: {
         branches: [ "main" ],
-        paths: [ std.format("crates/%s/**", crate) ]
+        paths: [ std.format("crates/%s/**", crate), std.format(".github/workflows/%s.yml", crate) ]
     }
   },
   env: {

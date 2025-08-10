@@ -104,10 +104,12 @@ name: deadpool-sqlite
       - main
     paths:
       - crates/deadpool-sqlite/**
+      - .github/workflows/deadpool-sqlite.yml
   push:
     branches:
       - main
     paths:
       - crates/deadpool-sqlite/**
+      - .github/workflows/deadpool-sqlite.yml
     tags:
       - deadpool-sqlite-v*

@@ -71,10 +71,12 @@ name: deadpool-runtime
       - main
     paths:
       - crates/deadpool-runtime/**
+      - .github/workflows/deadpool-runtime.yml
   push:
     branches:
       - main
     paths:
       - crates/deadpool-runtime/**
+      - .github/workflows/deadpool-runtime.yml
     tags:
       - deadpool-runtime-v*

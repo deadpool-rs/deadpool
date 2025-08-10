@@ -124,10 +124,12 @@ name: deadpool-redis
       - main
     paths:
       - crates/deadpool-redis/**
+      - .github/workflows/deadpool-redis.yml
   push:
     branches:
       - main
     paths:
       - crates/deadpool-redis/**
+      - .github/workflows/deadpool-redis.yml
     tags:
       - deadpool-redis-v*
