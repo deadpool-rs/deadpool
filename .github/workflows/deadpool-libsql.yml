@@ -6,7 +6,7 @@ env:
 jobs:
   check-integration:
     name: Check integration
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions-rs/toolchain@v1
@@ -23,6 +23,9 @@ jobs:
           - remote
           - replication
           - sync
+        os:
+          - ubuntu-latest
+          - windows-latest
   check-reexported-features:
     name: Check re-exported features
     runs-on: ubuntu-latest

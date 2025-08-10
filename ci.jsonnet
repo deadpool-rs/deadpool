@@ -118,9 +118,10 @@ local genFeaturesFlag(features) =
         "fail-fast": false,
         matrix: {
           feature: check_features,
+          os: ["ubuntu-latest", "windows-latest"],
         }
       },
-      "runs-on": "ubuntu-latest",
+      "runs-on": "${{ matrix.os }}",
       steps: [
         { uses: "actions/checkout@v3" },
         {

@@ -6,7 +6,7 @@ env:
 jobs:
   check-integration:
     name: Check integration
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions-rs/toolchain@v1
@@ -21,6 +21,9 @@ jobs:
           - serde
           - rt_tokio_1
           - rt_async-std_1
+        os:
+          - ubuntu-latest
+          - windows-latest
   check-integration-wasm:
     name: Check integration (WebAssembly)
     runs-on: ubuntu-latest
