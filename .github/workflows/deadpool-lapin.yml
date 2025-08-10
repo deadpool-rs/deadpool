@@ -23,7 +23,7 @@ jobs:
           - rt_tokio_1
         os:
           - ubuntu-latest
-          - windows-latest
+          - windows-2025
   check-reexported-features:
     name: Check re-exported features
     runs-on: ubuntu-latest

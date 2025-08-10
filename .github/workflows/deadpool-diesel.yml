@@ -13,6 +13,15 @@ jobs:
         with:
           profile: minimal
           toolchain: stable
+      - if: runner.os == 'Windows' && matrix.feature == 'mysql'
+        name: Install mysql (Windows)
+        run: |-
+          echo "MYSQLCLIENT_LIB_DIR=C:\Program Files\MySQL\MySQL Server 8.0\lib" >> $GITHUB_ENV
+          echo "MYSQLCLIENT_VERSION=8.0.40" >> $GITHUB_ENV
+          echo "C:\Program Files\MySQL\MySQL Server 8.0\lib" >> $GITHUB_PATH
+          echo "C:\Program Files\MySQL\MySQL Server 8.0\bin" >> $GITHUB_PATH
+          dir "C:\Program Files\MySQL\MySQL Server 8.0\lib"
+        shell: bash
       - run: cargo check --features ${{ matrix.feature }}
     strategy:
       fail-fast: false
@@ -27,7 +36,7 @@ jobs:
           - sqlite
         os:
           - ubuntu-latest
-          - windows-latest
+          - windows-2025
   check-reexported-features:
     name: Check re-exported features
     runs-on: ubuntu-latest

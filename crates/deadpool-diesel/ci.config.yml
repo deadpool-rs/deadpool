@@ -21,3 +21,15 @@ test:
     - tracing
     - rt_tokio_1
     - sqlite
+
+check:
+  extra_steps:
+      - name: Install mysql (Windows)
+        if: runner.os == 'Windows' && matrix.feature == 'mysql'
+        shell: bash
+        run: |
+          echo "MYSQLCLIENT_LIB_DIR=C:\Program Files\MySQL\MySQL Server 8.0\lib" >> $GITHUB_ENV
+          echo "MYSQLCLIENT_VERSION=8.0.40" >> $GITHUB_ENV
+          echo "C:\Program Files\MySQL\MySQL Server 8.0\lib" >> $GITHUB_PATH
+          echo "C:\Program Files\MySQL\MySQL Server 8.0\bin" >> $GITHUB_PATH
+          dir "C:\Program Files\MySQL\MySQL Server 8.0\lib"

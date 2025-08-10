@@ -25,6 +25,7 @@ local features =
   else
     null;
 local check_features = getConfig("check.features", features);
+local check_extra_steps = getConfig("check.extra_steps", []);
 local test_features = getConfig("test.features", features);
 local test_services = getConfig("test.services", {});
 local test_env = getConfig("test.env", {});
@@ -118,7 +119,7 @@ local genFeaturesFlag(features) =
         "fail-fast": false,
         matrix: {
           feature: check_features,
-          os: ["ubuntu-latest", "windows-latest"],
+          os: ["ubuntu-latest", "windows-2025"],
         }
       },
       "runs-on": "${{ matrix.os }}",
@@ -131,6 +132,7 @@ local genFeaturesFlag(features) =
             toolchain: "stable",
           }
         },
+      ] + check_extra_steps + [
         # We don't use `--no-default-features` here as integration crates don't
         # work with it at all.
         {

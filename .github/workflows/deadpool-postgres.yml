@@ -23,7 +23,7 @@ jobs:
           - rt_async-std_1
         os:
           - ubuntu-latest
-          - windows-latest
+          - windows-2025
   check-integration-wasm:
     name: Check integration (WebAssembly)
     runs-on: ubuntu-latest
