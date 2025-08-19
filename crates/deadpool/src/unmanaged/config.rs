@@ -33,7 +33,7 @@ impl PoolConfig {
 
 impl Default for PoolConfig {
     /// Create a [`PoolConfig`] where [`PoolConfig::max_size`] is set to
-    /// `cpu_count * 4` ignoring any logical CPUs (Hyper-Threading).
+    /// `cpu_core_count * 2` including logical cores (Hyper-Threading).
     fn default() -> Self {
         Self::new(crate::util::get_default_pool_max_size())
     }
