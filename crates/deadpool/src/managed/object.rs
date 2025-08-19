@@ -36,9 +36,8 @@ pub(crate) struct ObjectInner<M: Manager> {
     /// Actual pooled object.
     pub obj: M::Type,
 
-    /// The id of this object. This number is strictly monotonically
-    /// increasing. The order of IDs is equal to the time the objects
-    /// was created.
+    /// The ID of this object. IDs are assigned in increasing order and
+    /// generally reflect the creation order of objects.
     ///
     /// This can be used to discard objects after a configuration change
     /// or simply identify an objects for debugging purposes.
