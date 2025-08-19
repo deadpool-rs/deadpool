@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add unique `id` to objects which can be read via the `Object::id` method
 - Add `WeakPool<T>` and `Pool::weak()` for non-owning, upgradeable pool references.
+- Cache `num_cpus::get_physical()` result to improve `Pool` creation performance.
 
 ## [0.12.2] - 2025-02-02
 
