@@ -54,3 +54,5 @@ pub struct Status {
     /// The number of futures waiting for an object.
     pub waiting: usize,
 }
+
+mod util;

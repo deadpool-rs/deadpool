@@ -51,7 +51,7 @@ impl Default for PoolConfig {
     /// Creates a new [`PoolConfig`] with the `max_size` being set to
     /// `cpu_count * 4` ignoring any logical CPUs (Hyper-Threading).
     fn default() -> Self {
-        Self::new(num_cpus::get_physical() * 4)
+        Self::new(crate::util::get_default_pool_max_size())
     }
 }
 
