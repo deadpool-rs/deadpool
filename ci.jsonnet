@@ -72,14 +72,13 @@ local genFeaturesFlag(features) =
       "runs-on": "ubuntu-latest",
       steps: [
         {
-          uses: "actions/checkout@v3"
+          uses: "actions/checkout@v5"
         },
         {
-          uses: "actions-rs/toolchain@v1",
+          uses: "dtolnay/rust-toolchain@v1",
           with: {
-            profile: "minimal",
             toolchain: "stable",
-            components: "clippy",
+            components: "rustc,rust-std,cargo,clippy",
           }
         },
         {
@@ -92,14 +91,13 @@ local genFeaturesFlag(features) =
       "runs-on": "ubuntu-latest",
       steps: [
         {
-          uses: "actions/checkout@v3",
+          uses: "actions/checkout@v5",
         },
         {
-          uses: "actions-rs/toolchain@v1",
+          uses: "dtolnay/rust-toolchain@v1",
           with: {
-            profile: "minimal",
             toolchain: "stable",
-            components: "rustfmt",
+            components: "rustc,rust-std,cargo,rustfmt",
           }
         },
         {
@@ -124,12 +122,12 @@ local genFeaturesFlag(features) =
       },
       "runs-on": "${{ matrix.os }}",
       steps: [
-        { uses: "actions/checkout@v3" },
+        { uses: "actions/checkout@v5" },
         {
-          uses: "actions-rs/toolchain@v1",
+          uses: "dtolnay/rust-toolchain@v1",
           with: {
-            profile: "minimal",
             toolchain: "stable",
+            components: "rustc,rust-std,cargo",
           }
         },
       ] + check_extra_steps + [
@@ -146,21 +144,20 @@ local genFeaturesFlag(features) =
       "runs-on": "ubuntu-latest",
       steps: [
         {
-          uses: "actions/checkout@v3"
+          uses: "actions/checkout@v5"
         },
         {
-          uses: "actions-rs/toolchain@v1",
+          uses: "dtolnay/rust-toolchain@v1",
           with: {
-            profile: "minimal",
             toolchain: "nightly",
+            components: "rustc,rust-std,cargo",
           }
         },
         {
-          uses: "actions-rs/toolchain@v1",
+          uses: "dtolnay/rust-toolchain@v1",
           with: {
-            profile: "minimal",
             toolchain: rust_version,
-            override: "true",
+            components: "rustc,rust-std,cargo",
           }
         },
         {
@@ -178,13 +175,13 @@ local genFeaturesFlag(features) =
       services: test_services,
       steps: [
         {
-          uses: "actions/checkout@v3",
+          uses: "actions/checkout@v5",
         },
         {
-          uses: "actions-rs/toolchain@v1",
+          uses: "dtolnay/rust-toolchain@v1",
           with: {
-            profile: "minimal",
             toolchain: "stable",
+            components: "rustc,rust-std,cargo",
           }
         },
         {
@@ -198,12 +195,12 @@ local genFeaturesFlag(features) =
       name: "Check re-exported features",
       "runs-on": "ubuntu-latest",
       steps: [
-        { uses: "actions/checkout@v3" },
+        { uses: "actions/checkout@v5" },
         {
-          uses: "actions-rs/toolchain@v1",
+          uses: "dtolnay/rust-toolchain@v1",
           with: {
-            profile: "minimal",
             toolchain: "stable",
+            components: "rustc,rust-std,cargo",
           }
         },
         { uses: "dcarbone/install-jq-action@v3" },
@@ -221,13 +218,13 @@ local genFeaturesFlag(features) =
       "runs-on": "ubuntu-latest",
       steps: [
         {
-          uses: "actions/checkout@v3",
+          uses: "actions/checkout@v5",
         },
         {
-          uses: "actions-rs/toolchain@v1",
+          uses: "dtolnay/rust-toolchain@v1",
           with: {
-            profile: "minimal",
             toolchain: "stable",
+            components: "rustc,rust-std,cargo",
           }
         },
         {

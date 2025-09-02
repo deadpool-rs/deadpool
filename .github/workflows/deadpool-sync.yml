@@ -8,26 +8,24 @@ jobs:
     name: Clippy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          components: clippy
-          profile: minimal
+          components: rustc,rust-std,cargo,clippy
           toolchain: stable
       - run: cargo clippy --no-deps --all-features -- -D warnings
   msrv:
     name: MSRV
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          profile: minimal
+          components: rustc,rust-std,cargo
           toolchain: nightly
-      - uses: actions-rs/toolchain@v1
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          override: "true"
-          profile: minimal
+          components: rustc,rust-std,cargo
           toolchain: "1.75"
       - run: ../../tools/cargo-update-minimal-versions.sh 1.75
       - run: cargo check --all-features
@@ -35,21 +33,20 @@ jobs:
     name: Doc
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          profile: minimal
+          components: rustc,rust-std,cargo
           toolchain: stable
       - run: cargo doc --no-deps --all-features
   rustfmt:
     name: rustfmt
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          components: rustfmt
-          profile: minimal
+          components: rustc,rust-std,cargo,rustfmt
           toolchain: stable
       - run: cargo fmt --check
   test:
@@ -57,10 +54,10 @@ jobs:
     runs-on: ubuntu-latest
     services: {}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          profile: minimal
+          components: rustc,rust-std,cargo
           toolchain: stable
       - env: {}
         run: cargo test --all-features

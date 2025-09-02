@@ -14,10 +14,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          profile: minimal
           toolchain: stable
+          components: rustc,rust-std,cargo
       - run: cargo check
           --no-default-features
           --features ${{ matrix.feature1 }},${{ matrix.feature2 }}

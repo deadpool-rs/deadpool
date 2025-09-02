@@ -8,10 +8,10 @@ jobs:
     name: Check integration
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          profile: minimal
+          components: rustc,rust-std,cargo
           toolchain: stable
       - run: cargo check --features ${{ matrix.feature }}
     strategy:
@@ -29,10 +29,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          profile: minimal
-          target: wasm32-unknown-unknown
+          components: rustc,rust-std,cargo
+          targets: wasm32-unknown-unknown
           toolchain: stable
       - run: cargo check --no-default-features ${{ matrix.feature }} --target wasm32-unknown-unknown
     strategy:
@@ -45,10 +45,10 @@ jobs:
     name: Check re-exported features
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          profile: minimal
+          components: rustc,rust-std,cargo
           toolchain: stable
       - uses: dcarbone/install-jq-action@v3
       - uses: dcarbone/install-yq-action@v1
@@ -57,26 +57,24 @@ jobs:
     name: Clippy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          components: clippy
-          profile: minimal
+          components: rustc,rust-std,cargo,clippy
           toolchain: stable
       - run: cargo clippy --no-deps --features serde,rt_tokio_1,rt_async-std_1 -- -D warnings
   msrv:
     name: MSRV
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          profile: minimal
+          components: rustc,rust-std,cargo
           toolchain: nightly
-      - uses: actions-rs/toolchain@v1
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          override: "true"
-          profile: minimal
+          components: rustc,rust-std,cargo
           toolchain: "1.75"
       - run: ../../tools/cargo-update-minimal-versions.sh 1.75
       - run: cargo check --features serde,rt_tokio_1,rt_async-std_1
@@ -84,21 +82,20 @@ jobs:
     name: Doc
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          profile: minimal
+          components: rustc,rust-std,cargo
           toolchain: stable
       - run: cargo doc --no-deps --features serde,rt_tokio_1,rt_async-std_1
   rustfmt:
     name: rustfmt
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          components: rustfmt
-          profile: minimal
+          components: rustc,rust-std,cargo,rustfmt
           toolchain: stable
       - run: cargo fmt --check
   test:
@@ -115,10 +112,10 @@ jobs:
         ports:
           - 5432:5432
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          profile: minimal
+          components: rustc,rust-std,cargo
           toolchain: stable
       - env:
           PG__DBNAME: deadpool

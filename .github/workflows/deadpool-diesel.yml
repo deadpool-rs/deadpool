@@ -8,10 +8,10 @@ jobs:
     name: Check integration
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          profile: minimal
+          components: rustc,rust-std,cargo
           toolchain: stable
       - if: runner.os == 'Windows' && matrix.feature == 'mysql'
         name: Install mysql (Windows)
@@ -41,10 +41,10 @@ jobs:
     name: Check re-exported features
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          profile: minimal
+          components: rustc,rust-std,cargo
           toolchain: stable
       - uses: dcarbone/install-jq-action@v3
       - uses: dcarbone/install-yq-action@v1
@@ -53,26 +53,24 @@ jobs:
     name: Clippy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          components: clippy
-          profile: minimal
+          components: rustc,rust-std,cargo,clippy
           toolchain: stable
       - run: cargo clippy --no-deps --features serde,tracing,rt_tokio_1,rt_async-std_1,mysql,postgres,sqlite -- -D warnings
   msrv:
     name: MSRV
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          profile: minimal
+          components: rustc,rust-std,cargo
           toolchain: nightly
-      - uses: actions-rs/toolchain@v1
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          override: "true"
-          profile: minimal
+          components: rustc,rust-std,cargo
           toolchain: "1.84"
       - run: ../../tools/cargo-update-minimal-versions.sh 1.84
       - run: cargo check --features serde,tracing,rt_tokio_1,rt_async-std_1,mysql,postgres,sqlite
@@ -80,21 +78,20 @@ jobs:
     name: Doc
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          profile: minimal
+          components: rustc,rust-std,cargo
           toolchain: stable
       - run: cargo doc --no-deps --features serde,tracing,rt_tokio_1,rt_async-std_1,mysql,postgres,sqlite
   rustfmt:
     name: rustfmt
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          components: rustfmt
-          profile: minimal
+          components: rustc,rust-std,cargo,rustfmt
           toolchain: stable
       - run: cargo fmt --check
   test:
@@ -102,10 +99,10 @@ jobs:
     runs-on: ubuntu-latest
     services: {}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          profile: minimal
+          components: rustc,rust-std,cargo
           toolchain: stable
       - env: {}
         run: cargo test --features serde,tracing,rt_tokio_1,sqlite
