@@ -65,6 +65,9 @@ services:
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
 
+  memcached:
+    image: memcached:1.6
+
 volumes:
   postgres-data:
   redis-data:

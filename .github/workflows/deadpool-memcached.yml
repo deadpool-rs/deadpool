@@ -67,14 +67,19 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
-    services: {}
+    services:
+      rabbitmq:
+        image: memcached:1.6
+        ports:
+          - 11211:11211
     steps:
       - uses: actions/checkout@v3
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
           toolchain: stable
-      - env: {}
+      - env:
+          MEMCACHED__ADDR: tcp://127.0.0.1:11211
         run: cargo test --all-features
 name: deadpool-memcached
 "on":

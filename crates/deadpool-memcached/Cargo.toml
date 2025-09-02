@@ -36,5 +36,8 @@ deadpool = { path = "../deadpool", version = "0.12.0", default-features = false,
 # again.
 tokio = { version = "1.29", default-features = false, features = ["net"] }
 
+[dev-dependencies]
+tokio = { version = "1.29", features = ["macros", "rt-multi-thread"] }
+
 [package.metadata.cargo-machete]
 ignored = ["tokio"]
