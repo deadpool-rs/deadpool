@@ -8,10 +8,10 @@ jobs:
     name: Check re-exported features
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          profile: minimal
+          components: rustc,rust-std,cargo
           toolchain: stable
       - uses: dcarbone/install-jq-action@v3
       - uses: dcarbone/install-yq-action@v1
@@ -20,26 +20,24 @@ jobs:
     name: Clippy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          components: clippy
-          profile: minimal
+          components: rustc,rust-std,cargo,clippy
           toolchain: stable
       - run: cargo clippy --no-deps --all-features -- -D warnings
   msrv:
     name: MSRV
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          profile: minimal
+          components: rustc,rust-std,cargo
           toolchain: nightly
-      - uses: actions-rs/toolchain@v1
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          override: "true"
-          profile: minimal
+          components: rustc,rust-std,cargo
           toolchain: "1.82"
       - run: ../../tools/cargo-update-minimal-versions.sh 1.82
       - run: cargo check --all-features
@@ -47,21 +45,20 @@ jobs:
     name: Doc
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          profile: minimal
+          components: rustc,rust-std,cargo
           toolchain: stable
       - run: cargo doc --no-deps --all-features
   rustfmt:
     name: rustfmt
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          components: rustfmt
-          profile: minimal
+          components: rustc,rust-std,cargo,rustfmt
           toolchain: stable
       - run: cargo fmt --check
   test:
@@ -73,10 +70,10 @@ jobs:
         ports:
           - 11211:11211
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          profile: minimal
+          components: rustc,rust-std,cargo
           toolchain: stable
       - env:
           MEMCACHED__ADDR: tcp://127.0.0.1:11211

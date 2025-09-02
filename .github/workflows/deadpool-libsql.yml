@@ -8,10 +8,10 @@ jobs:
     name: Check integration
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          profile: minimal
+          components: rustc,rust-std,cargo
           toolchain: stable
       - run: cargo check --features ${{ matrix.feature }}
     strategy:
@@ -30,10 +30,10 @@ jobs:
     name: Check re-exported features
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          profile: minimal
+          components: rustc,rust-std,cargo
           toolchain: stable
       - uses: dcarbone/install-jq-action@v3
       - uses: dcarbone/install-yq-action@v1
@@ -42,26 +42,24 @@ jobs:
     name: Clippy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          components: clippy
-          profile: minimal
+          components: rustc,rust-std,cargo,clippy
           toolchain: stable
       - run: cargo clippy --no-deps --features rt_async-std_1,rt_tokio_1,serde -- -D warnings
   msrv:
     name: MSRV
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          profile: minimal
+          components: rustc,rust-std,cargo
           toolchain: nightly
-      - uses: actions-rs/toolchain@v1
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          override: "true"
-          profile: minimal
+          components: rustc,rust-std,cargo
           toolchain: "1.81"
       - run: ../../tools/cargo-update-minimal-versions.sh 1.81
       - run: cargo check --features rt_async-std_1,rt_tokio_1,serde
@@ -69,21 +67,20 @@ jobs:
     name: Doc
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          profile: minimal
+          components: rustc,rust-std,cargo
           toolchain: stable
       - run: cargo doc --no-deps --features rt_async-std_1,rt_tokio_1,serde
   rustfmt:
     name: rustfmt
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          components: rustfmt
-          profile: minimal
+          components: rustc,rust-std,cargo,rustfmt
           toolchain: stable
       - run: cargo fmt --check
   test:
@@ -91,10 +88,10 @@ jobs:
     runs-on: ubuntu-latest
     services: {}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          profile: minimal
+          components: rustc,rust-std,cargo
           toolchain: stable
       - env: {}
         run: cargo test --features rt_async-std_1,rt_tokio_1,serde
