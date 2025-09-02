@@ -68,6 +68,6 @@ pub use self::{
     hooks::{Hook, HookError, HookFuture, HookResult},
     manager::{Manager, RecycleResult},
     metrics::Metrics,
-    object::Object,
+    object::{Object, ObjectId},
     pool::{Pool, RetainResult, WeakPool},
 };

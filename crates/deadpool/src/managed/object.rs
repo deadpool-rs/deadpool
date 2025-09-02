@@ -64,8 +64,8 @@ impl<M: Manager> Object<M> {
     /// Object IDs are strictly monotonically increasing — each new object
     /// receives an ID greater than that of the previously created object.
     /// However, IDs are not guaranteed to be consecutive; gaps may exist.
-    pub fn id(this: &Self) -> usize {
-        this.inner.as_ref().unwrap().id
+    pub fn id(this: &Self) -> ObjectId {
+        ObjectId(this.inner.as_ref().unwrap().id)
     }
 
     /// Get object statistics
@@ -114,5 +114,27 @@ impl<M: Manager> AsRef<M::Type> for Object<M> {
 impl<M: Manager> AsMut<M::Type> for Object<M> {
     fn as_mut(&mut self) -> &mut M::Type {
         self
+    }
+}
+
+/// A unique identifier for an object within a pool.
+///
+/// `ObjectId` is an opaque wrapper around a numeric identifier.
+/// IDs are guaranteed to be unique and monotonically increasing
+/// **within a single pool**. Each new object receives an identifier
+/// greater than the previously created object, but IDs are not
+/// guaranteed to be consecutive (gaps may exist).
+///
+/// This type is intended to be used as an opaque handle for
+/// identifying objects. It implements common traits such as
+/// [`Copy`], [`Clone`], [`Eq`], [`Ord`], and [`Hash`] so that
+/// it can be compared, ordered, or stored in sets and maps.
+/// It should not be used for arithmetic or treated as a raw number.
+#[derive(Copy, Clone, Debug, Hash, Eq, PartialEq, Ord, PartialOrd)]
+pub struct ObjectId(usize);
+
+impl fmt::Display for ObjectId {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.0)
     }
 }
