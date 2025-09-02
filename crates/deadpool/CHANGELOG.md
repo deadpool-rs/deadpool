@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- next-header -->
 
-## [Unreleased]
+## [0.12.3] - 2025-08-19
 
 - Add unique `id` to objects which can be read via the `Object::id` method
 - Add `WeakPool<T>` and `Pool::weak()` for non-owning, upgradeable pool references.
@@ -209,7 +209,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - First release
 
 <!-- next-url -->
-[Unreleased]: https://github.com/bikeshedder/deadpool/compare/deadpool-v0.12.2...HEAD
+[Unreleased]: https://github.com/bikeshedder/deadpool/compare/deadpool-v0.12.3...HEAD
+[0.12.3]: https://github.com/bikeshedder/deadpool/compare/deadpool-v0.12.2...deadpool-v0.12.3
 [0.12.2]: https://github.com/bikeshedder/deadpool/compare/deadpool-v0.12.1...deadpool-v0.12.2
 [0.12.1]: https://github.com/bikeshedder/deadpool/compare/deadpool-v0.12.0...deadpool-v0.12.1
 [0.12.0]: https://github.com/bikeshedder/deadpool/compare/deadpool-v0.11.2...deadpool-v0.12.0
