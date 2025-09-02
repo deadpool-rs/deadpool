@@ -7,7 +7,7 @@ authors = ["Michael P. Jung <michael.jung@terreon.de>"]
 description = "Dead simple async pool for r2d2 managers"
 keywords = ["async", "database", "pool", "r2d2"]
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/bikeshedder/deadpool"
+repository = "https://github.com/deadpool-rs/deadpool"
 readme = "README.md"
 
 [package.metadata.docs.rs]

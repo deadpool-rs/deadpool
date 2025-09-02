@@ -10,7 +10,7 @@ authors = [
 description = "Dead simple async pool for memcached"
 keywords = ["async", "memcached", "pool"]
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/bikeshedder/deadpool"
+repository = "https://github.com/deadpool-rs/deadpool"
 readme = "README.md"
 
 [package.metadata.docs.rs]

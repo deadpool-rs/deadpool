@@ -7,7 +7,7 @@ authors = ["Michael P. Jung <michael.jung@terreon.de>"]
 description = "Dead simple async pool for lapin"
 keywords = ["async", "lapin", "pool", "amqp", "rabbitmq"]
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/bikeshedder/deadpool"
+repository = "https://github.com/deadpool-rs/deadpool"
 readme = "README.md"
 
 [package.metadata.docs.rs]

@@ -37,9 +37,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - First release
 
 <!-- next-url -->
-[Unreleased]: https://github.com/bikeshedder/deadpool/compare/deadpool-r2d2-v0.4.1...HEAD
-[0.4.1]: https://github.com/bikeshedder/deadpool/compare/deadpool-r2d2-v0.4.0...deadpool-r2d2-v0.4.1
-[0.4.0]: https://github.com/bikeshedder/deadpool/compare/deadpool-r2d2-v0.3.0...deadpool-r2d2-v0.4.0
-[0.3.0]: https://github.com/bikeshedder/deadpool/compare/deadpool-r2d2-v0.2.0...deadpool-r2d2-v0.3.0
-[0.2.0]: https://github.com/bikeshedder/deadpool/compare/deadpool-r2d2-v0.1.0...deadpool-r2d2-v0.2.0
-[0.1.0]: https://github.com/bikeshedder/deadpool/releases/tag/deadpool-r2d2-v0.1.0
+[Unreleased]: https://github.com/deadpool-rs/deadpool/compare/deadpool-r2d2-v0.4.1...HEAD
+[0.4.1]: https://github.com/deadpool-rs/deadpool/compare/deadpool-r2d2-v0.4.0...deadpool-r2d2-v0.4.1
+[0.4.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-r2d2-v0.3.0...deadpool-r2d2-v0.4.0
+[0.3.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-r2d2-v0.2.0...deadpool-r2d2-v0.3.0
+[0.2.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-r2d2-v0.1.0...deadpool-r2d2-v0.2.0
+[0.1.0]: https://github.com/deadpool-rs/deadpool/releases/tag/deadpool-r2d2-v0.1.0
