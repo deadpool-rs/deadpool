@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Re-export `lapin` feature:
+    - `hickory-dns`
+
 ## [0.13.1] - 2024-08-11
 
 - Update `tokio-reactor-trait` to version `3`

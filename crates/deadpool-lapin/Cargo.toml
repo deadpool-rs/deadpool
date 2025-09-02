@@ -32,6 +32,7 @@ serde = ["deadpool/serde", "dep:serde"]
 codegen = ["lapin/codegen"]
 codegen-internal = ["lapin/codegen-internal"]
 default-runtime = ["lapin/default-runtime"]
+hickory-dns = ["lapin/hickory-dns"]
 native-tls = ["lapin/native-tls"]
 openssl = ["lapin/openssl"]
 rustls = ["lapin/rustls"]
@@ -48,7 +49,7 @@ async-reactor-trait = { version = "2", optional = true }
 deadpool = { path = "../deadpool", version = "0.12.0", default-features = false, features = [
     "managed",
 ] }
-lapin = { version = "3", default-features = false }
+lapin = { version = "3.2", default-features = false }
 serde = { package = "serde", version = "1.0.103", features = [
     "derive",
 ], optional = true }
