@@ -1,4 +1,4 @@
-# Deadpool for libsql [![Latest Version](https://img.shields.io/crates/v/deadpool-libsql.svg)](https://crates.io/crates/deadpool-libsql) ![Unsafe forbidden](https://img.shields.io/badge/unsafe-forbidden-success.svg "Unsafe forbidden") [![Rust 1.81+](https://img.shields.io/badge/rustc-1.81+-lightgray.svg "Rust 1.81+")](https://blog.rust-lang.org/2023/12/28/Rust-1.81.0.html)
+# Deadpool for libsql [![Latest Version](https://img.shields.io/crates/v/deadpool-libsql.svg)](https://crates.io/crates/deadpool-libsql) [![Build Status](https://img.shields.io/github/actions/workflow/status/deadpool-rs/deadpool/deadpool-libsql.yml?branch=main)](https://github.com/deadpool-rs/deadpool/actions/workflows/deadpool-libsql.yml?query=branch%3Amain) ![Unsafe forbidden](https://img.shields.io/badge/unsafe-forbidden-success.svg "Unsafe forbidden") [![Rust 1.81+](https://img.shields.io/badge/rustc-1.81+-lightgray.svg "Rust 1.81+")](https://blog.rust-lang.org/2023/12/28/Rust-1.81.0.html)
 
 Deadpool is a dead simple async pool for connections and objects
 of any type.
