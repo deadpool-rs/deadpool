@@ -1,5 +1,5 @@
 // This code must compile even without the async_trait crate
-// See: https://github.com/bikeshedder/deadpool/issues/323
+// See: https://github.com/deadpool-rs/deadpool/issues/323
 
 use deadpool_postgres::{tokio_postgres::Row, GenericClient};
 use futures_util::{Stream, StreamExt};

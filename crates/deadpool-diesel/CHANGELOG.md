@@ -74,15 +74,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - First release
 
 <!-- next-url -->
-[Unreleased]: https://github.com/bikeshedder/deadpool/compare/deadpool-diesel-v0.6.1...HEAD
-[0.6.1]: https://github.com/bikeshedder/deadpool/compare/deadpool-diesel-v0.6.0...deadpool-diesel-v0.6.1
-[0.6.0]: https://github.com/bikeshedder/deadpool/compare/deadpool-diesel-v0.5.0...deadpool-diesel-v0.6.0
-[0.5.0]: https://github.com/bikeshedder/deadpool/compare/deadpool-diesel-v0.4.1...deadpool-diesel-v0.5.0
-[0.4.1]: https://github.com/bikeshedder/deadpool/compare/deadpool-diesel-v0.4.0...deadpool-diesel-v0.4.1
-[0.4.0]: https://github.com/bikeshedder/deadpool/compare/deadpool-diesel-v0.3.1...deadpool-diesel-v0.4.0
-[0.3.1]: https://github.com/bikeshedder/deadpool/compare/deadpool-diesel-v0.3.0...deadpool-diesel-v0.3.1
-[0.3.0]: https://github.com/bikeshedder/deadpool/compare/deadpool-diesel-v0.2.0...deadpool-diesel-v0.3.0
-[0.2.0]: https://github.com/bikeshedder/deadpool/compare/deadpool-diesel-v0.1.2...deadpool-diesel-v0.2.0
-[0.1.2]: https://github.com/bikeshedder/deadpool/compare/deadpool-diesel-v0.1.1...deadpool-diesel-v0.1.2
-[0.1.1]: https://github.com/bikeshedder/deadpool/compare/deadpool-diesel-v0.1.0...deadpool-diesel-v0.1.1
-[0.1.0]: https://github.com/bikeshedder/deadpool/releases/tag/deadpool-diesel-v0.1.0
+[Unreleased]: https://github.com/deadpool-rs/deadpool/compare/deadpool-diesel-v0.6.1...HEAD
+[0.6.1]: https://github.com/deadpool-rs/deadpool/compare/deadpool-diesel-v0.6.0...deadpool-diesel-v0.6.1
+[0.6.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-diesel-v0.5.0...deadpool-diesel-v0.6.0
+[0.5.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-diesel-v0.4.1...deadpool-diesel-v0.5.0
+[0.4.1]: https://github.com/deadpool-rs/deadpool/compare/deadpool-diesel-v0.4.0...deadpool-diesel-v0.4.1
+[0.4.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-diesel-v0.3.1...deadpool-diesel-v0.4.0
+[0.3.1]: https://github.com/deadpool-rs/deadpool/compare/deadpool-diesel-v0.3.0...deadpool-diesel-v0.3.1
+[0.3.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-diesel-v0.2.0...deadpool-diesel-v0.3.0
+[0.2.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-diesel-v0.1.2...deadpool-diesel-v0.2.0
+[0.1.2]: https://github.com/deadpool-rs/deadpool/compare/deadpool-diesel-v0.1.1...deadpool-diesel-v0.1.2
+[0.1.1]: https://github.com/deadpool-rs/deadpool/compare/deadpool-diesel-v0.1.0...deadpool-diesel-v0.1.1
+[0.1.0]: https://github.com/deadpool-rs/deadpool/releases/tag/deadpool-diesel-v0.1.0

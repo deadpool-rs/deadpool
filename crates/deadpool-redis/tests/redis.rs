@@ -67,7 +67,7 @@ async fn test_aborted_command() {
         // wait for the response. The connection now has a request queued
         // and the response to it will be returned when using the connection
         // the next time:
-        // https://github.com/bikeshedder/deadpool/issues/97
+        // https://github.com/deadpool-rs/deadpool/issues/97
         // https://github.com/mitsuhiko/redis-rs/issues/489
         cmd("PING")
             .arg("wrong")

@@ -87,18 +87,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - First release
 
 <!-- next-url -->
-[Unreleased]: https://github.com/bikeshedder/deadpool/compare/deadpool-sqlite-v0.12.1...HEAD
-[0.12.1]: https://github.com/bikeshedder/deadpool/compare/deadpool-sqlite-v0.12.0...deadpool-sqlite-v0.12.1
-[0.12.0]: https://github.com/bikeshedder/deadpool/compare/deadpool-sqlite-v0.11.0...deadpool-sqlite-v0.12.0
-[0.11.0]: https://github.com/bikeshedder/deadpool/compare/deadpool-sqlite-v0.10.0...deadpool-sqlite-v0.11.0
-[0.10.0]: https://github.com/bikeshedder/deadpool/compare/deadpool-sqlite-v0.9.0...deadpool-sqlite-v0.10.0
-[0.9.0]: https://github.com/bikeshedder/deadpool/compare/deadpool-sqlite-v0.8.1...deadpool-sqlite-v0.9.0
-[0.8.1]: https://github.com/bikeshedder/deadpool/compare/deadpool-sqlite-v0.8.0...deadpool-sqlite-v0.8.1
-[0.8.0]: https://github.com/bikeshedder/deadpool/compare/deadpool-sqlite-v0.7.0...deadpool-sqlite-v0.8.0
-[0.7.0]: https://github.com/bikeshedder/deadpool/compare/deadpool-sqlite-v0.6.0...deadpool-sqlite-v0.7.0
-[0.6.0]: https://github.com/bikeshedder/deadpool/compare/deadpool-sqlite-v0.5.0...deadpool-sqlite-v0.6.0
-[0.5.0]: https://github.com/bikeshedder/deadpool/compare/deadpool-sqlite-v0.4.0...deadpool-sqlite-v0.5.0
-[0.4.0]: https://github.com/bikeshedder/deadpool/compare/deadpool-sqlite-v0.3.0...deadpool-sqlite-v0.4.0
-[0.3.0]: https://github.com/bikeshedder/deadpool/compare/deadpool-sqlite-v0.2.0...deadpool-sqlite-v0.3.0
-[0.2.0]: https://github.com/bikeshedder/deadpool/compare/deadpool-sqlite-v0.1.0...deadpool-sqlite-v0.2.0
-[0.1.0]: https://github.com/bikeshedder/deadpool/releases/tag/deadpool-sqlite-v0.1.0
+[Unreleased]: https://github.com/deadpool-rs/deadpool/compare/deadpool-sqlite-v0.12.1...HEAD
+[0.12.1]: https://github.com/deadpool-rs/deadpool/compare/deadpool-sqlite-v0.12.0...deadpool-sqlite-v0.12.1
+[0.12.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-sqlite-v0.11.0...deadpool-sqlite-v0.12.0
+[0.11.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-sqlite-v0.10.0...deadpool-sqlite-v0.11.0
+[0.10.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-sqlite-v0.9.0...deadpool-sqlite-v0.10.0
+[0.9.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-sqlite-v0.8.1...deadpool-sqlite-v0.9.0
+[0.8.1]: https://github.com/deadpool-rs/deadpool/compare/deadpool-sqlite-v0.8.0...deadpool-sqlite-v0.8.1
+[0.8.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-sqlite-v0.7.0...deadpool-sqlite-v0.8.0
+[0.7.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-sqlite-v0.6.0...deadpool-sqlite-v0.7.0
+[0.6.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-sqlite-v0.5.0...deadpool-sqlite-v0.6.0
+[0.5.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-sqlite-v0.4.0...deadpool-sqlite-v0.5.0
+[0.4.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-sqlite-v0.3.0...deadpool-sqlite-v0.4.0
+[0.3.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-sqlite-v0.2.0...deadpool-sqlite-v0.3.0
+[0.2.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-sqlite-v0.1.0...deadpool-sqlite-v0.2.0
+[0.1.0]: https://github.com/deadpool-rs/deadpool/releases/tag/deadpool-sqlite-v0.1.0

@@ -21,7 +21,7 @@ impl managed::Manager for Manager {
     }
 }
 
-// Regression test for https://github.com/bikeshedder/deadpool/issues/380
+// Regression test for https://github.com/deadpool-rs/deadpool/issues/380
 #[tokio::test]
 async fn test_grow_reuse_existing() {
     // Shrink doesn't discard objects currently borrowed from the pool but
