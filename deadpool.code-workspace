@@ -74,6 +74,7 @@
 		"rust-analyzer.checkOnSave": true,
 		"rust-analyzer.diagnostics.disabled": [
 			"unresolved-extern-crate"
-		]
+		],
+		"files.insertFinalNewline": true,
 	}
 }
