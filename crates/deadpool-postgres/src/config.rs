@@ -1,6 +1,6 @@
 //! Configuration used for [`Pool`] creation.
 
-use std::{env, fmt, net::IpAddr, str::FromStr, time::Duration};
+use std::{env, fmt, net::IpAddr, str::FromStr, sync::Arc, time::Duration};
 
 use tokio_postgres::config::{
     ChannelBinding as PgChannelBinding, LoadBalanceHosts as PgLoadBalanceHosts,
@@ -293,6 +293,18 @@ impl Config {
     #[must_use]
     pub fn get_pool_config(&self) -> PoolConfig {
         self.pool.unwrap_or_default()
+    }
+}
+
+#[async_trait::async_trait]
+pub trait ConfigSource: Sync + Send + fmt::Debug {
+    async fn get_config<'a>(&'a self) -> Result<&'a tokio_postgres::Config, ConfigError>;
+}
+
+#[async_trait::async_trait]
+impl ConfigSource for tokio_postgres::Config {
+    async fn get_config<'a>(&'a self) -> Result<&'a tokio_postgres::Config, ConfigError> {
+        Ok(self)
     }
 }
 

@@ -54,8 +54,8 @@ use tokio_postgres::{
 pub use tokio_postgres;
 
 pub use self::config::{
-    ChannelBinding, Config, ConfigError, LoadBalanceHosts, ManagerConfig, RecyclingMethod, SslMode,
-    TargetSessionAttrs,
+    ChannelBinding, Config, ConfigError, ConfigSource, LoadBalanceHosts, ManagerConfig,
+    RecyclingMethod, SslMode, TargetSessionAttrs,
 };
 
 pub use self::generic_client::GenericClient;
@@ -82,7 +82,7 @@ type RecycleError = managed::RecycleError<Error>;
 /// [`Manager`]: managed::Manager
 pub struct Manager {
     config: ManagerConfig,
-    pg_config: PgConfig,
+    pg_config: Box<dyn ConfigSource>,
     connect: Box<dyn Connect>,
     /// [`StatementCaches`] of [`Client`]s handed out by the [`Pool`].
     pub statement_caches: StatementCaches,
@@ -92,7 +92,7 @@ impl Manager {
     #[cfg(not(target_arch = "wasm32"))]
     /// Creates a new [`Manager`] using the given [`tokio_postgres::Config`] and
     /// `tls` connector.
-    pub fn new<T>(pg_config: tokio_postgres::Config, tls: T) -> Self
+    pub fn new<T>(pg_config: impl ConfigSource + 'static, tls: T) -> Self
     where
         T: MakeTlsConnect<Socket> + Clone + Sync + Send + 'static,
         T::Stream: Sync + Send,
@@ -105,7 +105,7 @@ impl Manager {
     #[cfg(not(target_arch = "wasm32"))]
     /// Create a new [`Manager`] using the given [`tokio_postgres::Config`], and
     /// `tls` connector and [`ManagerConfig`].
-    pub fn from_config<T>(pg_config: tokio_postgres::Config, tls: T, config: ManagerConfig) -> Self
+    pub fn from_config<T>(pg_config: impl ConfigSource + 'static, tls: T, config: ManagerConfig) -> Self
     where
         T: MakeTlsConnect<Socket> + Clone + Sync + Send + 'static,
         T::Stream: Sync + Send,
@@ -118,13 +118,13 @@ impl Manager {
     /// Create a new [`Manager`] using the given [`tokio_postgres::Config`], and
     /// `connect` impl and [`ManagerConfig`].
     pub fn from_connect(
-        pg_config: tokio_postgres::Config,
+        pg_config: impl ConfigSource + 'static,
         connect: impl Connect + 'static,
         config: ManagerConfig,
     ) -> Self {
         Self {
             config,
-            pg_config,
+            pg_config: Box::new(pg_config),
             connect: Box::new(connect),
             statement_caches: StatementCaches::default(),
         }
@@ -147,7 +147,8 @@ impl managed::Manager for Manager {
     type Error = Error;
 
     async fn create(&self) -> Result<ClientWrapper, Error> {
-        let (client, conn_task) = self.connect.connect(&self.pg_config).await?;
+        let pg_config = self.pg_config.get_config().await?;
+        let (client, conn_task) = self.connect.connect(pg_config).await?;
         let client_wrapper = ClientWrapper::new(client, conn_task);
         self.statement_caches
             .attach(&client_wrapper.statement_cache);
