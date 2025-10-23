@@ -62,7 +62,7 @@ impl<M: Manager> fmt::Debug for Hook<M> {
     }
 }
 
-/// Error which is returned by `pre_create`, `pre_recycle` and
+/// Error which is returned by `post_create`, `pre_recycle` and
 /// `post_recycle` hooks.
 #[derive(Debug)]
 pub enum HookError<E> {
