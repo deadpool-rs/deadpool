@@ -15,7 +15,7 @@ pub enum RecycleError<E> {
 }
 
 impl<E> RecycleError<E> {
-    /// Convenience constructor function for the `HookError::Message`
+    /// Convenience constructor function for the `RecycleError::Message`
     /// variant.
     pub fn message(msg: impl Into<Cow<'static, str>>) -> Self {
         Self::Message(msg.into())
