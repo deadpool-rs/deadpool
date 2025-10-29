@@ -17,7 +17,7 @@ pub trait Manager: Sync + Send {
     ///
     /// # Errors
     ///
-    /// Returns [`Manager::Error`] if the instance couldn't be recycled.
+    /// Returns [`RecycleError`]<[`Manager::Error`]> if the instance couldn't be recycled.
     fn recycle(
         &self,
         obj: &mut Self::Type,

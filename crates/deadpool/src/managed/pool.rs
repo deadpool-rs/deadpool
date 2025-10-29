@@ -242,7 +242,7 @@ impl<M: Manager, W: From<Object<M>>> Pool<M, W> {
      * Resize the pool. This change the `max_size` of the pool dropping
      * excess objects and/or making space for new ones.
      *
-     * If the pool is closed this method does nothing. The [`Pool::status`] method
+     * If the pool is closed this method does nothing. The [`Pool::status()`] method
      * always reports a `max_size` of 0 for closed pools.
      */
     pub fn resize(&self, max_size: usize) {
@@ -416,8 +416,8 @@ pub(crate) struct PoolInner<M: Manager> {
     manager: M,
     next_id: AtomicUsize,
     slots: Mutex<Slots<ObjectInner<M>>>,
-    /// Number of ['Pool'] users. A user is both a future which is waiting for an ['Object'] or one
-    /// with an ['Object'] which hasn't been returned, yet.
+    /// Number of [`Pool`] users. A user is both a future which is waiting for an [`Object`] or one
+    /// with an [`Object`] which hasn't been returned, yet.
     users: AtomicUsize,
     semaphore: Semaphore,
     config: PoolConfig,

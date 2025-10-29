@@ -10,7 +10,7 @@ use super::BuildError;
 pub struct PoolConfig {
     /// Maximum size of the [`Pool`].
     ///
-    /// Default: `cpu_count * 4`
+    /// Default: `cpu_core_count * 2`
     ///
     /// [`Pool`]: super::Pool
     pub max_size: usize,
