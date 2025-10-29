@@ -242,7 +242,7 @@ impl<M: Manager, W: From<Object<M>>> Pool<M, W> {
      * Resize the pool. This change the `max_size` of the pool dropping
      * excess objects and/or making space for new ones.
      *
-     * If the pool is closed this method does nothing. The [`Pool::status`] method
+     * If the pool is closed this method does nothing. The [`Pool::status()`] method
      * always reports a `max_size` of 0 for closed pools.
      */
     pub fn resize(&self, max_size: usize) {
