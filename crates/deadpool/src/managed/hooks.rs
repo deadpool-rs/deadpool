@@ -151,7 +151,7 @@ impl<M: Manager> fmt::Debug for Hooks<M> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("Hooks")
             .field("post_create", &self.post_create)
-            .field("pre_recycle", &self.post_recycle)
+            .field("pre_recycle", &self.pre_recycle)
             .field("post_recycle", &self.post_recycle)
             .finish()
     }
