@@ -416,8 +416,8 @@ pub(crate) struct PoolInner<M: Manager> {
     manager: M,
     next_id: AtomicUsize,
     slots: Mutex<Slots<ObjectInner<M>>>,
-    /// Number of ['Pool'] users. A user is both a future which is waiting for an ['Object'] or one
-    /// with an ['Object'] which hasn't been returned, yet.
+    /// Number of [`Pool`] users. A user is both a future which is waiting for an [`Object`] or one
+    /// with an [`Object`] which hasn't been returned, yet.
     users: AtomicUsize,
     semaphore: Semaphore,
     config: PoolConfig,
