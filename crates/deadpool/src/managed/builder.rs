@@ -11,7 +11,7 @@ use super::{
 /// [`Pool`].
 #[derive(Copy, Clone, Debug)]
 pub enum BuildError {
-    /// [`Runtime`] is required du to configured timeouts.
+    /// [`Runtime`] is required due to configured timeouts.
     NoRuntimeSpecified,
 }
 
