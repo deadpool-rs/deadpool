@@ -290,7 +290,7 @@ struct StatementCacheKey<'a> {
 }
 
 // The contents of a [`StatementCache`].
-enum Either {
+enum StatementCacheValue {
     // The previously prepared statement.
     Statement(Statement),
     // A semaphore limiting how many threads will try to prepare the statement
@@ -318,7 +318,7 @@ enum Either {
 /// and [`ClientWrapper::prepare_typed_cached()`] methods instead (or the
 /// similar ones on [`Transaction`]).
 pub struct StatementCache {
-    map: RwLock<HashMap<StatementCacheKey<'static>, Either>>,
+    map: RwLock<HashMap<StatementCacheKey<'static>, StatementCacheValue>>,
     size: AtomicUsize,
 }
 
@@ -359,12 +359,12 @@ impl StatementCache {
         };
         let mut map = self.map.write().unwrap();
         match map.remove(&key) {
-            Some(Either::Statement(statement)) => {
+            Some(StatementCacheValue::Statement(statement)) => {
                 // Decrease cache size only when removing a statement
                 let _ = self.size.fetch_sub(1, Ordering::Relaxed);
                 Some(statement)
             }
-            Some(Either::Semaphore(_)) => None,
+            Some(StatementCacheValue::Semaphore(_)) => None,
             None => None,
         }
     }
@@ -378,7 +378,7 @@ impl StatementCache {
         let mut map = self.map.write().unwrap();
         // Increase cache size if key was absent or when replacing a semaphore
         // with a statement
-        if let None | Some(Either::Semaphore(_)) = map.insert(key, Either::Statement(stmt)) {
+        if let None | Some(StatementCacheValue::Semaphore(_)) = map.insert(key, StatementCacheValue::Statement(stmt)) {
             let _ = self.size.fetch_add(1, Ordering::Relaxed);
         }
     }
@@ -416,11 +416,11 @@ impl StatementCache {
             let read_lock = self.map.read().unwrap();
             match read_lock.get(&borrowed_key) {
                 // Fast path: statement already prepared.
-                Some(Either::Statement(stmt)) => {
+                Some(StatementCacheValue::Statement(stmt)) => {
                     return Ok(stmt.clone());
                 }
                 // Slow path: statement not yet prepared but semaphore exists.
-                Some(Either::Semaphore(semaphore)) => semaphore.clone(),
+                Some(StatementCacheValue::Semaphore(semaphore)) => semaphore.clone(),
                 // Slow path: statement not yet prepared and no semaphore
                 // exists, so create one.
                 None => {
@@ -435,10 +435,10 @@ impl StatementCache {
                             query: Cow::Owned(query.to_owned()),
                             types: Cow::Owned(types.to_owned()),
                         })
-                        .or_insert(Either::Semaphore(Arc::new(Semaphore::new(1))))
+                        .or_insert(StatementCacheValue::Semaphore(Arc::new(Semaphore::new(1))))
                     {
-                        Either::Statement(stmt) => return Ok(stmt.clone()),
-                        Either::Semaphore(semaphore) => semaphore.clone(),
+                        StatementCacheValue::Statement(stmt) => return Ok(stmt.clone()),
+                        StatementCacheValue::Semaphore(semaphore) => semaphore.clone(),
                     }
                 }
             }
@@ -448,7 +448,7 @@ impl StatementCache {
         let _permit = semaphore.acquire().await.unwrap();
         // A statement may have been inserted while we waited to acquire the
         // semaphore.
-        if let Some(Either::Statement(stmt)) = self.map.read().unwrap().get(&borrowed_key) {
+        if let Some(StatementCacheValue::Statement(stmt)) = self.map.read().unwrap().get(&borrowed_key) {
             return Ok(stmt.clone());
         }
         // Still no statement in the cache, so do the expensive statement
