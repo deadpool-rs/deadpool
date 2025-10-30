@@ -378,7 +378,9 @@ impl StatementCache {
         let mut map = self.map.write().unwrap();
         // Increase cache size if key was absent or when replacing a semaphore
         // with a statement
-        if let None | Some(StatementCacheValue::Semaphore(_)) = map.insert(key, StatementCacheValue::Statement(stmt)) {
+        if let None | Some(StatementCacheValue::Semaphore(_)) =
+            map.insert(key, StatementCacheValue::Statement(stmt))
+        {
             let _ = self.size.fetch_add(1, Ordering::Relaxed);
         }
     }
@@ -448,7 +450,9 @@ impl StatementCache {
         let _permit = semaphore.acquire().await.unwrap();
         // A statement may have been inserted while we waited to acquire the
         // semaphore.
-        if let Some(StatementCacheValue::Statement(stmt)) = self.map.read().unwrap().get(&borrowed_key) {
+        if let Some(StatementCacheValue::Statement(stmt)) =
+            self.map.read().unwrap().get(&borrowed_key)
+        {
             return Ok(stmt.clone());
         }
         // Still no statement in the cache, so do the expensive statement
