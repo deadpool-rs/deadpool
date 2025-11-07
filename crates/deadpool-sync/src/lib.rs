@@ -168,7 +168,7 @@ where
 }
 
 /// This guard is returned when calling `SyncWrapper::lock` or
-/// `SyncWrapper::try_lock`. This is basicly just a wrapper around
+/// `SyncWrapper::try_lock`. This is basically just a wrapper around
 /// a `MutexGuard` but hides some implementation details.
 ///
 /// **Important:** Any blocking operation using this object
