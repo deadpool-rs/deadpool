@@ -56,7 +56,6 @@ impl Config {
     pub fn create_pool(&self, runtime: Runtime) -> Result<Pool, CreatePoolError> {
         self.builder(runtime)
             .map_err(CreatePoolError::Config)?
-            .runtime(runtime)
             .build()
             .map_err(CreatePoolError::Build)
     }
