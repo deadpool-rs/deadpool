@@ -15,6 +15,19 @@ pub struct PoolConfig {
     pub timeout: Option<Duration>,
 
     /// [`Runtime`] to be used.
+    ///
+    /// # Important
+    ///
+    /// The [`Runtime`] is optional. Most [`Pool`]s don't need a [`Runtime`].
+    /// If you want to utilize a timeout, however, a [`Runtime`] must be
+    /// specified as you will otherwise get a [`PoolError::NoRuntimeSpecified`]
+    /// when trying to use [`Pool::timeout_get()`] or [`Pool::get()`] with a
+    /// [`PoolConfig::timeout`] configured.
+    ///
+    /// [`Pool`]: super::Pool
+    /// [`Pool::get()`]: super::Pool::get()
+    /// [`Pool::timeout_get()`]: super::Pool::timeout_get()
+    /// [`PoolError::NoRuntimeSpecified`]: super::PoolError::NoRuntimeSpecified
     #[cfg_attr(feature = "serde", serde(skip))]
     pub runtime: Option<Runtime>,
 }

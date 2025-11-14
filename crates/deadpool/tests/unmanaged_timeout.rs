@@ -22,6 +22,20 @@ async fn no_runtime() {
     ));
 }
 
+#[tokio::test]
+async fn no_runtime_from_config() {
+    let cfg = PoolConfig {
+        max_size: 16,
+        timeout: Some(Duration::from_millis(1)),
+        runtime: None,
+    };
+    let pool = Pool::from_config(&cfg);
+    assert!(matches!(
+        pool.get().await,
+        Err(PoolError::NoRuntimeSpecified)
+    ));
+}
+
 async fn _test_get(runtime: Runtime) {
     let cfg = PoolConfig {
         max_size: 16,
