@@ -8,10 +8,14 @@ pub enum PoolError {
     /// Operation timeout happened.
     Timeout,
 
-    /// Pool has been closed.
+    /// [`Pool`] has been closed.
+    ///
+    /// [`Pool`]: super::Pool
     Closed,
 
-    /// No runtime specified.
+    /// No [`Runtime`] was specified.
+    ///
+    /// [`Runtime`]: crate::Runtime
     NoRuntimeSpecified,
 }
 
