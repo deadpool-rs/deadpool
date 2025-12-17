@@ -53,6 +53,7 @@ cache-aio = ["redis/cache-aio"]
 smol-comp = ["redis/smol-comp"]
 smol-native-tls-comp = ["redis/smol-native-tls-comp"]
 smol-rustls-comp = ["redis/smol-rustls-comp"]
+uuid = ["redis/uuid"]
 
 [dependencies]
 deadpool = { path = "../deadpool", version = "0.12.0", default-features = false, features = [
