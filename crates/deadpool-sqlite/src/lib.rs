@@ -23,7 +23,7 @@
 
 mod config;
 
-use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::atomic::{AtomicIsize, Ordering};
 
 use deadpool::managed::{self, RecycleError};
 use deadpool_sync::SyncWrapper;
@@ -51,7 +51,7 @@ pub type Connection = Object;
 #[derive(Debug)]
 pub struct Manager {
     config: Config,
-    recycle_count: AtomicUsize,
+    recycle_count: AtomicIsize,
     runtime: Runtime,
 }
 
@@ -62,7 +62,7 @@ impl Manager {
     pub fn from_config(config: &Config, runtime: Runtime) -> Self {
         Self {
             config: config.clone(),
-            recycle_count: AtomicUsize::new(0),
+            recycle_count: AtomicIsize::new(0),
             runtime,
         }
     }
@@ -88,7 +88,7 @@ impl managed::Manager for Manager {
             ));
         }
         let recycle_count = self.recycle_count.fetch_add(1, Ordering::Relaxed);
-        let n: usize = conn
+        let n: isize = conn
             .interact(move |conn| conn.query_row("SELECT $1", [recycle_count], |row| row.get(0)))
             .await
             .map_err(|e| RecycleError::message(format!("{}", e)))??;
