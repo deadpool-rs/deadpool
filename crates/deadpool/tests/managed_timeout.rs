@@ -6,8 +6,8 @@
 use std::{convert::Infallible, future::Future, pin::Pin, task, time::Duration};
 
 use deadpool::{
-    managed::{self, Metrics, Object, PoolConfig, PoolError, RecycleResult, Timeouts},
     Runtime,
+    managed::{self, Metrics, Object, PoolConfig, PoolError, RecycleResult, Timeouts},
 };
 
 type Pool = managed::Pool<Manager, Object<Manager>>;

@@ -22,11 +22,7 @@ impl managed::Manager for Manager {
     type Error = ();
 
     async fn create(&self) -> Result<(), ()> {
-        if self.create_fail {
-            Err(())
-        } else {
-            Ok(())
-        }
+        if self.create_fail { Err(()) } else { Ok(()) }
     }
     async fn recycle(&self, _conn: &mut (), _: &Metrics) -> RecycleResult<()> {
         if self.recycle_fail {
@@ -58,10 +54,12 @@ async fn create() {
     assert_eq!(status.available, 0);
     assert_eq!(status.size, 0);
     {
-        assert!(time::timeout(Duration::from_millis(10), pool.get())
-            .await
-            .unwrap()
-            .is_err());
+        assert!(
+            time::timeout(Duration::from_millis(10), pool.get())
+                .await
+                .unwrap()
+                .is_err()
+        );
     }
     assert_eq!(status.available, 0);
     assert_eq!(status.size, 0);

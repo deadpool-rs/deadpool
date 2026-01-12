@@ -7,7 +7,7 @@ use std::{
 use redis;
 use redis::aio::MultiplexedConnection;
 use redis::sentinel::SentinelClient;
-use redis::{aio::ConnectionLike, IntoConnectionInfo, RedisError, RedisResult};
+use redis::{IntoConnectionInfo, RedisError, RedisResult, aio::ConnectionLike};
 use tokio::sync::Mutex;
 
 use deadpool::managed;

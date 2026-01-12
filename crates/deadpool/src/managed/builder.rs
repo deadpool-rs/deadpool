@@ -3,8 +3,8 @@ use std::{fmt, marker::PhantomData, time::Duration};
 use crate::Runtime;
 
 use super::{
-    hooks::{Hook, Hooks},
     Manager, Object, Pool, PoolConfig, QueueMode, Timeouts,
+    hooks::{Hook, Hooks},
 };
 
 /// Possible errors returned when [`PoolBuilder::build()`] fails to build a

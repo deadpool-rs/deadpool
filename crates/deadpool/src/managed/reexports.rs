@@ -15,8 +15,8 @@
 //! ```
 
 pub use crate::{
-    managed::{Metrics, ObjectId, PoolConfig, Status, TimeoutType, Timeouts},
     Runtime,
+    managed::{Metrics, ObjectId, PoolConfig, Status, TimeoutType, Timeouts},
 };
 
 /// This macro creates all the type aliases usually reexported by

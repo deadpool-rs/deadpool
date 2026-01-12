@@ -3,8 +3,8 @@
 //! - The `client()` method is not available.
 //! - The `prepare_cached()` and `prepare_typed_cached()` are
 //!   added.
-use tokio_postgres::types::{BorrowToSql, ToSql, Type};
 use tokio_postgres::RowStream;
+use tokio_postgres::types::{BorrowToSql, ToSql, Type};
 use tokio_postgres::{Error, Row, Statement, ToStatement};
 
 use async_trait::async_trait;

@@ -3,8 +3,8 @@
 use std::time::Duration;
 
 use deadpool::{
-    unmanaged::{self, PoolConfig, PoolError},
     Runtime,
+    unmanaged::{self, PoolConfig, PoolError},
 };
 
 type Pool = unmanaged::Pool<()>;

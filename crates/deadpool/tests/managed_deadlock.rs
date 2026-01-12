@@ -3,7 +3,7 @@
 use std::{sync::Arc, time::Duration};
 
 use tokio::{
-    sync::{mpsc, Mutex},
+    sync::{Mutex, mpsc},
     task, time,
 };
 

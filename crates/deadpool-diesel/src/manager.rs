@@ -1,11 +1,11 @@
 use std::{borrow::Cow, fmt, marker::PhantomData, sync::Arc};
 
 use deadpool::{
-    managed::{self, Metrics, RecycleError, RecycleResult},
     Runtime,
+    managed::{self, Metrics, RecycleError, RecycleResult},
 };
 use deadpool_sync::SyncWrapper;
-use diesel::{query_builder::QueryFragment, IntoSql, RunQueryDsl};
+use diesel::{IntoSql, RunQueryDsl, query_builder::QueryFragment};
 
 use crate::Error;
 

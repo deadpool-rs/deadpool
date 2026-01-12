@@ -3,8 +3,8 @@
 use tokio::sync::mpsc;
 
 use deadpool_diesel::{
-    sqlite::{Hook, HookError, Manager, Metrics, Pool, PoolError, Runtime},
     InteractError,
+    sqlite::{Hook, HookError, Manager, Metrics, Pool, PoolError, Runtime},
 };
 
 fn create_pool(max_size: usize) -> Pool {

@@ -1,8 +1,8 @@
 use std::{fmt, sync::Arc};
 
 use deadpool::{
-    managed::{self, Metrics, RecycleError, RecycleResult},
     Runtime,
+    managed::{self, Metrics, RecycleError, RecycleResult},
 };
 use deadpool_sync::SyncWrapper;
 

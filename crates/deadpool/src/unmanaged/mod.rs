@@ -35,8 +35,8 @@ use std::{
     convert::TryInto,
     ops::{Deref, DerefMut},
     sync::{
-        atomic::{AtomicIsize, AtomicUsize, Ordering},
         Arc, Mutex, Weak,
+        atomic::{AtomicIsize, AtomicUsize, Ordering},
     },
     time::Duration,
 };

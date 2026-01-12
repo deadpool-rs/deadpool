@@ -1,5 +1,5 @@
-pub use crate::config::ConfigError;
 use crate::ConnectionInfo;
+pub use crate::config::ConfigError;
 
 use super::{CreatePoolError, Pool, PoolBuilder, PoolConfig, Runtime};
 

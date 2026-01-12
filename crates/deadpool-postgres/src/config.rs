@@ -13,8 +13,8 @@ use super::Pool;
 use crate::{CreatePoolError, PoolBuilder, Runtime};
 #[cfg(not(target_arch = "wasm32"))]
 use tokio_postgres::{
-    tls::{MakeTlsConnect, TlsConnect},
     Socket,
+    tls::{MakeTlsConnect, TlsConnect},
 };
 
 use super::PoolConfig;

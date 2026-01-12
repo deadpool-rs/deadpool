@@ -6,8 +6,8 @@ use std::{
     future::Future,
     marker::PhantomData,
     sync::{
-        atomic::{AtomicUsize, Ordering},
         Arc, Mutex, Weak,
+        atomic::{AtomicUsize, Ordering},
     },
     time::Duration,
 };
@@ -16,11 +16,11 @@ use deadpool_runtime::Runtime;
 use tokio::sync::{Semaphore, TryAcquireError};
 
 use crate::{
-    managed::{
-        dropguard::DropGuard, hooks::Hooks, object::ObjectInner, Manager, Metrics, Object,
-        PoolBuilder, PoolConfig, PoolError, QueueMode, TimeoutType, Timeouts,
-    },
     Status,
+    managed::{
+        Manager, Metrics, Object, PoolBuilder, PoolConfig, PoolError, QueueMode, TimeoutType,
+        Timeouts, dropguard::DropGuard, hooks::Hooks, object::ObjectInner,
+    },
 };
 
 /// Generic object and connection pool.
