@@ -17,6 +17,9 @@ local getConfig(path, default) =
 
 local backend = getConfig("backend", null);
 local features_own = getConfig("features.own", null);
+// features.optional_dependencies is a list of features which are
+// modelled by optional dependencies.
+local features_optional_dependencies = getConfig("features.optional-dependencies", null);
 local features_required = getConfig("features.required", null);
 local features =
   if features_own != null || features_required != null then

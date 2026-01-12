@@ -12,6 +12,7 @@ REEXPORTED_FEATURES=$TEMP_DIR/reexported-features.json
 
 BACKEND=$(yq ".backend // \"\"" ci.config.yml)
 FEATURES_OWN=$(yq --output-format=json ".features | .own // []" ci.config.yml)
+FEATURES_OPTIONAL_DEPENDENCIES=$(yq --output-format=json ".features | .optional-dependencies // []" ci.config.yml)
 FEATURES_EXCLUDE=$(yq --output-format=json ".features | .exclude // []" ci.config.yml)
 
 if [ -z "$BACKEND" ]; then
@@ -23,7 +24,7 @@ fi
 # e.g. `tokio-postgres` becomes `tokio_postgres`.
 BACKEND_NORMALIZED=${BACKEND//-/_}
 
-cargo metadata --format-version 1 > $METADATA
+cargo metadata --format-version 1 > "$METADATA"
 
 CRATE_NAME=$(yq .package.name Cargo.toml)
 
@@ -38,7 +39,7 @@ DEPENDENCY_ID=$(
         | select(.name == \"$BACKEND_NORMALIZED\")
         | .pkg
     " \
-    $METADATA
+    "$METADATA"
 )
 
 if [ -z "$DEPENDENCY_ID" ]; then
@@ -48,17 +49,16 @@ fi
 
 yq --output-format=json \
     "
-        (
-            .features
-            | keys()
-            - [\"default\"]
-        )
-        - $FEATURES_OWN
+        .features
+        | keys
+        | . - [\"default\"]
+        | . - $FEATURES_OWN
+        | . - $FEATURES_OPTIONAL_DEPENDENCIES
         | sort
     " \
     Cargo.toml \
-    | jq .[] --raw-output \
-    > $REEXPORTED_FEATURES
+    | jq --raw-output .[] \
+    > "$REEXPORTED_FEATURES"
 
 jq --raw-output \
     "
@@ -73,14 +73,14 @@ jq --raw-output \
             | .key
         ]
         # Remove 'default' feature, we won't expose it
-        - [ \"default\" ]
+        | . - [ \"default\" ]
         # Remove all features that should be ignored
-        - $FEATURES_EXCLUDE
+        | . - $FEATURES_EXCLUDE
         | sort
         | .[]
     " \
-    < $METADATA \
-    > $DEPENDENCY_FEATURES
+    < "$METADATA" \
+    > "$DEPENDENCY_FEATURES"
 
 # 'diff' returns 0 if no difference is found
 printf "%-63s %s\n" "$BACKEND features" "$CRATE_NAME features"
