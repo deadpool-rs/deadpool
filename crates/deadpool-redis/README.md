@@ -1,4 +1,4 @@
-# Deadpool for Redis [![Latest Version](https://img.shields.io/crates/v/deadpool-redis.svg)](https://crates.io/crates/deadpool-redis) [![Build Status](https://img.shields.io/github/actions/workflow/status/deadpool-rs/deadpool/deadpool-redis.yml?branch=main)](https://github.com/deadpool-rs/deadpool/actions/workflows/deadpool-redis.yml?query=branch%3Amain) ![Unsafe forbidden](https://img.shields.io/badge/unsafe-forbidden-success.svg "Unsafe forbidden") [![Rust 1.75+](https://img.shields.io/badge/rustc-1.75+-lightgray.svg "Rust 1.75+")](https://blog.rust-lang.org/2023/12/28/Rust-1.75.0.html)
+# Deadpool for Redis [![Latest Version](https://img.shields.io/crates/v/deadpool-redis.svg)](https://crates.io/crates/deadpool-redis) [![Build Status](https://img.shields.io/github/actions/workflow/status/deadpool-rs/deadpool/deadpool-redis.yml?branch=main)](https://github.com/deadpool-rs/deadpool/actions/workflows/deadpool-redis.yml?query=branch%3Amain) ![Unsafe forbidden](https://img.shields.io/badge/unsafe-forbidden-success.svg "Unsafe forbidden") [![Rust 1.85+](https://img.shields.io/badge/rustc-1.85+-lightgray.svg "Rust 1.85+")](https://blog.rust-lang.org/2025/02/20/Rust-1.85.0/)
 
 Deadpool is a dead simple async pool for connections and objects
 of any type.
@@ -8,13 +8,13 @@ manager for [`redis`](https://crates.io/crates/redis).
 
 ## Features
 
-| Feature          | Description                                                           | Extra dependencies                                | Default |
-| ---------------- | --------------------------------------------------------------------- | ------------------------------------------------- | ------- |
-| `rt_tokio_1`     | Enable support for [tokio](https://crates.io/crates/tokio) crate      | `deadpool/rt_tokio_1`, `redis/tokio-comp`         | yes     |
+| Feature          | Description                                                              | Extra dependencies                                | Default |
+| ---------------- | ------------------------------------------------------------------------ | ------------------------------------------------- | ------- |
+| `rt_tokio_1`     | Enable support for [tokio](https://crates.io/crates/tokio) crate         | `deadpool/rt_tokio_1`, `redis/tokio-comp`         | yes     |
 | `rt_async-std_1` | Enable support for [async-std](https://crates.io/crates/async-std) crate | `deadpool/rt_async-std_1`, `redis/async-std-comp` | no      |
-| `serde`          | Enable support for [serde](https://crates.io/crates/serde) crate      | `deadpool/serde`, `serde/derive`                  | no      |
-| `cluster`        | Enable support for Redis Cluster                                      | `redis/cluster-async`                             | no      |
-| `sentinel`       | Enable high-level interfaces for communication with Redis sentinels   | `redis/sentinel`, `tokio/sync`                    | no      |
+| `serde`          | Enable support for [serde](https://crates.io/crates/serde) crate         | `deadpool/serde`, `serde/derive`                  | no      |
+| `cluster`        | Enable support for Redis Cluster                                         | `redis/cluster-async`                             | no      |
+| `sentinel`       | Enable high-level interfaces for communication with Redis sentinels      | `redis/sentinel`, `tokio/sync`                    | no      |
 
 All of the features of [redis](https://crates.io/crates/redis) are also re-exported.
 For example, the feature `tls-rustls` does enable the feature `tls-rustls` from the `redis` crate.

@@ -1,4 +1,4 @@
-# Deadpool for Lapin [![Latest Version](https://img.shields.io/crates/v/deadpool-lapin.svg)](https://crates.io/crates/deadpool-lapin) [![Build Status](https://img.shields.io/github/actions/workflow/status/deadpool-rs/deadpool/deadpool-lapin.yml?branch=main)](https://github.com/deadpool-rs/deadpool/actions/workflows/deadpool-lapin.yml?query=branch%3Amain) ![Unsafe forbidden](https://img.shields.io/badge/unsafe-forbidden-success.svg "Unsafe forbidden") [![Rust 1.75+](https://img.shields.io/badge/rustc-1.75+-lightgray.svg "Rust 1.75+")](https://blog.rust-lang.org/2023/12/28/Rust-1.75.0.html)
+# Deadpool for Lapin [![Latest Version](https://img.shields.io/crates/v/deadpool-lapin.svg)](https://crates.io/crates/deadpool-lapin) [![Build Status](https://img.shields.io/github/actions/workflow/status/deadpool-rs/deadpool/deadpool-lapin.yml?branch=main)](https://github.com/deadpool-rs/deadpool/actions/workflows/deadpool-lapin.yml?query=branch%3Amain) ![Unsafe forbidden](https://img.shields.io/badge/unsafe-forbidden-success.svg "Unsafe forbidden") [![Rust 1.85+](https://img.shields.io/badge/rustc-1.85+-lightgray.svg "Rust 1.85+")](https://blog.rust-lang.org/2025/02/20/Rust-1.85.0/)
 
 Deadpool is a dead simple async pool for connections and objects
 of any type.
@@ -8,11 +8,11 @@ manager for [`lapin`](https://crates.io/crates/lapin).
 
 ## Features
 
-| Feature          | Description                                                           | Extra dependencies               | Default |
-| ---------------- | --------------------------------------------------------------------- | -------------------------------- | ------- |
-| `rt_tokio_1`     | Enable support for [tokio](https://crates.io/crates/tokio) crate      | `deadpool/rt_tokio_1`            | yes     |
+| Feature          | Description                                                              | Extra dependencies               | Default |
+| ---------------- | ------------------------------------------------------------------------ | -------------------------------- | ------- |
+| `rt_tokio_1`     | Enable support for [tokio](https://crates.io/crates/tokio) crate         | `deadpool/rt_tokio_1`            | yes     |
 | `rt_async-std_1` | Enable support for [async-std](https://crates.io/crates/async-std) crate | `deadpool/rt_async-std_1`        | no      |
-| `serde`          | Enable support for [serde](https://crates.io/crates/serde) crate      | `deadpool/serde`, `serde/derive` | no      |
+| `serde`          | Enable support for [serde](https://crates.io/crates/serde) crate         | `deadpool/serde`, `serde/derive` | no      |
 
 ## Example with `tokio-amqp` crate
 
