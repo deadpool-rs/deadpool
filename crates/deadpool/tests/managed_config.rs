@@ -19,16 +19,20 @@ impl Env {
     }
     pub fn set(&mut self, name: &str, value: &str) {
         self.backup.insert(name.to_string(), env::var(name).ok());
-        env::set_var(name, value);
+        unsafe {
+            env::set_var(name, value);
+        }
     }
 }
 
 impl Drop for Env {
     fn drop(&mut self) {
         for (name, value) in self.backup.iter() {
-            match value {
-                Some(value) => env::set_var(name.as_str(), value),
-                None => env::remove_var(name.as_str()),
+            unsafe {
+                match value {
+                    Some(value) => env::set_var(name.as_str(), value),
+                    None => env::remove_var(name.as_str()),
+                }
             }
         }
     }

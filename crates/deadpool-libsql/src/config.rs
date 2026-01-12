@@ -6,8 +6,8 @@ use std::path::PathBuf;
 use std::time::Duration;
 
 use deadpool::{
-    managed::{CreatePoolError, PoolConfig},
     Runtime,
+    managed::{CreatePoolError, PoolConfig},
 };
 use libsql::Builder;
 #[cfg(feature = "serde")]
@@ -130,7 +130,9 @@ impl Database {
                 feature = "remote",
                 feature = "sync"
             )))]
-            _ => compile_error!("At least one of the following features must be enabled: core, replication, remote, sync"),
+            _ => compile_error!(
+                "At least one of the following features must be enabled: core, replication, remote, sync"
+            ),
         }
     }
 }

@@ -1,6 +1,6 @@
 use std::{convert::TryInto, fmt::Display};
 
-use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion};
+use criterion::{BenchmarkId, Criterion, criterion_group, criterion_main};
 
 use deadpool::managed::Metrics;
 use tokio::task::JoinHandle;

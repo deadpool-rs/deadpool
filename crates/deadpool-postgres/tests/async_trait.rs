@@ -1,7 +1,7 @@
 // This code must compile even without the async_trait crate
 // See: https://github.com/deadpool-rs/deadpool/issues/323
 
-use deadpool_postgres::{tokio_postgres::Row, GenericClient};
+use deadpool_postgres::{GenericClient, tokio_postgres::Row};
 use futures_util::{Stream, StreamExt};
 use std::future::Future;
 use tokio_postgres::types::ToSql;

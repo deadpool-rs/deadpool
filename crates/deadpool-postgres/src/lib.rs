@@ -31,8 +31,8 @@ use std::{
     ops::{Deref, DerefMut},
     pin::Pin,
     sync::{
-        atomic::{AtomicUsize, Ordering},
         Arc, Mutex, RwLock, Weak,
+        atomic::{AtomicUsize, Ordering},
     },
 };
 
@@ -41,14 +41,14 @@ use deadpool::managed;
 use tokio::spawn;
 use tokio::task::JoinHandle;
 use tokio_postgres::{
-    types::Type, Client as PgClient, Config as PgConfig, Error, IsolationLevel, Statement,
-    Transaction as PgTransaction, TransactionBuilder as PgTransactionBuilder,
+    Client as PgClient, Config as PgConfig, Error, IsolationLevel, Statement,
+    Transaction as PgTransaction, TransactionBuilder as PgTransactionBuilder, types::Type,
 };
 
 #[cfg(not(target_arch = "wasm32"))]
 use tokio_postgres::{
-    tls::{MakeTlsConnect, TlsConnect},
     Socket,
+    tls::{MakeTlsConnect, TlsConnect},
 };
 
 pub use tokio_postgres;

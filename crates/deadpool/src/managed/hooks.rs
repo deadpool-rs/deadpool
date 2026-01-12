@@ -39,9 +39,9 @@ impl<M: Manager> Hook<M> {
     /// Create Hook from async function
     pub fn async_fn(
         f: impl for<'a> Fn(&'a mut M::Type, &'a Metrics) -> HookFuture<'a, M::Error>
-            + Sync
-            + Send
-            + 'static,
+        + Sync
+        + Send
+        + 'static,
     ) -> Self {
         Self::AsyncFn(Box::new(f))
     }

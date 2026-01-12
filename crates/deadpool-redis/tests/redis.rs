@@ -117,7 +117,7 @@ async fn test_recycled() {
 
 #[tokio::test]
 async fn test_recycled_with_watch() {
-    use deadpool_redis::redis::{pipe, Value};
+    use deadpool_redis::redis::{Value, pipe};
 
     let pool = create_pool();
 

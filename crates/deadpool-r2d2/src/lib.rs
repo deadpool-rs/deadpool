@@ -25,7 +25,7 @@ mod manager;
 
 pub use deadpool::managed::reexports::*;
 pub use deadpool::managed::{Pool, PoolError};
-pub use deadpool_sync::reexports::*;
 pub use deadpool_sync::SyncWrapper;
+pub use deadpool_sync::reexports::*;
 
 pub use self::manager::Manager;

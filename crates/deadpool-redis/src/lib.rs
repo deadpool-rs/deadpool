@@ -35,8 +35,8 @@ use std::{
 
 use deadpool::managed;
 use redis::{
-    aio::{ConnectionLike, MultiplexedConnection},
     Client, IntoConnectionInfo, RedisError, RedisResult,
+    aio::{ConnectionLike, MultiplexedConnection},
 };
 
 pub use redis;

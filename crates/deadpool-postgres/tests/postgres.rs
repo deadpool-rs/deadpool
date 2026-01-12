@@ -2,7 +2,7 @@ use std::{collections::HashMap, env, time::Duration};
 
 use futures::future;
 use serde::{Deserialize, Serialize};
-use tokio_postgres::{types::Type, IsolationLevel};
+use tokio_postgres::{IsolationLevel, types::Type};
 
 use deadpool_postgres::{ManagerConfig, Pool, RecyclingMethod, Runtime};
 
@@ -224,7 +224,9 @@ impl Env {
     }
     pub fn set(&mut self, name: &str, value: &str) {
         self.backup.insert(name.to_string(), env::var(name).ok());
-        env::set_var(name, value);
+        unsafe {
+            env::set_var(name, value);
+        }
     }
 }
 
@@ -232,9 +234,11 @@ impl Drop for Env {
     fn drop(&mut self) {
         for (name, value) in self.backup.iter() {
             println!("setting {} = {:?}", name, value);
-            match value {
-                Some(val) => env::set_var(name.as_str(), val),
-                None => env::remove_var(name.as_str()),
+            unsafe {
+                match value {
+                    Some(val) => env::set_var(name.as_str(), val),
+                    None => env::remove_var(name.as_str()),
+                }
             }
         }
     }
