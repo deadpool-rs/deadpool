@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Bump up MSRV to `1.85` and Rust edition to `2024`.
+
 ## [0.1.4] - 2024-06-04
 
 - Fix `panic` when dropping a `SyncWrapper` while it is still executing the `interact` method.

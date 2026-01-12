@@ -60,8 +60,8 @@ jobs:
       - uses: dtolnay/rust-toolchain@v1
         with:
           components: rustc,rust-std,cargo
-          toolchain: "1.82"
-      - run: ../../tools/cargo-update-minimal-versions.sh 1.82
+          toolchain: "1.85"
+      - run: ../../tools/cargo-update-minimal-versions.sh 1.85
       - run: cargo check --features serde,rt_tokio_1,rt_async-std_1,cluster,sentinel
   rustdoc:
     name: Doc

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Bump up MSRV to `1.85` and Rust edition to `2024`
 - Re-export `lapin` feature:
     - `hickory-dns`
 

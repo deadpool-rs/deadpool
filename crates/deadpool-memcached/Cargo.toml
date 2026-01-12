@@ -1,8 +1,8 @@
 [package]
 name = "deadpool-memcached"
 version = "0.4.0"
-edition = "2021"
-rust-version = "1.82"
+edition = "2024"
+rust-version = "1.85"
 authors = [
     "Toby Lawrence <toby@nuclearfurnace.com>",
     "Michael P. Jung <michael.jung@terreon.de>",

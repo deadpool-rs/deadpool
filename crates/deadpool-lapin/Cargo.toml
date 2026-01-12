@@ -1,7 +1,7 @@
 [package]
 name = "deadpool-lapin"
 version = "0.13.1"
-edition = "2021"
+edition = "2024"
 rust-version = "1.85"
 authors = ["Michael P. Jung <michael.jung@terreon.de>"]
 description = "Dead simple async pool for lapin"
