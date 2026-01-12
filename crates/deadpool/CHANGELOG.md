@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Bump up MSRV to `1.85` and Rust edition to `2024`
+- Remove `lazy_static` dependency
 
 ## [0.12.3] - 2025-08-19
 
