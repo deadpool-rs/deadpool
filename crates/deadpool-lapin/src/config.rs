@@ -93,6 +93,7 @@ impl Config {
                 conn_props.with_executor(tokio_executor_trait::Tokio::current())
             }
             #[cfg(feature = "rt_async-std_1")]
+            #[allow(deprecated)]
             Some(Runtime::AsyncStd1) => conn_props
                 .with_executor(async_executor_trait::AsyncStd)
                 .with_reactor(async_reactor_trait::AsyncIo),
