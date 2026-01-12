@@ -203,7 +203,7 @@ impl Config {
         if let Some(user) = self.user.as_ref().filter(|s| !s.is_empty()) {
             cfg.user(user.as_str());
         }
-        if !cfg.get_user().is_some_and(|u| !u.is_empty()) {
+        if cfg.get_user().is_none_or(|u| u.is_empty()) {
             if let Ok(user) = env::var("USER") {
                 cfg.user(&user);
             }
