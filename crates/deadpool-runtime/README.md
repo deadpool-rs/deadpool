@@ -1,4 +1,4 @@
-# Deadpool runtime abstraction [![Latest Version](https://img.shields.io/crates/v/deadpool-runtime.svg)](https://crates.io/crates/deadpool-runtime) [![Build Status](https://img.shields.io/github/actions/workflow/status/deadpool-rs/deadpool/deadpool-runtime.yml?branch=main)](https://github.com/deadpool-rs/deadpool/actions/workflows/deadpool-runtime.yml?query=branch%3Amain) ![Unsafe forbidden](https://img.shields.io/badge/unsafe-forbidden-success.svg "Unsafe forbidden") [![Rust 1.75+](https://img.shields.io/badge/rustc-1.75+-lightgray.svg "Rust 1.75+")](https://blog.rust-lang.org/2023/12/28/Rust-1.75.0.html)
+# Deadpool runtime abstraction [![Latest Version](https://img.shields.io/crates/v/deadpool-runtime.svg)](https://crates.io/crates/deadpool-runtime) [![Build Status](https://img.shields.io/github/actions/workflow/status/deadpool-rs/deadpool/deadpool-runtime.yml?branch=main)](https://github.com/deadpool-rs/deadpool/actions/workflows/deadpool-runtime.yml?query=branch%3Amain) ![Unsafe forbidden](https://img.shields.io/badge/unsafe-forbidden-success.svg "Unsafe forbidden") [![Rust 1.85+](https://img.shields.io/badge/rustc-1.85+-lightgray.svg "Rust 1.85+")](https://blog.rust-lang.org/2025/02/20/Rust-1.85.0/)
 
 Deadpool is a dead simple async pool for connections and objects
 of any type.
@@ -14,10 +14,10 @@ reexports by the crates using it.
 
 ## Features
 
-| Feature | Description | Extra dependencies | Default |
-| ------- | ----------- | ------------------ | ------- |
-| `tokio_1` | Enable support for [tokio](https://crates.io/crates/tokio) crate | `tokio/time`, `tokio/rt` | no |
-| `async-std_1` | Enable support for [async-std](https://crates.io/crates/async-std) crate | `async-std` | no |
+| Feature       | Description                                                              | Extra dependencies       | Default |
+| ------------- | ------------------------------------------------------------------------ | ------------------------ | ------- |
+| `tokio_1`     | Enable support for [tokio](https://crates.io/crates/tokio) crate         | `tokio/time`, `tokio/rt` | no      |
+| `async-std_1` | Enable support for [async-std](https://crates.io/crates/async-std) crate | `async-std`              | no      |
 
 ## License
 

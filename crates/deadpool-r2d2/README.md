@@ -1,4 +1,4 @@
-# Deadpool for R2D2 Managers [![Latest Version](https://img.shields.io/crates/v/deadpool-r2d2.svg)](https://crates.io/crates/deadpool-r2d2) [![Build Status](https://img.shields.io/github/actions/workflow/status/deadpool-rs/deadpool/deadpool-r2d2.yml?branch=main)](https://github.com/deadpool-rs/deadpool/actions/workflows/deadpool-r2d2.yml?query=branch%3Amain) ![Unsafe forbidden](https://img.shields.io/badge/unsafe-forbidden-success.svg "Unsafe forbidden") [![Rust 1.75+](https://img.shields.io/badge/rustc-1.75+-lightgray.svg "Rust 1.75+")](https://blog.rust-lang.org/2023/12/28/Rust-1.75.0.html)
+# Deadpool for R2D2 Managers [![Latest Version](https://img.shields.io/crates/v/deadpool-r2d2.svg)](https://crates.io/crates/deadpool-r2d2) [![Build Status](https://img.shields.io/github/actions/workflow/status/deadpool-rs/deadpool/deadpool-r2d2.yml?branch=main)](https://github.com/deadpool-rs/deadpool/actions/workflows/deadpool-r2d2.yml?query=branch%3Amain) ![Unsafe forbidden](https://img.shields.io/badge/unsafe-forbidden-success.svg "Unsafe forbidden") [![Rust 1.85+](https://img.shields.io/badge/rustc-1.85+-lightgray.svg "Rust 1.85+")](https://blog.rust-lang.org/2025/02/20/Rust-1.85.0/)
 
 Deadpool is a dead simple async pool for connections and objects
 of any type.
@@ -8,12 +8,12 @@ manager for [`r2d2`](https://crates.io/crates/r2d2) managers.
 
 ## Features
 
-| Feature | Description | Extra dependencies | Default |
-| ------- | ----------- | ------------------ | ------- |
-| `rt_tokio_1` | Enable support for [tokio](https://crates.io/crates/tokio) crate | `deadpool/rt_tokio_1` | yes |
-| `rt_async-std_1` | Enable support for [async-std](https://crates.io/crates/async-std) crate | `deadpool/rt_async-std_1` | no |
-| `serde` | Enable support for [serde](https://crates.io/crates/serde) crate | `deadpool/serde` | no |
-| `tracing` | Enable support for [tracing](https://github.com/tokio-rs/tracing) by propagating Spans in the `interact()` calls. Enable this if you use the `tracing` crate and you want to get useful traces from within `interact()` calls. | `deadpool-sync/tracing`, `tracing` | no |
+| Feature          | Description                                                                                                                                                                                                                    | Extra dependencies                 | Default |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------- | ------- |
+| `rt_tokio_1`     | Enable support for [tokio](https://crates.io/crates/tokio) crate                                                                                                                                                               | `deadpool/rt_tokio_1`              | yes     |
+| `rt_async-std_1` | Enable support for [async-std](https://crates.io/crates/async-std) crate                                                                                                                                                       | `deadpool/rt_async-std_1`          | no      |
+| `serde`          | Enable support for [serde](https://crates.io/crates/serde) crate                                                                                                                                                               | `deadpool/serde`                   | no      |
+| `tracing`        | Enable support for [tracing](https://github.com/tokio-rs/tracing) by propagating Spans in the `interact()` calls. Enable this if you use the `tracing` crate and you want to get useful traces from within `interact()` calls. | `deadpool-sync/tracing`, `tracing` | no      |
 
 ## Example
 
