@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.22.1] - 2026-01-12
+
 - Bump up MSRV to `1.82`
 - Re-export `redis` features:
   - `safe_iterators`
@@ -209,7 +211,8 @@ Release of 0.6 and 0.7 with the following feature backported:
 - First release
 
 <!-- next-url -->
-[Unreleased]: https://github.com/deadpool-rs/deadpool/compare/deadpool-redis-v0.22.0...HEAD
+[Unreleased]: https://github.com/deadpool-rs/deadpool/compare/deadpool-redis-v0.22.1...HEAD
+[0.22.1]: https://github.com/deadpool-rs/deadpool/compare/deadpool-redis-v0.22.0...deadpool-redis-v0.22.1
 [0.22.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-redis-v0.21.1...deadpool-redis-v0.22.0
 [0.21.1]: https://github.com/deadpool-rs/deadpool/compare/deadpool-redis-v0.21.0...deadpool-redis-v0.21.1
 [0.21.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-redis-v0.20.0...deadpool-redis-v0.21.0
