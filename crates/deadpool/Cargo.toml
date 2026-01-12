@@ -20,6 +20,7 @@ managed = []
 unmanaged = []
 rt_tokio_1 = ["deadpool-runtime/tokio_1"]
 rt_async-std_1 = ["deadpool-runtime/async-std_1"]
+rt_smol_2 = ["deadpool-runtime/smol_2"]
 
 [dependencies]
 lazy_static = "1.5.0"
@@ -38,6 +39,8 @@ async-std = { version = "1.0", features = ["attributes"] }
 config = { version = "0.15", features = ["json"] }
 criterion = { version = "0.5", features = ["html_reports", "async_tokio"] }
 itertools = "0.14"
+macro_rules_attribute = "0.2.2"
+smol-macros = "0.1.1"
 tokio = { version = "1.5.0", features = [
     "macros",
     "rt",

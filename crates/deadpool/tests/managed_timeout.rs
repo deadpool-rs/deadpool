@@ -68,5 +68,12 @@ async fn rt_tokio_1() {
 #[cfg(feature = "rt_async-std_1")]
 #[async_std::test]
 async fn rt_async_std_1() {
+    #[allow(deprecated)]
     test_managed_timeout(Runtime::AsyncStd1).await;
+}
+
+#[cfg(feature = "rt_smol_2")]
+#[async_std::test]
+async fn rt_smol_2() {
+    test_managed_timeout(Runtime::Smol2).await;
 }

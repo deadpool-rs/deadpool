@@ -33,8 +33,16 @@ pub enum Runtime {
 
     #[cfg(feature = "async-std_1")]
     #[cfg_attr(docsrs, doc(cfg(feature = "async-std_1")))]
+    #[deprecated(
+        note = "Support for `async-std` is deprecated and will be removed in a future version. Consider using `tokio_1` or `smol_2` instead."
+    )]
     /// [`async-std` 1.0](async_std_1) runtime.
     AsyncStd1,
+
+    #[cfg(feature = "smol_2")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "smol_1")))]
+    /// [`async-std` 1.0](async_std_1) runtime.
+    Smol2,
 }
 
 impl Runtime {
@@ -53,7 +61,16 @@ impl Runtime {
             #[cfg(feature = "tokio_1")]
             Self::Tokio1 => tokio_1::time::timeout(duration, future).await.ok(),
             #[cfg(feature = "async-std_1")]
+            #[allow(deprecated)]
             Self::AsyncStd1 => async_std_1::future::timeout(duration, future).await.ok(),
+            #[cfg(feature = "smol_2")]
+            Self::Smol2 => {
+                smol_2::future::or(async { Some(future.await) }, async {
+                    let _ = smol_2::Timer::after(duration).await;
+                    None
+                })
+                .await
+            }
             #[allow(unreachable_patterns)]
             _ => unreachable!(),
         }
@@ -76,7 +93,10 @@ impl Runtime {
                 .await
                 .map_err(|e| SpawnBlockingError::Panic(e.into_panic())),
             #[cfg(feature = "async-std_1")]
+            #[allow(deprecated)]
             Self::AsyncStd1 => Ok(async_std_1::task::spawn_blocking(f).await),
+            #[cfg(feature = "smol_2")]
+            Self::Smol2 => Ok(smol_2::unblock(f).await),
             #[allow(unreachable_patterns)]
             _ => unreachable!(),
         }
@@ -102,8 +122,14 @@ impl Runtime {
                 Ok(())
             }
             #[cfg(feature = "async-std_1")]
+            #[allow(deprecated)]
             Self::AsyncStd1 => {
                 drop(async_std_1::task::spawn_blocking(f));
+                Ok(())
+            }
+            #[cfg(feature = "smol_2")]
+            Self::Smol2 => {
+                drop(smol_2::unblock(f));
                 Ok(())
             }
             #[allow(unreachable_patterns)]

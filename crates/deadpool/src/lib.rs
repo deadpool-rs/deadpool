@@ -56,3 +56,10 @@ pub struct Status {
 }
 
 mod util;
+
+/// This only exists to show the deprecation warning of `rt_async-std_1`
+#[cfg(feature = "rt_async-std_1")]
+#[deprecated(
+    note = "The `rt_async-std_1` feature is deprecated and will be removed in a future version. Consider using `rt_tokio_1` or `rt_smol_2` instead."
+)]
+pub const _RT_ASYNC_STD_1_DEPRECATED: () = ();

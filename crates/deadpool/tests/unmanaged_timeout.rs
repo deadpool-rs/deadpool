@@ -69,6 +69,15 @@ async fn rt_tokio_1() {
 #[cfg(feature = "rt_async-std_1")]
 #[async_std::test]
 async fn rt_async_std_1() {
+    #[allow(deprecated)]
     _test_get(Runtime::AsyncStd1).await;
+    #[allow(deprecated)]
     _test_config(Runtime::AsyncStd1).await;
+}
+
+#[cfg(feature = "rt_smol_2")]
+#[macro_rules_attribute::apply(smol_macros::test!)]
+async fn rt_smol_2() {
+    _test_get(Runtime::Smol2).await;
+    _test_config(Runtime::Smol2).await;
 }
