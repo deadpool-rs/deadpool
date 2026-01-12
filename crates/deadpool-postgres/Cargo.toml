@@ -24,6 +24,8 @@ array-impls = ["tokio-postgres/array-impls"]
 js = ["tokio-postgres/js"]
 runtime = ["tokio-postgres/runtime"]
 with-bit-vec-0_6 = ["tokio-postgres/with-bit-vec-0_6"]
+with-bit-vec-0_7 = ["tokio-postgres/with-bit-vec-0_7"]
+with-bit-vec-0_8 = ["tokio-postgres/with-bit-vec-0_8"]
 with-chrono-0_4 = ["tokio-postgres/with-chrono-0_4"]
 with-cidr-0_2 = ["tokio-postgres/with-cidr-0_2"]
 with-cidr-0_3 = ["tokio-postgres/with-cidr-0_3"]
@@ -32,6 +34,7 @@ with-eui48-1 = ["tokio-postgres/with-eui48-1"]
 with-geo-types-0_6 = ["tokio-postgres/with-geo-types-0_6"]
 with-geo-types-0_7 = ["tokio-postgres/with-geo-types-0_7"]
 with-jiff-0_1 = ["tokio-postgres/with-jiff-0_1"]
+with-jiff-0_2 = ["tokio-postgres/with-jiff-0_2"]
 with-serde_json-1 = ["tokio-postgres/with-serde_json-1"]
 with-smol_str-01 = ["tokio-postgres/with-smol_str-01"]
 with-time-0_2 = ["tokio-postgres/with-time-0_2"]
@@ -52,11 +55,11 @@ tokio = { version = "1.29", features = ["rt"] }
 tracing = "0.1.37"
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
-tokio-postgres = "0.7.9"
+tokio-postgres = "0.7.14"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 getrandom = { package = "getrandom", version = "0.3", features = ["wasm_js"] }
-tokio-postgres = { version = "0.7.9", default-features = false }
+tokio-postgres = { version = "0.7.14", default-features = false }
 
 [dev-dependencies]
 config = { version = "0.15", features = ["json"] }
