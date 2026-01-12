@@ -34,11 +34,13 @@ bundled-sqlcipher-vendored-openssl = [
     "rusqlite/bundled-sqlcipher-vendored-openssl",
 ]
 bundled-windows = ["rusqlite/bundled-windows"]
+cache = ["rusqlite/cache"]
 collation = ["rusqlite/collation"]
 column_decltype = ["rusqlite/column_decltype"]
 column_metadata = ["rusqlite/column_metadata"]
 csvtab = ["rusqlite/csvtab"]
 extra_check = ["rusqlite/extra_check"]
+fallible_uint = ["rusqlite/fallible_uint"]
 functions = ["rusqlite/functions"]
 hooks = ["rusqlite/hooks"]
 i128_blob = ["rusqlite/i128_blob"]
