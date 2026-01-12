@@ -38,8 +38,8 @@ jobs:
       - uses: dtolnay/rust-toolchain@v1
         with:
           components: rustc,rust-std,cargo
-          toolchain: "1.82"
-      - run: ../../tools/cargo-update-minimal-versions.sh 1.82
+          toolchain: "1.85"
+      - run: ../../tools/cargo-update-minimal-versions.sh 1.85
       - run: cargo check --all-features
   rustdoc:
     name: Doc

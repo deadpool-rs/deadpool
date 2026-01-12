@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Bump up MSRV to `1.85` and Rust edition to `2024`
+
 ## [0.4.0] - 2025-09-02
 
 - Update `async-memcached` dependency to version `0.5`

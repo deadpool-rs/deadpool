@@ -1,8 +1,8 @@
 [package]
 name = "deadpool-redis"
 version = "0.22.1"
-edition = "2021"
-rust-version = "1.82"
+edition = "2024"
+rust-version = "1.85"
 authors = [
     "Michael P. Jung <michael.jung@terreon.de>",
     "Subeom Choi <subumm1@gmail.com>",

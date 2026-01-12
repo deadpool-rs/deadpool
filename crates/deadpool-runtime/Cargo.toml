@@ -1,8 +1,8 @@
 [package]
 name = "deadpool-runtime"
-version = "0.1.4"
-edition = "2021"
-rust-version = "1.75"
+version = "0.1.5"
+edition = "2024"
+rust-version = "1.85"
 authors = ["Michael P. Jung <michael.jung@terreon.de>"]
 description = "Dead simple async pool utilities for async runtimes"
 keywords = ["async", "database", "pool", "sync", "utils"]

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- next-header -->
 
+## [Unreleased]
+
+- Bump up MSRV to `1.85` and Rust edition to `2024`
+
 ## [0.12.3] - 2025-08-19
 
 - Add unique `id` to objects which can be read via the `Object::id` method

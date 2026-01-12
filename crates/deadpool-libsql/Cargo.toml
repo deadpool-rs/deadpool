@@ -1,8 +1,8 @@
 [package]
 name = "deadpool-libsql"
 version = "0.1.0"
-edition = "2021"
-rust-version = "1.81"
+edition = "2024"
+rust-version = "1.85"
 authors = ["Michael P. Jung <michael.jung@terreon.de>"]
 description = "Dead simple async pool for libsql"
 keywords = ["async", "libsql", "database", "pool"]
@@ -39,7 +39,7 @@ bytes = "1.10.1"
 deadpool = { path = "../deadpool", version = "0.12.0", default-features = false, features = [
     "managed",
 ] }
-libsql = { version = "0.9.18", default-features = false}
+libsql = { version = "0.9.18", default-features = false }
 serde = { package = "serde", version = "1.0.103", features = [
     "derive",
 ], optional = true }
