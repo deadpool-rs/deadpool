@@ -65,8 +65,8 @@ impl Runtime {
             Self::AsyncStd1 => async_std_1::future::timeout(duration, future).await.ok(),
             #[cfg(feature = "smol_2")]
             Self::Smol2 => {
-                smol_2::future::or(async { Some(future.await) }, async {
-                    let _ = smol_2::Timer::after(duration).await;
+                smol_2_futures_lite::future::or(async { Some(future.await) }, async {
+                    let _ = smol_2_async_io::Timer::after(duration).await;
                     None
                 })
                 .await
@@ -96,7 +96,7 @@ impl Runtime {
             #[allow(deprecated)]
             Self::AsyncStd1 => Ok(async_std_1::task::spawn_blocking(f).await),
             #[cfg(feature = "smol_2")]
-            Self::Smol2 => Ok(smol_2::unblock(f).await),
+            Self::Smol2 => Ok(smol_2_blocking::unblock(f).await),
             #[allow(unreachable_patterns)]
             _ => unreachable!(),
         }
@@ -129,7 +129,7 @@ impl Runtime {
             }
             #[cfg(feature = "smol_2")]
             Self::Smol2 => {
-                drop(smol_2::unblock(f));
+                drop(smol_2_blocking::unblock(f));
                 Ok(())
             }
             #[allow(unreachable_patterns)]

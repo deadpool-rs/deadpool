@@ -12,11 +12,25 @@ readme = "README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[features]
+async-std_1 = ["dep:async-std_1"]
+smol_2 = [
+    "dep:smol_2_async-io",
+    "dep:smol_2_blocking",
+    "dep:smol_2_futures-lite",
+]
+tokio_1 = ["dep:tokio_1"]
+
 [dependencies]
 async-std_1 = { package = "async-std", version = "1.0", features = [
     "unstable",
 ], optional = true }
-smol_2 = { package = "smol", version = "2.0", features = [], optional = true }
+smol_2_async-io = { package = "async-io", version = "2.0", features = [
+], optional = true }
+smol_2_blocking = { package = "blocking", version = "1.6", features = [
+], optional = true }
+smol_2_futures-lite = { package = "futures-lite", version = "2.6", features = [
+], optional = true }
 tokio_1 = { package = "tokio", version = "1.0", features = [
     "time",
     "rt",
