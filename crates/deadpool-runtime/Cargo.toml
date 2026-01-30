@@ -35,3 +35,6 @@ tokio_1 = { package = "tokio", version = "1.0", features = [
     "time",
     "rt",
 ], optional = true }
+
+[dev-dependencies]
+tokio_1 = { package = "tokio", version = "1.0", features = ["rt", "macros"] }
