@@ -54,6 +54,15 @@ impl fmt::Display for InteractError {
 
 impl std::error::Error for InteractError {}
 
+impl From<SpawnBlockingError> for InteractError {
+    fn from(value: SpawnBlockingError) -> Self {
+        match value {
+            SpawnBlockingError::Panic(p) => Self::Panic(p),
+            SpawnBlockingError::Cancelled => Self::Aborted,
+        }
+    }
+}
+
 /// Wrapper for objects which only provides blocking functions that need to be
 /// called on a separate thread.
 ///
@@ -97,6 +106,7 @@ where
             // methods needs to support a custom error enum which
             // supports a Panic variant.
             Err(SpawnBlockingError::Panic(e)) => panic!("{e:?}"),
+            Err(SpawnBlockingError::Cancelled) => panic!("Task has been cancelled"),
             Ok(obj) => obj,
         };
         result.map(|obj| Self {
@@ -127,7 +137,7 @@ where
                 Ok(f(conn))
             })
             .await
-            .map_err(|SpawnBlockingError::Panic(p)| InteractError::Panic(p))?
+            .map_err(InteractError::from)?
     }
 
     /// Indicates whether the underlying [`Mutex`] has been poisoned.

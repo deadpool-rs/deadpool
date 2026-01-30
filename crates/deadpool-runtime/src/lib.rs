@@ -89,9 +89,13 @@ impl Runtime {
     {
         match self {
             #[cfg(feature = "tokio_1")]
-            Self::Tokio1 => tokio_1::task::spawn_blocking(f)
-                .await
-                .map_err(|e| SpawnBlockingError::Panic(e.into_panic())),
+            Self::Tokio1 => tokio_1::task::spawn_blocking(f).await.map_err(|e| {
+                if e.is_cancelled() {
+                    SpawnBlockingError::Cancelled
+                } else {
+                    SpawnBlockingError::Panic(e.into_panic())
+                }
+            }),
             #[cfg(feature = "async-std_1")]
             #[allow(deprecated)]
             Self::AsyncStd1 => Ok(async_std_1::task::spawn_blocking(f).await),
@@ -143,14 +147,40 @@ impl Runtime {
 pub enum SpawnBlockingError {
     /// Spawned task has panicked.
     Panic(Box<dyn Any + Send + 'static>),
+
+    /// Spawned task has been cancelled.
+    Cancelled,
 }
 
 impl fmt::Display for SpawnBlockingError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Panic(p) => write!(f, "SpawnBlockingError: Panic: {:?}", p),
+            Self::Cancelled => write!(f, "SpawnBlockingError: Cancelled"),
         }
     }
 }
 
 impl std::error::Error for SpawnBlockingError {}
+
+#[cfg(all(test, feature = "tokio_1"))]
+mod tests_with_tokio_1 {
+    use super::{Runtime, SpawnBlockingError};
+
+    #[tokio_1::test(crate = "tokio_1")]
+    async fn test_spawning_blocking() {
+        assert!(Runtime::Tokio1.spawn_blocking(|| 42).await.is_ok());
+    }
+
+    #[tokio_1::test(crate = "tokio_1")]
+    async fn test_spawning_blocking_can_panic() {
+        assert!(matches!(
+            Runtime::Tokio1
+                .spawn_blocking(|| {
+                    panic!("42");
+                })
+                .await,
+            Err(SpawnBlockingError::Panic(_))
+        ));
+    }
+}
