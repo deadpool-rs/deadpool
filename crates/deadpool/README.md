@@ -25,6 +25,7 @@ This crate provides two implementations:
 | `unmanaged`      | Enable unmanaged pool implementation                                     | -                  | yes     |
 | `rt_tokio_1`     | Enable support for [tokio](https://crates.io/crates/tokio) crate         | `tokio/time`       | no      |
 | `rt_async-std_1` | Enable support for [async-std](https://crates.io/crates/async-std) crate | `async-std`        | no      |
+| `rt_smol_2`      | Enable support for [smol](https://crates.io/crates/smol) crate           | `smol`             | no      |
 | `serde`          | Enable support for deserializing pool config                             | `serde/derive`     | no      |
 
 The runtime features (`rt_*`) are only needed if you need support for
