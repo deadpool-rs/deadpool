@@ -25,6 +25,7 @@ use std::{any::Any, fmt, future::Future, time::Duration};
 
 /// Enumeration for picking a runtime implementation.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[non_exhaustive]
 pub enum Runtime {
     #[cfg(feature = "tokio_1")]
     #[cfg_attr(docsrs, doc(cfg(feature = "tokio_1")))]

@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   taking the `Runtime` as first argument. This makes it possible to
   re-export the `Runtime` type without needing to re-export the
   `SpawnBlockingError` type as well.
+- Mark `Runtime` enum as `non_exhaustive` so future additions of runtimes
+  can be non breaking releases.
 
 ## [0.2.0] - 2026-02-02
 
