@@ -40,8 +40,8 @@ pub enum Runtime {
     AsyncStd1,
 
     #[cfg(feature = "smol_2")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "smol_1")))]
-    /// [`async-std` 1.0](async_std_1) runtime.
+    #[cfg_attr(docsrs, doc(cfg(feature = "smol_2")))]
+    /// [`smol` 2.0](smol_2) runtime.
     Smol2,
 }
 
