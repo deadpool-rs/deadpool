@@ -29,7 +29,7 @@ pub mod managed;
 #[cfg_attr(docsrs, doc(cfg(feature = "unmanaged")))]
 pub mod unmanaged;
 
-pub use deadpool_runtime::{Runtime, SpawnBlockingError};
+pub use deadpool_runtime::Runtime;
 
 /// The current pool status.
 ///

@@ -12,7 +12,7 @@ use std::{
     time::Duration,
 };
 
-use deadpool_runtime::Runtime;
+use deadpool_runtime::{Runtime, timeout};
 use tokio::sync::{Semaphore, TryAcquireError};
 
 use crate::{
@@ -509,8 +509,7 @@ async fn apply_timeout<O, E>(
 ) -> Result<O, PoolError<E>> {
     match (runtime, duration) {
         (_, None) => future.await.map_err(Into::into),
-        (Some(runtime), Some(duration)) => runtime
-            .timeout(duration, future)
+        (Some(runtime), Some(duration)) => timeout(runtime, duration, future)
             .await
             .ok_or(PoolError::Timeout(timeout_type))?
             .map_err(Into::into),

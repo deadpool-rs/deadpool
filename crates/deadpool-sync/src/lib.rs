@@ -29,7 +29,7 @@ use std::{
     sync::{Arc, Mutex, MutexGuard, PoisonError, TryLockError},
 };
 
-use deadpool_runtime::{Runtime, SpawnBlockingError};
+use deadpool_runtime::{Runtime, SpawnBlockingError, spawn_blocking, spawn_blocking_background};
 
 /// Possible errors returned when [`SyncWrapper::interact()`] fails.
 #[derive(Debug)]
@@ -100,7 +100,7 @@ where
         F: FnOnce() -> Result<T, E> + Send + 'static,
         E: Send + 'static,
     {
-        let result = match runtime.spawn_blocking(f).await {
+        let result = match spawn_blocking(runtime, f).await {
             // FIXME: Panicking when the creation panics is not nice.
             // In order to handle this properly the Manager::create
             // methods needs to support a custom error enum which
@@ -128,16 +128,15 @@ where
         let arc = self.obj.clone();
         #[cfg(feature = "tracing")]
         let span = tracing::Span::current();
-        self.runtime
-            .spawn_blocking(move || {
-                let mut guard = arc.lock().unwrap();
-                let conn: &mut T = guard.as_mut().ok_or(InteractError::Aborted)?;
-                #[cfg(feature = "tracing")]
-                let _span = span.enter();
-                Ok(f(conn))
-            })
-            .await
-            .map_err(InteractError::from)?
+        spawn_blocking(self.runtime, move || {
+            let mut guard = arc.lock().unwrap();
+            let conn: &mut T = guard.as_mut().ok_or(InteractError::Aborted)?;
+            #[cfg(feature = "tracing")]
+            let _span = span.enter();
+            Ok(f(conn))
+        })
+        .await
+        .map_err(InteractError::from)?
     }
 
     /// Indicates whether the underlying [`Mutex`] has been poisoned.
@@ -168,12 +167,11 @@ where
         let arc = self.obj.clone();
         // Drop the `rusqlite::Connection` inside a `spawn_blocking`
         // as the `drop` function of it can block.
-        self.runtime
-            .spawn_blocking_background(move || match arc.lock() {
-                Ok(mut guard) => drop(guard.take()),
-                Err(e) => drop(e.into_inner().take()),
-            })
-            .unwrap();
+        spawn_blocking_background(self.runtime, move || match arc.lock() {
+            Ok(mut guard) => drop(guard.take()),
+            Err(e) => drop(e.into_inner().take()),
+        })
+        .unwrap();
     }
 }
 

@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove `lazy_static` dependency
 - Add support for `smol` version 2 as runtime
 - Update `deadpool-runtime` dependency to version 0.2
+- Remove `SpawnBlockingError` re-export
 
 ## [0.12.4] - 2026-02-02 (yanked)
 

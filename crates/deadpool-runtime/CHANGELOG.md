@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Remove all methods from `Runtime` enum and make them regular functions
+  taking the `Runtime` as first argument. This makes it possible to
+  re-export the `Runtime` type without needing to re-export the
+  `SpawnBlockingError` type as well.
+
 ## [0.2.0] - 2026-02-02
 
 - Bump up MSRV to `1.85` and Rust edition to `2024`
