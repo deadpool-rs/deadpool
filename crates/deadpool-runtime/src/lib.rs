@@ -42,7 +42,7 @@ pub enum Runtime {
 
     #[cfg(feature = "smol_2")]
     #[cfg_attr(docsrs, doc(cfg(feature = "smol_2")))]
-    /// [`smol` 2.0](smol_2) runtime.
+    /// `smol` 2.0 runtime.
     Smol2,
 }
 
@@ -108,7 +108,7 @@ where
 
 /// Runs the given closure on a thread where blocking is acceptable.
 ///
-/// It works similar to [`Runtime::spawn_blocking()`] but doesn't return a
+/// It works similar to [`spawn_blocking()`] but doesn't return a
 /// [`Future`] and is meant to be used for background tasks.
 ///
 /// # Errors
