@@ -19,14 +19,14 @@ This crate provides two implementations:
 
 ## Features
 
-| Feature          | Description                                                              | Extra dependencies | Default |
-| ---------------- | ------------------------------------------------------------------------ | ------------------ | ------- |
-| `managed`        | Enable managed pool implementation                                       | -                  | yes     |
-| `unmanaged`      | Enable unmanaged pool implementation                                     | -                  | yes     |
-| `rt_tokio_1`     | Enable support for [tokio](https://crates.io/crates/tokio) crate         | `tokio/time`       | no      |
-| `rt_async-std_1` | Enable support for [async-std](https://crates.io/crates/async-std) crate | `async-std`        | no      |
-| `rt_smol_2`      | Enable support for [smol](https://crates.io/crates/smol) crate           | `smol`             | no      |
-| `serde`          | Enable support for deserializing pool config                             | `serde/derive`     | no      |
+| Feature          | Description                                                              | Extra dependencies                     | Default |
+| ---------------- | ------------------------------------------------------------------------ | -------------------------------------- | ------- |
+| `managed`        | Enable managed pool implementation                                       | -                                      | yes     |
+| `unmanaged`      | Enable unmanaged pool implementation                                     | -                                      | yes     |
+| `rt_tokio_1`     | Enable support for [tokio](https://crates.io/crates/tokio) crate         | `tokio/time`                           | no      |
+| `rt_async-std_1` | Enable support for [async-std](https://crates.io/crates/async-std) crate | `async-std`                            | no      |
+| `rt_smol_2`      | Enable support for [smol](https://crates.io/crates/smol) crate           | `async-io`, `blocking`, `futures-lite` | no      |
+| `serde`          | Enable support for deserializing pool config                             | `serde/derive`                         | no      |
 
 The runtime features (`rt_*`) are only needed if you need support for
 timeouts. If you try to use timeouts without specifying a runtime at
