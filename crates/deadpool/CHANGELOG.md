@@ -9,17 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Bump up MSRV to `1.85` and Rust edition to `2024`
-- Remove `lazy_static` dependency
-- Add support for `smol` version 2 as runtime
 - Update `deadpool-runtime` dependency to version 0.3
 - Remove `SpawnBlockingError` re-export
 
 ## [0.12.4] - 2026-02-02 (yanked)
 
-This release was botched as `deadpool` re-exports `deadpool-runtime::SpawnBlockingError`
-which was modified in `deadpool-runtime` version 0.2. This change requires a
-breaking release. Thus the next `deadpool` release is version `0.13`.
+- Bump up MSRV to `1.85` and Rust edition to `2024`
+- Remove `lazy_static` dependency
+- Update `deadpool-runtime` dependency to version 0.2
+- Add support for `smol` version 2 as runtime
+
+This release was yanked because `deadpool` publicly re-exports
+`deadpool-runtime::SpawnBlockingError`. That type was changed in
+`deadpool-runtime` 0.2, making the change a breaking one for
+`deadpool` as well. Supporting the new runtime therefore requires
+a breaking `deadpool` release.
 
 ## [0.12.3] - 2025-08-19
 
