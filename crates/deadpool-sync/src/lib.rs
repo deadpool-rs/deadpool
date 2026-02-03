@@ -37,17 +37,17 @@ pub enum InteractError {
     /// Provided callback has panicked.
     Panic(Box<dyn Any + Send + 'static>),
 
-    /// Callback was aborted. This variant needs to exist for technical
+    /// Callback was cancelled. This variant needs to exist for technical
     /// reasons but you should never actually be able to get this as a
     /// return value when calling `SyncWrapper::interact`.
-    Aborted,
+    Cancelled,
 }
 
 impl fmt::Display for InteractError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Panic(_) => write!(f, "Panic"),
-            Self::Aborted => write!(f, "Aborted"),
+            Self::Cancelled => write!(f, "Cancelled"),
         }
     }
 }
@@ -58,7 +58,7 @@ impl From<SpawnBlockingError> for InteractError {
     fn from(value: SpawnBlockingError) -> Self {
         match value {
             SpawnBlockingError::Panic(p) => Self::Panic(p),
-            SpawnBlockingError::Cancelled => Self::Aborted,
+            SpawnBlockingError::Cancelled => Self::Cancelled,
         }
     }
 }
@@ -130,7 +130,7 @@ where
         let span = tracing::Span::current();
         spawn_blocking(self.runtime, move || {
             let mut guard = arc.lock().unwrap();
-            let conn: &mut T = guard.as_mut().ok_or(InteractError::Aborted)?;
+            let conn: &mut T = guard.as_mut().ok_or(InteractError::Cancelled)?;
             #[cfg(feature = "tracing")]
             let _span = span.enter();
             Ok(f(conn))

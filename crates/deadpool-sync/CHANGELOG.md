@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Rename `SpawnBlockingError::Aborted` to `SpawnBlockingError::Cancelled`
+
 ## [0.1.5] - 2026-02-02
 
 - Bump up MSRV to `1.85` and Rust edition to `2024`.
