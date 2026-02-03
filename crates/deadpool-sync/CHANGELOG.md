@@ -12,10 +12,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rename `SpawnBlockingError::Aborted` to `SpawnBlockingError::Cancelled`
 - Update `deadpool-runtime` dependency to version `0.3`
 
-## [0.1.5] - 2026-02-02
+## [0.1.5] - 2026-02-02 (yanked)
 
 - Bump up MSRV to `1.85` and Rust edition to `2024`.
 - Update `deadpool-runtime` dependency to version `0.2`
+
+This release was yanked because `deadpool` requires a breaking release to
+support the latest `deadpool-runtime`. While this crate release was
+technically valid, it is unusable in practice: no `deadpool-*` crate can
+depend on it due to the runtime version mismatch. Leaving it published
+would only cause it to appear as an outdated dependency with no viable
+upgrade path.
 
 ## [0.1.4] - 2024-06-04
 
