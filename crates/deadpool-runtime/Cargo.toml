@@ -38,3 +38,6 @@ tokio_1 = { package = "tokio", version = "1.0", features = [
 
 [dev-dependencies]
 tokio_1 = { package = "tokio", version = "1.0", features = ["rt", "macros"] }
+
+[package.metadata.docs.rs]
+all-features = true
