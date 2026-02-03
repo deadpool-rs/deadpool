@@ -14,11 +14,11 @@ reexports by the crates using it.
 
 ## Features
 
-| Feature       | Description                                                              | Extra dependencies                                              | Default |
-| ------------- | ------------------------------------------------------------------------ | --------------------------------------------------------------- | ------- |
-| `tokio_1`     | Enable support for [tokio](https://crates.io/crates/tokio) crate         | `tokio/time`, `tokio/rt`                                        | no      |
-| `async-std_1` | Enable support for [async-std](https://crates.io/crates/async-std) crate | `async-std`                                                     | no      |
-| `smol_2`      | Enable support for [smol](https://crates.io/crates/smol) crate           | `dep:smol_2_async-io`, `smol_2_blocking`, `smol_2_futures-lite` | no      |
+| Feature       | Description                                                              | Extra dependencies                                          | Default |
+| ------------- | ------------------------------------------------------------------------ | ----------------------------------------------------------- | ------- |
+| `tokio_1`     | Enable support for [tokio](https://crates.io/crates/tokio) crate         | `tokio/time`, `tokio/rt`                                    | no      |
+| `async-std_1` | Enable support for [async-std](https://crates.io/crates/async-std) crate | `async-std`                                                 | no      |
+| `smol_2`      | Enable support for [smol](https://crates.io/crates/smol) crate           | `smol_2_async-io`, `smol_2_blocking`, `smol_2_futures-lite` | no      |
 
 ## License
 
