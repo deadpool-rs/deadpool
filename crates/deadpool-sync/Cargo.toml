@@ -13,7 +13,7 @@ readme = "README.md"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-deadpool-runtime = { version = "0.2.0", path = "../deadpool-runtime" }
+deadpool-runtime = { version = "0.3", path = "../deadpool-runtime" }
 tracing = { version = "0.1.2", optional = true }
 
 [dev-dependencies]

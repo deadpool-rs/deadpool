@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Rename `SpawnBlockingError::Aborted` to `SpawnBlockingError::Cancelled`
+- Update `deadpool-runtime` dependency to version `0.3`
 
 ## [0.1.5] - 2026-02-02
 
