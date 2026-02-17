@@ -45,10 +45,10 @@ with-deprecated = ["diesel/with-deprecated"]
 without-deprecated = ["diesel/without-deprecated"]
 
 [dependencies]
-deadpool = { path = "../deadpool", version = "0.12.0", default-features = false, features = [
+deadpool = { path = "../deadpool", version = "0.13.0", default-features = false, features = [
     "managed",
 ] }
-deadpool-sync = { path = "../deadpool-sync", version = "0.1.1" }
+deadpool-sync = { path = "../deadpool-sync", version = "0.2" }
 diesel = { version = "2.2.3", default-features = false }
 
 [dev-dependencies]

@@ -1,6 +1,6 @@
 [package]
 name = "deadpool-sync"
-version = "0.1.5"
+version = "0.2.0"
 edition = "2024"
 rust-version = "1.85"
 authors = ["Michael P. Jung <michael.jung@terreon.de>"]
@@ -17,5 +17,5 @@ deadpool-runtime = { version = "0.3", path = "../deadpool-runtime" }
 tracing = { version = "0.1.2", optional = true }
 
 [dev-dependencies]
-deadpool = { version = "0.12", path = "../deadpool", features = ["rt_tokio_1"] }
+deadpool = { version = "0.13", path = "../deadpool", features = ["rt_tokio_1"] }
 tokio = { version = "1.38.0", features = ["macros", "rt-multi-thread"] }

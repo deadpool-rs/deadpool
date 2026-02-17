@@ -36,7 +36,7 @@ vendored-openssl = ["lapin/vendored-openssl"]
 
 [dependencies]
 async-rs = { version = "0.8", default-features = false }
-deadpool = { path = "../deadpool", version = "0.12.0", default-features = false, features = [
+deadpool = { path = "../deadpool", version = "0.13.0", default-features = false, features = [
     "managed",
 ] }
 lapin = { version = "4", default-features = false }

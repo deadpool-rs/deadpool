@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.13.0] - 2026-02-17
+
 - Update `deadpool-runtime` dependency to version 0.3
 - Remove `SpawnBlockingError` re-export
 
@@ -227,7 +229,8 @@ a breaking `deadpool` release.
 - First release
 
 <!-- next-url -->
-[Unreleased]: https://github.com/deadpool-rs/deadpool/compare/deadpool-v0.12.4...HEAD
+[Unreleased]: https://github.com/deadpool-rs/deadpool/compare/deadpool-v0.13.0...HEAD
+[0.13.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-v0.12.4...deadpool-v0.13.0
 [0.12.4]: https://github.com/deadpool-rs/deadpool/compare/deadpool-v0.12.3...deadpool-v0.12.4
 [0.12.3]: https://github.com/deadpool-rs/deadpool/compare/deadpool-v0.12.2...deadpool-v0.12.3
 [0.12.2]: https://github.com/deadpool-rs/deadpool/compare/deadpool-v0.12.1...deadpool-v0.12.2

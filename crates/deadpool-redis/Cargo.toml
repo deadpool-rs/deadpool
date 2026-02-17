@@ -56,7 +56,7 @@ smol-rustls-comp = ["redis/smol-rustls-comp"]
 uuid = ["redis/uuid"]
 
 [dependencies]
-deadpool = { path = "../deadpool", version = "0.12.0", default-features = false, features = [
+deadpool = { path = "../deadpool", version = "0.13.0", default-features = false, features = [
     "managed",
 ] }
 redis = { version = "0.32", default-features = false, features = ["aio"] }

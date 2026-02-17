@@ -27,7 +27,7 @@ udp = ["async-memcached/udp"]
 
 [dependencies]
 async-memcached = { version = "0.5", default-features = false }
-deadpool = { path = "../deadpool", version = "0.12.0", default-features = false, features = [
+deadpool = { path = "../deadpool", version = "0.13.0", default-features = false, features = [
     "managed",
 ] }
 # This crate doesn't directly depend on tokio but async-memcached 0.1.7
