@@ -20,7 +20,7 @@ jobs:
         feature:
           - serde
           - rt_tokio_1
-          - rt_async-std_1
+          - rt_smol_2
           - cluster
           - sentinel
         os:
@@ -47,7 +47,7 @@ jobs:
         with:
           components: rustc,rust-std,cargo,clippy
           toolchain: stable
-      - run: cargo clippy --no-deps --features serde,rt_tokio_1,rt_async-std_1,cluster,sentinel -- -D warnings
+      - run: cargo clippy --no-deps --features serde,rt_tokio_1,rt_smol_2,cluster,sentinel -- -D warnings
   msrv:
     name: MSRV
     runs-on: ubuntu-latest
@@ -62,7 +62,7 @@ jobs:
           components: rustc,rust-std,cargo
           toolchain: "1.85"
       - run: ../../tools/cargo-update-minimal-versions.sh 1.85
-      - run: cargo check --features serde,rt_tokio_1,rt_async-std_1,cluster,sentinel
+      - run: cargo check --features serde,rt_tokio_1,rt_smol_2,cluster,sentinel
   rustdoc:
     name: Doc
     runs-on: ubuntu-latest
@@ -72,7 +72,7 @@ jobs:
         with:
           components: rustc,rust-std,cargo
           toolchain: stable
-      - run: cargo doc --no-deps --features serde,rt_tokio_1,rt_async-std_1,cluster,sentinel
+      - run: cargo doc --no-deps --features serde,rt_tokio_1,rt_smol_2,cluster,sentinel
   rustfmt:
     name: rustfmt
     runs-on: ubuntu-latest
@@ -113,7 +113,7 @@ jobs:
           REDIS_SENTINEL__SERVER_TYPE: Master
           REDIS_SENTINEL__URLS: redis://127.0.0.1:26379
           REDIS__URL: redis://127.0.0.1/
-        run: cargo test --features serde,rt_tokio_1,rt_async-std_1,cluster,sentinel
+        run: cargo test --features serde,rt_tokio_1,rt_smol_2,cluster,sentinel
 name: deadpool-redis
 "on":
   pull_request:

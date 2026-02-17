@@ -193,6 +193,7 @@ impl From<redis::ConnectionAddr> for ConnectionAddr {
                 insecure,
             },
             redis::ConnectionAddr::Unix(path) => Self::Unix(path),
+            other => unimplemented!("unsupported redis::ConnectionAddr variant: {other:?}"),
         }
     }
 }
@@ -214,18 +215,18 @@ pub struct ConnectionInfo {
 
 impl From<ConnectionInfo> for redis::ConnectionInfo {
     fn from(info: ConnectionInfo) -> Self {
-        Self {
-            addr: info.addr.into(),
-            redis: info.redis.into(),
-        }
+        redis::IntoConnectionInfo::into_connection_info(redis::ConnectionAddr::from(info.addr))
+            .expect("converting ConnectionAddr into redis::ConnectionInfo is infallible")
+            .set_redis_settings(info.redis.into())
+            .set_tcp_settings(Default::default())
     }
 }
 
 impl From<redis::ConnectionInfo> for ConnectionInfo {
     fn from(info: redis::ConnectionInfo) -> Self {
         Self {
-            addr: info.addr.into(),
-            redis: info.redis.into(),
+            addr: info.addr().clone().into(),
+            redis: info.redis_settings().clone().into(),
         }
     }
 }
@@ -276,25 +277,30 @@ impl From<RedisConnectionInfo> for redis::RedisConnectionInfo {
             ProtocolVersion::RESP2 => redis::ProtocolVersion::RESP2,
             ProtocolVersion::RESP3 => redis::ProtocolVersion::RESP3,
         };
-        Self {
-            db: info.db,
-            username: info.username,
-            password: info.password,
-            protocol,
+        let mut result = redis::RedisConnectionInfo::default()
+            .set_db(info.db)
+            .set_protocol(protocol);
+        if let Some(username) = info.username {
+            result = result.set_username(username);
         }
+        if let Some(password) = info.password {
+            result = result.set_password(password);
+        }
+        result
     }
 }
 
 impl From<redis::RedisConnectionInfo> for RedisConnectionInfo {
     fn from(info: redis::RedisConnectionInfo) -> Self {
-        let protocol = match info.protocol {
+        let protocol = match info.protocol() {
             redis::ProtocolVersion::RESP2 => ProtocolVersion::RESP2,
             redis::ProtocolVersion::RESP3 => ProtocolVersion::RESP3,
+            other => unimplemented!("unsupported redis::ProtocolVersion variant: {other:?}"),
         };
         Self {
-            db: info.db,
-            username: info.username,
-            password: info.password,
+            db: info.db(),
+            username: info.username().map(ToOwned::to_owned),
+            password: info.password().map(ToOwned::to_owned),
             protocol,
         }
     }

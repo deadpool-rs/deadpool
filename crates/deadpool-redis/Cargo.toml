@@ -20,7 +20,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 [features]
 default = ["rt_tokio_1"]
 rt_tokio_1 = ["deadpool/rt_tokio_1", "tokio-comp"]
-rt_async-std_1 = ["deadpool/rt_async-std_1", "async-std-comp"]
+rt_smol_2 = ["deadpool/rt_smol_2", "smol-comp"]
 serde = ["deadpool/serde", "dep:serde"]
 
 # Re-export of redis features
@@ -33,22 +33,15 @@ tls-native-tls = ["redis/tls-native-tls"]
 tls-rustls = ["redis/tls-rustls"]
 tls-rustls-insecure = ["redis/tls-rustls-insecure"]
 tls-rustls-webpki-roots = ["redis/tls-rustls-webpki-roots"]
-async-std-comp = ["redis/async-std-comp"]
-async-std-native-tls-comp = ["redis/async-std-native-tls-comp"]
-async-std-rustls-comp = ["redis/async-std-rustls-comp"]
 tokio-comp = ["redis/tokio-comp"]
 tokio-native-tls-comp = ["redis/tokio-native-tls-comp"]
 tokio-rustls-comp = ["redis/tokio-rustls-comp"]
 connection-manager = ["redis/connection-manager"]
-safe_iterators = ["redis/safe_iterators"]
 streams = ["redis/streams"]
 cluster-async = ["cluster"]
-keep-alive = ["redis/keep-alive"]
 sentinel = ["redis/sentinel", "dep:tokio", "tokio/sync"]
-tcp_nodelay = ["redis/tcp_nodelay"]
 vector-sets = ["redis/vector-sets"]
 num-bigint = ["redis/num-bigint"]
-disable-client-setinfo = ["redis/disable-client-setinfo"]
 cache-aio = ["redis/cache-aio"]
 smol-comp = ["redis/smol-comp"]
 smol-native-tls-comp = ["redis/smol-native-tls-comp"]
@@ -59,7 +52,7 @@ uuid = ["redis/uuid"]
 deadpool = { path = "../deadpool", version = "0.13.0", default-features = false, features = [
     "managed",
 ] }
-redis = { version = "0.32", default-features = false, features = ["aio"] }
+redis = { version = "1.0.3", default-features = false, features = ["aio"] }
 serde = { package = "serde", version = "1.0", features = [
     "derive",
 ], optional = true }
@@ -69,7 +62,5 @@ tokio = { version = "1.6", default-features = false, optional = true }
 config = { version = "0.15", features = ["json"] }
 dotenvy = "0.15.0"
 futures = "0.3.15"
-redis = { version = "0.32", default-features = false, features = [
-    "tokio-comp",
-] }
+redis = { version = "1", default-features = false, features = ["tokio-comp"] }
 tokio = { version = "1.6", features = ["macros", "rt-multi-thread", "sync"] }

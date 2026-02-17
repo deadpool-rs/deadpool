@@ -178,6 +178,9 @@ impl From<redis::sentinel::SentinelServerType> for SentinelServerType {
         match value {
             redis::sentinel::SentinelServerType::Master => SentinelServerType::Master,
             redis::sentinel::SentinelServerType::Replica => SentinelServerType::Replica,
+            other => {
+                unimplemented!("unsupported redis::sentinel::SentinelServerType variant: {other:?}")
+            }
         }
     }
 }
@@ -207,6 +210,10 @@ impl From<redis::TlsMode> for TlsMode {
         match value {
             redis::TlsMode::Insecure => TlsMode::Insecure,
             redis::TlsMode::Secure => TlsMode::Secure,
+            other => unimplemented!(
+                "unsupported redis::TlsMode variant discriminant: {:?}",
+                std::mem::discriminant(&other)
+            ),
         }
     }
 }
@@ -235,18 +242,19 @@ pub struct SentinelNodeConnectionInfo {
 
 impl From<SentinelNodeConnectionInfo> for redis::sentinel::SentinelNodeConnectionInfo {
     fn from(info: SentinelNodeConnectionInfo) -> Self {
-        Self {
-            tls_mode: info.tls_mode.map(|m| m.into()),
-            redis_connection_info: info.redis_connection_info.map(|i| i.into()),
+        let mut result = redis::sentinel::SentinelNodeConnectionInfo::default();
+        if let Some(tls_mode) = info.tls_mode {
+            result = result.set_tls_mode(tls_mode.into());
         }
+        if let Some(redis_connection_info) = info.redis_connection_info {
+            result = result.set_redis_connection_info(redis_connection_info.into());
+        }
+        result
     }
 }
 
 impl From<redis::sentinel::SentinelNodeConnectionInfo> for SentinelNodeConnectionInfo {
-    fn from(info: redis::sentinel::SentinelNodeConnectionInfo) -> Self {
-        Self {
-            tls_mode: info.tls_mode.map(|m| m.into()),
-            redis_connection_info: info.redis_connection_info.map(|m| m.into()),
-        }
+    fn from(_info: redis::sentinel::SentinelNodeConnectionInfo) -> Self {
+        Self::default()
     }
 }

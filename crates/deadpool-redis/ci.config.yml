@@ -4,7 +4,7 @@ features:
   own:
     - serde
     - rt_tokio_1
-    - rt_async-std_1
+    - rt_smol_2
   required:
     - cluster
     - sentinel
