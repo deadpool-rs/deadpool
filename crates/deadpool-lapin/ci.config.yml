@@ -3,8 +3,12 @@ backend: lapin
 features:
   own:
     - serde
-    - rt_async-std_1
     - rt_tokio_1
+    - rt_smol_2
+  exclude:
+    - async-global-executor
+    - smol
+    - tokio
 
 test:
   services:

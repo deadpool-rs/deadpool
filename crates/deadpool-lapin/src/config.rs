@@ -1,4 +1,5 @@
-use std::convert::Infallible;
+use std::fmt;
+use std::sync::Arc;
 
 use crate::{CreatePoolError, Manager, Pool, PoolBuilder, PoolConfig, Runtime};
 
@@ -37,31 +38,13 @@ pub struct Config {
 
     /// [`Pool`] configuration.
     pub pool: Option<PoolConfig>,
-
-    /// Connection properties.
-    #[cfg_attr(feature = "serde", serde(skip))]
-    pub connection_properties: lapin::ConnectionProperties,
 }
 
-pub(crate) struct ConnProps<'a>(pub(crate) &'a lapin::ConnectionProperties);
-impl std::fmt::Debug for ConnProps<'_> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("ConnectionProperties")
-            .field("locale", &self.0.locale)
-            .field("client_properties", &self.0.client_properties)
-            .finish_non_exhaustive()
-    }
-}
-
-impl std::fmt::Debug for Config {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl fmt::Debug for Config {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("Config")
             .field("url", &self.url)
             .field("pool", &self.pool)
-            .field(
-                "connection_properties",
-                &ConnProps(&self.connection_properties),
-            )
             .finish()
     }
 }
@@ -72,42 +55,56 @@ impl Config {
     /// # Errors
     ///
     /// See [`CreatePoolError`] for details.
-    pub fn create_pool(&self, runtime: Option<Runtime>) -> Result<Pool, CreatePoolError> {
-        self.builder(runtime)
+    pub fn create_pool<F>(
+        &self,
+        connection_properties: F,
+        runtime: Runtime,
+    ) -> Result<Pool, CreatePoolError>
+    where
+        F: Fn() -> lapin::ConnectionProperties + Send + Sync + 'static,
+    {
+        self.builder(connection_properties, runtime)
+            .map_err(CreatePoolError::Config)?
             .build()
             .map_err(CreatePoolError::Build)
     }
 
     /// Creates a new [`PoolBuilder`] using this [`Config`].
-    pub fn builder(&self, runtime: Option<Runtime>) -> PoolBuilder {
+    ///
+    /// # Errors
+    ///
+    /// See [`ConfigError`] for details.
+    pub fn builder<F>(
+        &self,
+        connection_properties: F,
+        runtime: Runtime,
+    ) -> Result<PoolBuilder, ConfigError>
+    where
+        F: Fn() -> lapin::ConnectionProperties + Send + Sync + 'static,
+    {
         let url = self.get_url().to_string();
         let pool_config = self.get_pool_config();
-
-        let conn_props = self.connection_properties.clone();
-        let conn_props = match runtime {
-            None => conn_props,
+        let connection_properties: Arc<
+            dyn Fn() -> lapin::ConnectionProperties + Send + Sync + 'static,
+        > = Arc::new(connection_properties);
+        let manager = match runtime {
             #[cfg(feature = "rt_tokio_1")]
-            Some(Runtime::Tokio1) => {
-                #[cfg(not(windows))]
-                let conn_props = conn_props.with_reactor(tokio_reactor_trait::Tokio::current());
-                conn_props.with_executor(tokio_executor_trait::Tokio::current())
+            Runtime::Tokio1 => {
+                let runtime = async_rs::Runtime::tokio_current();
+                let connection_properties = connection_properties.clone();
+                Manager::new(url, move || connection_properties(), runtime)
             }
-            #[cfg(feature = "rt_async-std_1")]
-            #[allow(deprecated)]
-            Some(Runtime::AsyncStd1) => conn_props
-                .with_executor(async_executor_trait::AsyncStd)
-                .with_reactor(async_reactor_trait::AsyncIo),
+            #[cfg(feature = "rt_smol_2")]
+            Runtime::Smol2 => {
+                let runtime = async_rs::Runtime::smol();
+                let connection_properties = connection_properties.clone();
+                Manager::new(url, move || connection_properties(), runtime)
+            }
             #[allow(unreachable_patterns)]
-            _ => unreachable!(),
+            _ => return Err(ConfigError::UnsupportedRuntime(runtime)),
         };
 
-        let mut builder = Pool::builder(Manager::new(url, conn_props)).config(pool_config);
-
-        if let Some(runtime) = runtime {
-            builder = builder.runtime(runtime)
-        }
-
-        builder
+        Ok(Pool::builder(manager).config(pool_config).runtime(runtime))
     }
 
     /// Returns URL which can be used to connect to the database.
@@ -124,7 +121,9 @@ impl Config {
 }
 
 /// This error is returned if there is something wrong with the lapin configuration.
-///
-/// This is just a type alias to [`Infallible`] at the moment as there
-/// is no validation happening at the configuration phase.
-pub type ConfigError = Infallible;
+#[derive(Clone, Copy, Debug, Eq, PartialEq, thiserror::Error)]
+pub enum ConfigError {
+    /// The selected [`Runtime`] is not supported by this crate build.
+    #[error("unsupported runtime for deadpool-lapin: {0:?}")]
+    UnsupportedRuntime(Runtime),
+}

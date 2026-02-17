@@ -23,8 +23,10 @@
 
 mod config;
 
+use std::{future::Future, pin::Pin};
+
 use deadpool::managed;
-use lapin::{ConnectionProperties, Error};
+use lapin::Error;
 
 pub use lapin;
 
@@ -44,35 +46,47 @@ pub type Connection = managed::Object<Manager>;
 
 type RecycleResult = managed::RecycleResult<Error>;
 type RecycleError = managed::RecycleError<Error>;
+type ConnectFuture = Pin<Box<dyn Future<Output = Result<lapin::Connection, Error>> + Send>>;
+type ConnectFn = dyn Fn(String, lapin::ConnectionProperties) -> ConnectFuture + Send + Sync;
 
 /// [`Manager`] for creating and recycling [`lapin::Connection`].
 ///
 /// [`Manager`]: managed::Manager
 pub struct Manager {
     addr: String,
-    connection_properties: ConnectionProperties,
+    connect: Box<ConnectFn>,
+    connection_properties: Box<dyn Fn() -> lapin::ConnectionProperties + Send + Sync>,
 }
 
 impl std::fmt::Debug for Manager {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("Manager")
             .field("addr", &self.addr)
-            .field(
-                "connection_properties",
-                &config::ConnProps(&self.connection_properties),
-            )
-            .finish()
+            .finish_non_exhaustive()
     }
 }
 
 impl Manager {
     /// Creates a new [`Manager`] using the given AMQP address and
-    /// [`lapin::ConnectionProperties`].
+    /// [`async_rs::Runtime`] and a [`lapin::ConnectionProperties`] factory.
     #[must_use]
-    pub fn new<S: Into<String>>(addr: S, connection_properties: ConnectionProperties) -> Self {
+    pub fn new<S, F, RK>(addr: S, connection_properties: F, runtime: async_rs::Runtime<RK>) -> Self
+    where
+        S: Into<String>,
+        F: Fn() -> lapin::ConnectionProperties + Send + Sync + 'static,
+        RK: async_rs::traits::RuntimeKit + Send + Sync + Clone + 'static,
+    {
+        let connect = move |addr: String, conn_props: lapin::ConnectionProperties| {
+            let runtime = runtime.clone();
+            Box::pin(async move {
+                lapin::Connection::connect_with_runtime(addr.as_str(), conn_props, runtime).await
+            }) as ConnectFuture
+        };
+
         Self {
             addr: addr.into(),
-            connection_properties,
+            connect: Box::new(connect),
+            connection_properties: Box::new(connection_properties),
         }
     }
 }
@@ -82,19 +96,19 @@ impl managed::Manager for Manager {
     type Error = Error;
 
     async fn create(&self) -> Result<lapin::Connection, Error> {
-        let conn =
-            lapin::Connection::connect(self.addr.as_str(), self.connection_properties.clone())
-                .await?;
+        let conn_props = (self.connection_properties)();
+        let conn = (self.connect)(self.addr.clone(), conn_props).await?;
         Ok(conn)
     }
 
     async fn recycle(&self, conn: &mut lapin::Connection, _: &Metrics) -> RecycleResult {
-        match conn.status().state() {
-            lapin::ConnectionState::Connected => Ok(()),
-            other_state => Err(RecycleError::message(format!(
-                "lapin connection is in state: {:?}",
-                other_state
-            ))),
+        if conn.status().connected() {
+            Ok(())
+        } else {
+            Err(RecycleError::message(format!(
+                "lapin connection is not connected: {:?}",
+                conn.status()
+            )))
         }
     }
 }

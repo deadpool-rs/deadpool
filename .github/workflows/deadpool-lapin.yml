@@ -19,8 +19,8 @@ jobs:
       matrix:
         feature:
           - serde
-          - rt_async-std_1
           - rt_tokio_1
+          - rt_smol_2
         os:
           - ubuntu-latest
           - windows-2025
@@ -45,7 +45,7 @@ jobs:
         with:
           components: rustc,rust-std,cargo,clippy
           toolchain: stable
-      - run: cargo clippy --no-deps --features serde,rt_async-std_1,rt_tokio_1 -- -D warnings
+      - run: cargo clippy --no-deps --features serde,rt_tokio_1,rt_smol_2 -- -D warnings
   msrv:
     name: MSRV
     runs-on: ubuntu-latest
@@ -58,9 +58,9 @@ jobs:
       - uses: dtolnay/rust-toolchain@v1
         with:
           components: rustc,rust-std,cargo
-          toolchain: "1.85"
-      - run: ../../tools/cargo-update-minimal-versions.sh 1.85
-      - run: cargo check --features serde,rt_async-std_1,rt_tokio_1
+          toolchain: "1.88"
+      - run: ../../tools/cargo-update-minimal-versions.sh 1.88
+      - run: cargo check --features serde,rt_tokio_1,rt_smol_2
   rustdoc:
     name: Doc
     runs-on: ubuntu-latest
@@ -70,7 +70,7 @@ jobs:
         with:
           components: rustc,rust-std,cargo
           toolchain: stable
-      - run: cargo doc --no-deps --features serde,rt_async-std_1,rt_tokio_1
+      - run: cargo doc --no-deps --features serde,rt_tokio_1,rt_smol_2
   rustfmt:
     name: rustfmt
     runs-on: ubuntu-latest
@@ -101,7 +101,7 @@ jobs:
           toolchain: stable
       - env:
           AMQP__URL: amqp://deadpool:deadpool@127.0.0.1/deadpool
-        run: cargo test --features serde,rt_async-std_1,rt_tokio_1
+        run: cargo test --features serde,rt_tokio_1,rt_smol_2
 name: deadpool-lapin
 "on":
   pull_request:
