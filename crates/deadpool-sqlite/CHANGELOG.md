@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.13.0] - 2026-02-17
+
 - Bump up MSRV to `1.85` and Rust edition to `2024`
 - Update `rusqlite` dependency to version `0.38`
 - Re-export `rusqlite` features:
@@ -91,7 +93,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - First release
 
 <!-- next-url -->
-[Unreleased]: https://github.com/deadpool-rs/deadpool/compare/deadpool-sqlite-v0.12.1...HEAD
+[Unreleased]: https://github.com/deadpool-rs/deadpool/compare/deadpool-sqlite-v0.13.0...HEAD
+[0.13.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-sqlite-v0.12.1...deadpool-sqlite-v0.13.0
 [0.12.1]: https://github.com/deadpool-rs/deadpool/compare/deadpool-sqlite-v0.12.0...deadpool-sqlite-v0.12.1
 [0.12.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-sqlite-v0.11.0...deadpool-sqlite-v0.12.0
 [0.11.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-sqlite-v0.10.0...deadpool-sqlite-v0.11.0
