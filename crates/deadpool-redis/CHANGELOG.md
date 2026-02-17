@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bump up MSRV to `1.85` and Rust edition to `2024`
 - Remove support for `async-std`
 - Add support for `smol` runtime
+- Re-export `redis` features:
+  - `ahash`
+  - `bigdecimal`
+  - `rust_decimal`
 
 ## [0.22.1] - 2026-01-12
 

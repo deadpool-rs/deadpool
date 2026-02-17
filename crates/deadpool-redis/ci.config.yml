@@ -5,15 +5,19 @@ features:
     - serde
     - rt_tokio_1
     - rt_smol_2
+  optional-dependencies:
+    - ahash
+    - bigdecimal
+    - rust_decimal
+    - uuid
   required:
     - cluster
     - sentinel
   exclude:
     - tls
-    - async-std-tls-comp
     - aio
-  optional-dependencies:
-    - uuid
+    - r2d2
+    - bb8
 
 test:
   services:
