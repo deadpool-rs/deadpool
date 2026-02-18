@@ -43,6 +43,16 @@ impl Connection {
     pub fn take(this: Self) -> ClusterConnection {
         Object::take(this.conn)
     }
+
+    /// Returns the unique [`ObjectId`] of this [`Connection`].
+    pub fn id(this: &Self) -> deadpool::managed::ObjectId {
+        Object::id(&this.conn)
+    }
+
+    /// Returns the [`Metrics`] of this [`Connection`].
+    pub fn metrics(this: &Self) -> &deadpool::managed::Metrics {
+        Object::metrics(&this.conn)
+    }
 }
 
 impl From<Object> for Connection {
