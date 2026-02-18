@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.23.0] - 2026-02-18
+
 - Update `redis` dependency to version `1`
 - Bump up MSRV to `1.85` and Rust edition to `2024`
 - Remove support for `async-std`
