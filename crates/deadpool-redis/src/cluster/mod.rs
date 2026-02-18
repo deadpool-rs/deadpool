@@ -45,12 +45,12 @@ impl Connection {
     }
 
     /// Returns the unique [`ObjectId`] of this [`Connection`].
-    pub fn id(this: &Self) -> deadpool::managed::ObjectId {
+    pub fn id(this: &Self) -> ObjectId {
         Object::id(&this.conn)
     }
 
     /// Returns the [`Metrics`] of this [`Connection`].
-    pub fn metrics(this: &Self) -> &deadpool::managed::Metrics {
+    pub fn metrics(this: &Self) -> &Metrics {
         Object::metrics(&this.conn)
     }
 }
