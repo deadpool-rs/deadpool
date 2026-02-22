@@ -75,8 +75,13 @@ where
 {
     obj: Arc<Mutex<Option<T>>>,
     runtime: Runtime,
-    drop_callback: Option<Box<dyn FnOnce() + Send + 'static>>,
+    drop_callback: Option<Mutex<Box<dyn FnOnce() + Send + 'static>>>,
 }
+
+const _: () = {
+    const fn assert_send_sync<T: Send + Sync>() {}
+    assert_send_sync::<SyncWrapper<()>>();
+};
 
 // Implemented manually to avoid unnecessary trait bound on `E` type parameter.
 impl<T> fmt::Debug for SyncWrapper<T>
@@ -163,7 +168,7 @@ where
     /// Set the callback when the actual obj is dropped.
     // https://github.com/deadpool-rs/deadpool/issues/330
     pub fn set_drop_callback<F>(&mut self, drop_callback: F) where F: FnOnce() + Send + 'static {
-        let _ = self.drop_callback.replace(Box::new(drop_callback));
+        let _ = self.drop_callback.replace(Mutex::new(Box::new(drop_callback)));
     }
 }
 
@@ -183,7 +188,7 @@ where
             if let Some(callback) = drop_callback {
                 #[cfg(feature = "tracing")]
                 let _span = span.enter();
-                callback();
+                callback.into_inner().unwrap()();
             }
         })
         .unwrap();
