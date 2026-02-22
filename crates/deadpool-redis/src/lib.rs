@@ -145,6 +145,22 @@ impl Manager {
             ping_number: AtomicUsize::new(0),
         })
     }
+
+    /// Creates a new [`Manager`] from the given `params` and TLS certificates.`
+    ///
+    /// # Errors
+    ///
+    /// If establishing a new [`Client`] fails.
+    #[cfg(feature = "tls-rustls")]
+    pub fn from_tls_certificates<T: IntoConnectionInfo>(
+        params: T,
+        tls_certs: redis::TlsCertificates,
+    ) -> RedisResult<Self> {
+        Ok(Self {
+            client: Client::build_with_tls(params, tls_certs)?,
+            ping_number: AtomicUsize::new(0),
+        })
+    }
 }
 
 impl managed::Manager for Manager {
