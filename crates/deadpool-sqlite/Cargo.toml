@@ -71,7 +71,7 @@ rusqlite = "0.38.0"
 serde = { package = "serde", version = "1.0", features = [
     "derive",
 ], optional = true }
-tokio = { version = "1.5", features = ["sync"] }
+tokio = { version = "1.37", features = ["sync"] }
 
 [dev-dependencies]
 config = { version = "0.15", features = ["json"] }

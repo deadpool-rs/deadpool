@@ -167,8 +167,13 @@ where
 
     /// Set the callback when the actual obj is dropped.
     // https://github.com/deadpool-rs/deadpool/issues/330
-    pub fn set_drop_callback<F>(&mut self, drop_callback: F) where F: FnOnce() + Send + 'static {
-        let _ = self.drop_callback.replace(Mutex::new(Box::new(drop_callback)));
+    pub fn set_drop_callback<F>(&mut self, drop_callback: F)
+    where
+        F: FnOnce() + Send + 'static,
+    {
+        let _ = self
+            .drop_callback
+            .replace(Mutex::new(Box::new(drop_callback)));
     }
 }
 

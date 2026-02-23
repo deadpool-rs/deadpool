@@ -77,7 +77,11 @@ impl Manager {
 
     /// Wait for all `rusqlite::Connection` is closed in background.
     pub async fn wait_all_inactive(&self) {
-        let _ = self.active_count.subscribe().wait_for(|count| *count == 0).await;
+        let _ = self
+            .active_count
+            .subscribe()
+            .wait_for(|count| *count == 0)
+            .await;
     }
 }
 
@@ -87,7 +91,8 @@ impl managed::Manager for Manager {
 
     async fn create(&self) -> Result<Self::Type, Self::Error> {
         let path = self.config.path.clone();
-        let mut conn = SyncWrapper::new(self.runtime, move || rusqlite::Connection::open(path)).await?;
+        let mut conn =
+            SyncWrapper::new(self.runtime, move || rusqlite::Connection::open(path)).await?;
         self.active_count.send_modify(|count| *count += 1);
         let active_count = self.active_count.clone();
         conn.set_drop_callback(move || active_count.send_modify(|count| *count -= 1));
