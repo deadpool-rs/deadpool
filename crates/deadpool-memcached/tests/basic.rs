@@ -19,7 +19,7 @@ async fn test_set_get() {
     let _ = conn.delete(test_key).await;
     assert_eq!(conn.get(test_key).await.unwrap(), None);
     conn.set(test_key, test_value, None, None).await.unwrap();
-    let value_bytes = conn.get(test_key).await.unwrap().unwrap().data.unwrap();
-    let value = String::from_utf8(value_bytes).unwrap();
+    let value =
+        String::from_utf8(conn.get(test_key).await.unwrap().unwrap().data.unwrap()).unwrap();
     assert_eq!(value, test_value);
 }
