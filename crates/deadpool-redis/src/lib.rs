@@ -35,7 +35,7 @@ use std::{
 
 use deadpool::managed;
 use redis::{
-    Client, IntoConnectionInfo, RedisError, RedisResult,
+    AsyncConnectionConfig, Client, IntoConnectionInfo, RedisError, RedisResult,
     aio::{ConnectionLike, MultiplexedConnection},
 };
 
@@ -127,10 +127,19 @@ impl ConnectionLike for Connection {
 /// [`Manager`] for creating and recycling [`redis`] connections.
 ///
 /// [`Manager`]: managed::Manager
-#[derive(Debug)]
 pub struct Manager {
     client: Client,
+    connection_config: Option<AsyncConnectionConfig>,
     ping_number: AtomicUsize,
+}
+
+impl std::fmt::Debug for Manager {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Manager")
+            .field("client", &self.client)
+            .field("ping_number", &self.ping_number)
+            .finish()
+    }
 }
 
 impl Manager {
@@ -142,6 +151,27 @@ impl Manager {
     pub fn new<T: IntoConnectionInfo>(params: T) -> RedisResult<Self> {
         Ok(Self {
             client: Client::open(params)?,
+            connection_config: None,
+            ping_number: AtomicUsize::new(0),
+        })
+    }
+
+    /// Creates a new [`Manager`] from the given `params` and
+    /// [`AsyncConnectionConfig`].
+    ///
+    /// This allows configuring connection-level settings such as response timeouts and connection
+    /// timeouts.
+    ///
+    /// # Errors
+    ///
+    /// If establishing a new [`Client`] fails.
+    pub fn new_with_config<T: IntoConnectionInfo>(
+        params: T,
+        connection_config: AsyncConnectionConfig,
+    ) -> RedisResult<Self> {
+        Ok(Self {
+            client: Client::open(params)?,
+            connection_config: Some(connection_config),
             ping_number: AtomicUsize::new(0),
         })
     }
@@ -152,7 +182,15 @@ impl managed::Manager for Manager {
     type Error = RedisError;
 
     async fn create(&self) -> Result<MultiplexedConnection, RedisError> {
-        let conn = self.client.get_multiplexed_async_connection().await?;
+        let conn = match &self.connection_config {
+            Some(config) => {
+                self.client
+                    .get_multiplexed_async_connection_with_config(config)
+                    .await?
+            }
+            None => self.client.get_multiplexed_async_connection().await?,
+        };
+
         Ok(conn)
     }
 
