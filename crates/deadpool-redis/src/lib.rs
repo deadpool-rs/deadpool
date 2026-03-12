@@ -31,6 +31,7 @@ pub mod sentinel;
 use std::{
     ops::{Deref, DerefMut},
     sync::atomic::{AtomicUsize, Ordering},
+    time::Duration,
 };
 
 use deadpool::managed;
@@ -127,19 +128,12 @@ impl ConnectionLike for Connection {
 /// [`Manager`] for creating and recycling [`redis`] connections.
 ///
 /// [`Manager`]: managed::Manager
+#[derive(Debug)]
 pub struct Manager {
     client: Client,
-    connection_config: Option<AsyncConnectionConfig>,
+    connection_timeout: Option<Option<Duration>>,
+    response_timeout: Option<Option<Duration>>,
     ping_number: AtomicUsize,
-}
-
-impl std::fmt::Debug for Manager {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("Manager")
-            .field("client", &self.client)
-            .field("ping_number", &self.ping_number)
-            .finish()
-    }
 }
 
 impl Manager {
@@ -151,27 +145,81 @@ impl Manager {
     pub fn new<T: IntoConnectionInfo>(params: T) -> RedisResult<Self> {
         Ok(Self {
             client: Client::open(params)?,
-            connection_config: None,
+            connection_timeout: None,
+            response_timeout: None,
             ping_number: AtomicUsize::new(0),
         })
     }
 
-    /// Creates a new [`Manager`] from the given `params` and
-    /// [`AsyncConnectionConfig`].
+    /// Returns a [`ManagerBuilder`] for the given `params`.
     ///
-    /// This allows configuring connection-level settings such as response timeouts and connection
-    /// timeouts.
+    /// # Errors
+    ///
+    /// [`ManagerBuilder::build`] will fail if establishing a new [`Client`]
+    /// fails.
+    pub fn builder<T: IntoConnectionInfo>(params: T) -> ManagerBuilder<T> {
+        ManagerBuilder {
+            params,
+            connection_timeout: None,
+            response_timeout: None,
+        }
+    }
+}
+
+/// Builder for [`Manager`].
+///
+/// Use [`Manager::builder`] to create one.
+///
+/// # Example
+///
+/// ```rust
+/// use std::time::Duration;
+/// use deadpool_redis::Manager;
+///
+/// let manager = Manager::builder("redis://127.0.0.1")
+///     .connection_timeout(Some(Duration::from_secs(5)))
+///     .response_timeout(None)
+///     .build()
+///     .unwrap();
+/// ```
+#[derive(Debug)]
+pub struct ManagerBuilder<T: IntoConnectionInfo> {
+    params: T,
+    connection_timeout: Option<Option<Duration>>,
+    response_timeout: Option<Option<Duration>>,
+}
+
+impl<T: IntoConnectionInfo> ManagerBuilder<T> {
+    /// Sets the connection timeout.
+    ///
+    /// Pass `Some(duration)` to set a specific timeout, or `None` to explicitly
+    /// disable it. If not called, the redis crate's default timeout is used.
+    #[must_use]
+    pub fn connection_timeout(mut self, timeout: Option<Duration>) -> Self {
+        self.connection_timeout = Some(timeout);
+        self
+    }
+
+    /// Sets the response timeout.
+    ///
+    /// Pass `Some(duration)` to set a specific timeout, or `None` to explicitly
+    /// disable it. If not called, the redis crate's default timeout is used.
+    #[must_use]
+    pub fn response_timeout(mut self, timeout: Option<Duration>) -> Self {
+        self.response_timeout = Some(timeout);
+        self
+    }
+
+    /// Builds the [`Manager`].
     ///
     /// # Errors
     ///
     /// If establishing a new [`Client`] fails.
-    pub fn new_with_config<T: IntoConnectionInfo>(
-        params: T,
-        connection_config: AsyncConnectionConfig,
-    ) -> RedisResult<Self> {
-        Ok(Self {
-            client: Client::open(params)?,
-            connection_config: Some(connection_config),
+    pub fn build(self) -> RedisResult<Manager> {
+        Ok(Manager {
+            client: Client::open(self.params)?,
+            connection_timeout: self.connection_timeout,
+            response_timeout: self.response_timeout,
             ping_number: AtomicUsize::new(0),
         })
     }
@@ -182,13 +230,22 @@ impl managed::Manager for Manager {
     type Error = RedisError;
 
     async fn create(&self) -> Result<MultiplexedConnection, RedisError> {
-        let conn = match &self.connection_config {
-            Some(config) => {
-                self.client
-                    .get_multiplexed_async_connection_with_config(config)
-                    .await?
+        let conn = if self.connection_timeout.is_some() || self.response_timeout.is_some() {
+            let mut config = AsyncConnectionConfig::new();
+
+            if let Some(timeout) = self.connection_timeout {
+                config = config.set_connection_timeout(timeout);
             }
-            None => self.client.get_multiplexed_async_connection().await?,
+
+            if let Some(timeout) = self.response_timeout {
+                config = config.set_response_timeout(timeout);
+            }
+
+            self.client
+                .get_multiplexed_async_connection_with_config(&config)
+                .await?
+        } else {
+            self.client.get_multiplexed_async_connection().await?
         };
 
         Ok(conn)
