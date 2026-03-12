@@ -3,7 +3,7 @@
 use std::time::Duration;
 
 use deadpool_redis::{Manager, Pool, Runtime};
-use redis::{AsyncCommands, AsyncConnectionConfig};
+use redis::AsyncCommands;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Default, Deserialize, Serialize)]
@@ -27,8 +27,11 @@ fn redis_url() -> String {
     Config::from_env().redis.url.unwrap_or_default()
 }
 
-fn create_pool_with_config(connection_config: AsyncConnectionConfig) -> Pool {
-    let manager = Manager::new_with_config(redis_url(), connection_config).unwrap();
+fn create_pool_with_no_response_timeout() -> Pool {
+    let manager = Manager::builder(redis_url())
+        .response_timeout(None)
+        .build()
+        .unwrap();
     Pool::builder(manager)
         .max_size(1)
         .runtime(Runtime::Tokio1)
@@ -45,16 +48,14 @@ fn create_pool_default() -> Pool {
         .unwrap()
 }
 
-/// Verifies that `new_with_config` with `set_response_timeout(None)` allows commands that take
-/// longer than the default 500ms timeout.
+/// Verifies that `Manager::builder` with `response_timeout(None)` allows commands that take
+/// longer than the default response timeout.
 ///
-/// Uses `BLPOP` on an empty list with a 1-second timeout. With the default `AsyncConnectionConfig`
-/// (500ms response timeout), this would fail. With `set_response_timeout(None)`, it waits the full
-/// second and returns nil.
+/// Uses `BLPOP` on an empty list with a 1-second timeout. With the default response timeout this
+/// would fail. With `response_timeout(None)`, it waits the full second and returns nil.
 #[tokio::test]
 async fn test_response_timeout_can_be_disabled() {
-    let config = AsyncConnectionConfig::new().set_response_timeout(None);
-    let pool = create_pool_with_config(config);
+    let pool = create_pool_with_no_response_timeout();
     let mut conn = pool.get().await.unwrap();
 
     let result: Option<(String, String)> = conn
@@ -65,7 +66,7 @@ async fn test_response_timeout_can_be_disabled() {
 }
 
 /// Verifies that the default `Manager::new` (without config) uses the redis crate's default
-/// timeouts, which causes blocking commands exceeding 500ms to fail.
+/// response timeout, which causes blocking commands exceeding it to fail.
 #[tokio::test]
 async fn test_default_manager_times_out_on_slow_commands() {
     let pool = create_pool_default();
