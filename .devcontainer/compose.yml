@@ -51,7 +51,7 @@ services:
 
   redis-sentinel:
     # https://hub.docker.com/r/bitnami/redis-sentinel
-    image: bitnami/redis-sentinel:7.4
+    image: bitnami/redis-sentinel:latest
     environment:
       ALLOW_EMPTY_PASSWORD: yes
     volumes:

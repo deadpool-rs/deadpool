@@ -17,6 +17,3 @@ USER vscode
 
 ARG RUST_VERSION
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain ${RUST_VERSION} --no-modify-path -y
-
-RUN /home/vscode/.cargo/bin/cargo install cargo-release
-RUN /home/vscode/.cargo/bin/cargo install --locked cargo-outdated
