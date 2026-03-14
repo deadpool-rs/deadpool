@@ -28,6 +28,14 @@ fn create_pool() -> deadpool_redis::Pool {
 }
 
 #[tokio::test]
+async fn deadpool_reexports_queue_mode() {
+    use deadpool_redis::QueueMode;
+
+    let _ = QueueMode::Fifo;
+    let _ = QueueMode::Lifo;
+}
+
+#[tokio::test]
 async fn test_pipeline() {
     use deadpool_redis::redis::pipe;
     let pool = create_pool();
