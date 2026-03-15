@@ -5,6 +5,7 @@
   "dockerComposeFile": "compose.yml",
   "service": "app",
   "workspaceFolder": "/workspace",
+  "postCreateCommand": ["/bin/bash", "./.devcontainer/post-create.sh"],
   // Configure tool-specific properties.
   "customizations": {
     // Configure properties specific to VS Code.
