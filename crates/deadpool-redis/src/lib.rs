@@ -34,6 +34,9 @@ use std::{
     time::Duration,
 };
 
+const DEFAULT_CONNECTION_TIMEOUT: Option<Duration> = Some(Duration::from_secs(1));
+const DEFAULT_RESPONSE_TIMEOUT: Option<Duration> = Some(Duration::from_millis(500));
+
 use deadpool::managed;
 use redis::{
     AsyncConnectionConfig, Client, IntoConnectionInfo, RedisError, RedisResult,
@@ -143,6 +146,46 @@ impl std::fmt::Debug for Manager {
     }
 }
 
+/// Connection configuration for the [`Manager`].
+///
+/// # Example
+///
+/// ```rust
+/// use std::time::Duration;
+/// use deadpool_redis::{ManagerConfig, Manager};
+///
+/// let manager = Manager::new_with_config(
+///     "redis://127.0.0.1",
+///     ManagerConfig {
+///         connection_timeout: Some(Duration::from_secs(5)),
+///         response_timeout: None,
+///     },
+/// )
+/// .unwrap();
+/// ```
+#[derive(Clone, Debug)]
+#[non_exhaustive]
+pub struct ManagerConfig {
+    /// Timeout for establishing a connection.
+    ///
+    /// Set to `None` to disable. Defaults to 1 second.
+    pub connection_timeout: Option<Duration>,
+
+    /// Timeout for waiting for a response.
+    ///
+    /// Set to `None` to disable. Defaults to 500 milliseconds.
+    pub response_timeout: Option<Duration>,
+}
+
+impl Default for ManagerConfig {
+    fn default() -> Self {
+        Self {
+            connection_timeout: DEFAULT_CONNECTION_TIMEOUT,
+            response_timeout: DEFAULT_RESPONSE_TIMEOUT,
+        }
+    }
+}
+
 impl Manager {
     /// Creates a new [`Manager`] from the given `params`.
     ///
@@ -157,72 +200,22 @@ impl Manager {
         })
     }
 
-    /// Returns a [`ManagerBuilder`] for the given `params`.
-    pub fn builder<T: IntoConnectionInfo>(params: T) -> ManagerBuilder<T> {
-        ManagerBuilder {
-            params,
-            connection_timeout: None,
-            response_timeout: None,
-        }
-    }
-}
-
-/// Builder for [`Manager`].
-///
-/// Use [`Manager::builder`] to create one.
-///
-/// # Example
-///
-/// ```rust
-/// use std::time::Duration;
-/// use deadpool_redis::Manager;
-///
-/// let manager = Manager::builder("redis://127.0.0.1")
-///     .connection_timeout(Some(Duration::from_secs(5)))
-///     .response_timeout(None)
-///     .build()
-///     .unwrap();
-/// ```
-#[derive(Debug)]
-pub struct ManagerBuilder<T: IntoConnectionInfo> {
-    params: T,
-    connection_timeout: Option<Duration>,
-    response_timeout: Option<Duration>,
-}
-
-impl<T: IntoConnectionInfo> ManagerBuilder<T> {
-    /// Sets the connection timeout.
-    ///
-    /// Pass `Some(duration)` to set a specific timeout, or `None` to
-    /// disable it.
-    #[must_use]
-    pub fn connection_timeout(mut self, timeout: Option<Duration>) -> Self {
-        self.connection_timeout = timeout;
-        self
-    }
-
-    /// Sets the response timeout.
-    ///
-    /// Pass `Some(duration)` to set a specific timeout, or `None` to
-    /// disable it.
-    #[must_use]
-    pub fn response_timeout(mut self, timeout: Option<Duration>) -> Self {
-        self.response_timeout = timeout;
-        self
-    }
-
-    /// Builds the [`Manager`].
+    /// Creates a new [`Manager`] from the given `params` and
+    /// [`ManagerConfig`].
     ///
     /// # Errors
     ///
     /// If establishing a new [`Client`] fails.
-    pub fn build(self) -> RedisResult<Manager> {
+    pub fn new_with_config<T: IntoConnectionInfo>(
+        params: T,
+        config: ManagerConfig,
+    ) -> RedisResult<Self> {
         let connection_config = AsyncConnectionConfig::new()
-            .set_connection_timeout(self.connection_timeout)
-            .set_response_timeout(self.response_timeout);
+            .set_connection_timeout(config.connection_timeout)
+            .set_response_timeout(config.response_timeout);
 
-        Ok(Manager {
-            client: Client::open(self.params)?,
+        Ok(Self {
+            client: Client::open(params)?,
             connection_config: Some(connection_config),
             ping_number: AtomicUsize::new(0),
         })

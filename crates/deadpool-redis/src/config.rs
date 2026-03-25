@@ -4,10 +4,10 @@ use redis::RedisError;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
-use crate::{CreatePoolError, Pool, PoolBuilder, PoolConfig, RedisResult, Runtime};
-
-const DEFAULT_CONNECTION_TIMEOUT: Option<Duration> = Some(Duration::from_secs(1));
-const DEFAULT_RESPONSE_TIMEOUT: Option<Duration> = Some(Duration::from_millis(500));
+use crate::{
+    CreatePoolError, DEFAULT_CONNECTION_TIMEOUT, DEFAULT_RESPONSE_TIMEOUT, ManagerConfig, Pool,
+    PoolBuilder, PoolConfig, RedisResult, Runtime,
+};
 
 /// Configuration object.
 ///
@@ -104,10 +104,13 @@ impl Config {
         &self,
         params: T,
     ) -> Result<crate::Manager, ConfigError> {
-        Ok(crate::Manager::builder(params)
-            .connection_timeout(self.connection_timeout)
-            .response_timeout(self.response_timeout)
-            .build()?)
+        Ok(crate::Manager::new_with_config(
+            params,
+            ManagerConfig {
+                connection_timeout: self.connection_timeout,
+                response_timeout: self.response_timeout,
+            },
+        )?)
     }
 
     /// Returns [`deadpool::managed::PoolConfig`] which can be used to construct
