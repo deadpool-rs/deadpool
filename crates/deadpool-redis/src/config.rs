@@ -1,4 +1,4 @@
-use std::{fmt, path::PathBuf};
+use std::{fmt, path::PathBuf, time::Duration};
 
 use redis::RedisError;
 #[cfg(feature = "serde")]
@@ -17,6 +17,10 @@ use crate::{CreatePoolError, Pool, PoolBuilder, PoolConfig, RedisResult, Runtime
 /// REDIS__POOL__MAX_SIZE=16
 /// REDIS__POOL__TIMEOUTS__WAIT__SECS=2
 /// REDIS__POOL__TIMEOUTS__WAIT__NANOS=0
+/// REDIS__CONNECTION_TIMEOUT__SECS=5
+/// REDIS__CONNECTION_TIMEOUT__NANOS=0
+/// REDIS__RESPONSE_TIMEOUT__SECS=2
+/// REDIS__RESPONSE_TIMEOUT__NANOS=0
 /// ```
 /// ```rust
 /// #[derive(serde::Deserialize)]
@@ -47,6 +51,22 @@ pub struct Config {
 
     /// Pool configuration.
     pub pool: Option<PoolConfig>,
+
+    /// Connection timeout applied when creating new Redis connections.
+    ///
+    /// - `None`: use the redis crate's default.
+    /// - `Some(None)`: disable the timeout.
+    /// - `Some(Some(duration))`: use this specific timeout.
+    #[cfg_attr(feature = "serde", serde(default))]
+    pub connection_timeout: Option<Option<Duration>>,
+
+    /// Response timeout applied when waiting for Redis responses.
+    ///
+    /// - `None`: use the redis crate's default.
+    /// - `Some(None)`: disable the timeout.
+    /// - `Some(Some(duration))`: use this specific timeout.
+    #[cfg_attr(feature = "serde", serde(default))]
+    pub response_timeout: Option<Option<Duration>>,
 }
 
 impl Config {
@@ -70,13 +90,36 @@ impl Config {
     /// See [`ConfigError`] for details.
     pub fn builder(&self) -> Result<PoolBuilder, ConfigError> {
         let manager = match (&self.url, &self.connection) {
-            (Some(url), None) => crate::Manager::new(url.as_str())?,
-            (None, Some(connection)) => crate::Manager::new(connection.clone())?,
-            (None, None) => crate::Manager::new(ConnectionInfo::default())?,
+            (Some(url), None) => self.build_manager(url.as_str())?,
+            (None, Some(connection)) => self.build_manager(connection.clone())?,
+            (None, None) => self.build_manager(ConnectionInfo::default())?,
             (Some(_), Some(_)) => return Err(ConfigError::UrlAndConnectionSpecified),
         };
+
         let pool_config = self.get_pool_config();
+
         Ok(Pool::builder(manager).config(pool_config))
+    }
+
+    fn build_manager<T: redis::IntoConnectionInfo>(
+        &self,
+        params: T,
+    ) -> Result<crate::Manager, ConfigError> {
+        if self.connection_timeout.is_some() || self.response_timeout.is_some() {
+            let mut config = redis::AsyncConnectionConfig::new();
+
+            if let Some(timeout) = self.connection_timeout {
+                config = config.set_connection_timeout(timeout);
+            }
+
+            if let Some(timeout) = self.response_timeout {
+                config = config.set_response_timeout(timeout);
+            }
+
+            Ok(crate::Manager::new_with_config(params, config)?)
+        } else {
+            Ok(crate::Manager::new(params)?)
+        }
     }
 
     /// Returns [`deadpool::managed::PoolConfig`] which can be used to construct
@@ -94,6 +137,8 @@ impl Config {
             url: Some(url.into()),
             connection: None,
             pool: None,
+            connection_timeout: None,
+            response_timeout: None,
         }
     }
 
@@ -105,7 +150,29 @@ impl Config {
             url: None,
             connection: Some(connection_info.into()),
             pool: None,
+            connection_timeout: None,
+            response_timeout: None,
         }
+    }
+
+    /// Sets the connection timeout.
+    ///
+    /// Pass `Some(duration)` to set a specific timeout, or `None` to
+    /// explicitly disable it.
+    #[must_use]
+    pub fn with_connection_timeout(mut self, timeout: Option<Duration>) -> Self {
+        self.connection_timeout = Some(timeout);
+        self
+    }
+
+    /// Sets the response timeout.
+    ///
+    /// Pass `Some(duration)` to set a specific timeout, or `None` to
+    /// explicitly disable it.
+    #[must_use]
+    pub fn with_response_timeout(mut self, timeout: Option<Duration>) -> Self {
+        self.response_timeout = Some(timeout);
+        self
     }
 }
 
@@ -115,6 +182,8 @@ impl Default for Config {
             url: None,
             connection: Some(ConnectionInfo::default()),
             pool: None,
+            connection_timeout: None,
+            response_timeout: None,
         }
     }
 }
