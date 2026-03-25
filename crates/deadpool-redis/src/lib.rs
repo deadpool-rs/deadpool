@@ -163,8 +163,7 @@ impl std::fmt::Debug for Manager {
 /// )
 /// .unwrap();
 /// ```
-#[derive(Clone, Debug)]
-#[non_exhaustive]
+#[derive(Clone, Copy, Debug)]
 pub struct ManagerConfig {
     /// Timeout for establishing a connection.
     ///
