@@ -23,7 +23,6 @@ rt_async-std_1 = ["deadpool-runtime/async-std_1"]
 rt_smol_2 = ["deadpool-runtime/smol_2"]
 
 [dependencies]
-num_cpus = "1.11.1"
 # `serde` feature
 serde = { version = "1.0.103", features = ["derive"], optional = true }
 # `rt_async-std_1` feature

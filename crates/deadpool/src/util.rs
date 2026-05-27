@@ -1,9 +1,13 @@
-use std::sync::LazyLock;
+use std::{num::NonZeroUsize, sync::LazyLock};
 
-/// Cache the physical CPU cofunt to avoid calling `num_cpus::get()`
-/// multiple times, which is expensive when creating pools in quick
-/// succession.
-static CPU_COUNT: LazyLock<usize> = LazyLock::new(num_cpus::get);
+/// Cache the logical CPU count to avoid calling
+/// `std::thread::available_parallelism()` multiple times, which is
+/// expensive when creating pools in quick succession.
+static CPU_COUNT: LazyLock<usize> = LazyLock::new(|| {
+    std::thread::available_parallelism()
+        .map(NonZeroUsize::get)
+        .unwrap_or(1)
+});
 
 /// Get the default maximum size of a pool, which is `cpu_core_count * 2`
 /// including logical cores (Hyper-Threading).
