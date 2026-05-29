@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Add `Manager::new_with_config` method
+- Re-export `redis` features:
+  - `entra-id`
+  - `token-based-authentication`
+
 ## [0.23.0] - 2026-02-18
 
 - Update `redis` dependency to version `1`

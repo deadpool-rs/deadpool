@@ -31,6 +31,7 @@ cache-aio = ["redis/cache-aio"]
 cluster = ["redis/cluster-async"]
 cluster-async = ["cluster"]
 connection-manager = ["redis/connection-manager"]
+entra-id = ["redis/entra-id"]
 geospatial = ["redis/geospatial"]
 json = ["redis/json"]
 num-bigint = ["redis/num-bigint"]
@@ -45,6 +46,7 @@ tls-native-tls = ["redis/tls-native-tls"]
 tls-rustls = ["redis/tls-rustls"]
 tls-rustls-insecure = ["redis/tls-rustls-insecure"]
 tls-rustls-webpki-roots = ["redis/tls-rustls-webpki-roots"]
+token-based-authentication = ["redis/token-based-authentication"]
 tokio-comp = ["redis/tokio-comp"]
 tokio-native-tls-comp = ["redis/tokio-native-tls-comp"]
 tokio-rustls-comp = ["redis/tokio-rustls-comp"]
@@ -55,7 +57,7 @@ vector-sets = ["redis/vector-sets"]
 deadpool = { path = "../deadpool", version = "0.13.0", default-features = false, features = [
     "managed",
 ] }
-redis = { version = "1.0.3", default-features = false, features = ["aio"] }
+redis = { version = "1.0.4", default-features = false, features = ["aio"] }
 serde = { package = "serde", version = "1.0", features = [
     "derive",
 ], optional = true }
