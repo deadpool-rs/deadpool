@@ -57,6 +57,7 @@ local genFeaturesFlag(features) =
     }
   },
   env: {
+    CARGO_NET_RETRY: 10,
     RUST_BACKTRACE: 1
   },
   defaults: {

@@ -2,6 +2,7 @@ defaults:
   run:
     working-directory: ./crates/deadpool-redis
 env:
+  CARGO_NET_RETRY: 10
   RUST_BACKTRACE: 1
 jobs:
   check-integration:
