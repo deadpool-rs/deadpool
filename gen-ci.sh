@@ -1,10 +1,14 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -e
 
 for CRATE_PATH in crates/*; do
     CRATE_NAME=$(basename "${CRATE_PATH}")
     CARGO_TOML="${CRATE_PATH}/Cargo.toml"
+    if [ ! -f "$CARGO_TOML" ]; then
+        continue
+    fi
+
     CI_CONFIG_YML="${CRATE_PATH}/ci.config.yml"
     WORKFLOW_YML=.github/workflows/${CRATE_NAME}.yml
     echo ${WORKFLOW_YML}

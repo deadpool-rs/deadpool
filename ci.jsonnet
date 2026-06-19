@@ -44,6 +44,7 @@ local genFeaturesFlag(features) =
 
 {
   name: crate,
+  permissions: {},
   on: {
     push: {
         branches: [ "main" ],
@@ -74,10 +75,11 @@ local genFeaturesFlag(features) =
       "runs-on": "ubuntu-latest",
       steps: [
         {
-          uses: "actions/checkout@v5"
+          uses: "actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd", // v5.0.1
+          with: { "persist-credentials": false },
         },
         {
-          uses: "dtolnay/rust-toolchain@v1",
+          uses: "dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9", // v1
           with: {
             toolchain: "stable",
             components: "rustc,rust-std,cargo,clippy",
@@ -93,10 +95,11 @@ local genFeaturesFlag(features) =
       "runs-on": "ubuntu-latest",
       steps: [
         {
-          uses: "actions/checkout@v5",
+          uses: "actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd", // v5.0.1
+          with: { "persist-credentials": false },
         },
         {
-          uses: "dtolnay/rust-toolchain@v1",
+          uses: "dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9", // v1
           with: {
             toolchain: "stable",
             components: "rustc,rust-std,cargo,rustfmt",
@@ -124,9 +127,12 @@ local genFeaturesFlag(features) =
       },
       "runs-on": "${{ matrix.os }}",
       steps: [
-        { uses: "actions/checkout@v5" },
         {
-          uses: "dtolnay/rust-toolchain@v1",
+          uses: "actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd", // v5.0.1
+          with: { "persist-credentials": false },
+        },
+        {
+          uses: "dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9", // v1
           with: {
             toolchain: "stable",
             components: "rustc,rust-std,cargo",
@@ -146,17 +152,18 @@ local genFeaturesFlag(features) =
       "runs-on": "ubuntu-latest",
       steps: [
         {
-          uses: "actions/checkout@v5"
+          uses: "actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd", // v5.0.1
+          with: { "persist-credentials": false },
         },
         {
-          uses: "dtolnay/rust-toolchain@v1",
+          uses: "dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9", // v1
           with: {
             toolchain: "nightly",
             components: "rustc,rust-std,cargo",
           }
         },
         {
-          uses: "dtolnay/rust-toolchain@v1",
+          uses: "dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9", // v1
           with: {
             toolchain: rust_version,
             components: "rustc,rust-std,cargo",
@@ -177,10 +184,11 @@ local genFeaturesFlag(features) =
       services: test_services,
       steps: [
         {
-          uses: "actions/checkout@v5",
+          uses: "actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd", // v5.0.1
+          with: { "persist-credentials": false },
         },
         {
-          uses: "dtolnay/rust-toolchain@v1",
+          uses: "dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9", // v1
           with: {
             toolchain: "stable",
             components: "rustc,rust-std,cargo",
@@ -197,16 +205,23 @@ local genFeaturesFlag(features) =
       name: "Check re-exported features",
       "runs-on": "ubuntu-latest",
       steps: [
-        { uses: "actions/checkout@v5" },
         {
-          uses: "dtolnay/rust-toolchain@v1",
+          uses: "actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd", // v5.0.1
+          with: { "persist-credentials": false },
+        },
+        {
+          uses: "dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9", // v1
           with: {
             toolchain: "stable",
             components: "rustc,rust-std,cargo",
           }
         },
-        { uses: "dcarbone/install-jq-action@v3" },
-        { uses: "dcarbone/install-yq-action@v1" },
+        {
+          uses: "dcarbone/install-jq-action@b7ef57d46ece78760b4019dbc4080a1ba2a40b45", // v3.2.0
+        },
+        {
+          uses: "dcarbone/install-yq-action@4075b4dca348d74bd83f2bf82d30f25d7c54539b", // v1.3.1
+        },
         { run: "../../tools/check-reexported-features.sh" },
       ]
     },
@@ -220,10 +235,11 @@ local genFeaturesFlag(features) =
       "runs-on": "ubuntu-latest",
       steps: [
         {
-          uses: "actions/checkout@v5",
+          uses: "actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd", // v5.0.1
+          with: { "persist-credentials": false },
         },
         {
-          uses: "dtolnay/rust-toolchain@v1",
+          uses: "dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9", // v1
           with: {
             toolchain: "stable",
             components: "rustc,rust-std,cargo",
