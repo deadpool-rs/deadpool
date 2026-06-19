@@ -31,6 +31,7 @@ rustls = ["lapin/rustls"]
 rustls--aws_lc_rs = ["lapin/rustls--aws_lc_rs"]
 rustls--ring = ["lapin/rustls--ring"]
 rustls-native-certs = ["lapin/rustls-native-certs"]
+rustls-platform-verifier = ["lapin/rustls-platform-verifier"]
 rustls-webpki-roots-certs = ["lapin/rustls-webpki-roots-certs"]
 vendored-openssl = ["lapin/vendored-openssl"]
 
