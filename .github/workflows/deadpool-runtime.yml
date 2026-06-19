@@ -2,6 +2,7 @@ defaults:
   run:
     working-directory: ./crates/deadpool-runtime
 env:
+  CARGO_NET_RETRY: 10
   RUST_BACKTRACE: 1
 jobs:
   clippy:
