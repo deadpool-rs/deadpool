@@ -7,7 +7,10 @@ use std::{
 };
 
 use deadpool::managed;
-use redis::{IntoConnectionInfo, RedisError, RedisResult, aio::ConnectionLike};
+use redis::{
+    IntoConnectionInfo, RedisError, RedisResult, aio::ConnectionLike,
+    cluster_read_routing::RandomReplicaStrategy,
+};
 
 use redis;
 pub use redis::cluster::{ClusterClient, ClusterClientBuilder};
@@ -139,7 +142,7 @@ impl Manager {
     ) -> RedisResult<Self> {
         let mut client = ClusterClientBuilder::new(params);
         if read_from_replicas {
-            client = client.read_from_replicas();
+            client = client.read_routing_strategy(RandomReplicaStrategy);
         }
         Ok(Self {
             client: client.build()?,

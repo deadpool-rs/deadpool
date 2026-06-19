@@ -12,8 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update `lapin` dependency to version `4`
 - Remove `async-std` support
 - Bump up MSRV to `1.88` and Rust edition to `2024`
-- Re-export `lapin` feature:
-    - `hickory-dns`
+- Re-export `lapin` features:
+  - `hickory-dns`
+  - `rustls-platform-verifier`
 
 ## [0.13.1] - 2024-08-11
 

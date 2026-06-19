@@ -27,6 +27,7 @@ runtime = ["tokio-postgres/runtime"]
 with-bit-vec-0_6 = ["tokio-postgres/with-bit-vec-0_6"]
 with-bit-vec-0_7 = ["tokio-postgres/with-bit-vec-0_7"]
 with-bit-vec-0_8 = ["tokio-postgres/with-bit-vec-0_8"]
+with-bit-vec-0_9 = ["tokio-postgres/with-bit-vec-0_9"]
 with-chrono-0_4 = ["tokio-postgres/with-chrono-0_4"]
 with-cidr-0_2 = ["tokio-postgres/with-cidr-0_2"]
 with-cidr-0_3 = ["tokio-postgres/with-cidr-0_3"]
@@ -59,7 +60,7 @@ tracing = "0.1.37"
 tokio-postgres = "0.7.14"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
-getrandom = { package = "getrandom", version = "0.3", features = ["wasm_js"] }
+getrandom = { package = "getrandom", version = "0.4", features = ["wasm_js"] }
 tokio-postgres = { version = "0.7.14", default-features = false }
 
 [dev-dependencies]
