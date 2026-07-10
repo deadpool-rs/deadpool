@@ -7,15 +7,13 @@
 //! connect via TCP as there is no existing mechanism to parameterize how to deal with different
 //! unerlying connection types at the moment.
 #![deny(warnings, missing_docs)]
-use std::convert::Infallible;
-
 use async_memcached::{Client, Error};
+mod config;
 
 /// Type alias for using [`deadpool::managed::RecycleResult`] with [`redis`].
 type RecycleResult = deadpool::managed::RecycleResult<Error>;
 
-type ConfigError = Infallible;
-
+pub use self::config::{Config, ConfigError};
 pub use deadpool::managed::reexports::*;
 deadpool::managed_reexports!(
     "memcached",
