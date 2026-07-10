@@ -13,10 +13,14 @@ use deadpool_memcached::Manager;
 #[tokio::main]
 async fn main() {
     let manager = Manager::new("localhost:11211");
+    let pool = deadpool_memcached::Pool::builder(manager).build().unwrap();
     let mut client = pool.get().await.unwrap();
     println!("version: {:?}", client.version().await);
 }
 ```
+
+You can also use `deadpool_memcached::Config` to build a pool (including
+optional `serde`-based config deserialization).
 
 ## License
 

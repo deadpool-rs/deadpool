@@ -4,17 +4,20 @@ use std::env;
 use async_memcached::AsciiProtocol;
 use deadpool_memcached::{Manager, Pool};
 
-fn create_pool() -> Pool {
-    let addr = env::var("MEMCACHED__ADDR").unwrap();
+fn create_pool() -> Option<Pool> {
+    let addr = env::var("MEMCACHED__ADDR").ok()?;
     let manager = Manager::new(addr);
-    Pool::builder(manager).build().unwrap()
+    Some(Pool::builder(manager).build().unwrap())
 }
 
 #[tokio::test]
 async fn test_set_get() {
+    let Some(pool) = create_pool() else {
+        // Skip test when no Memcached server is configured.
+        return;
+    };
     let test_key = "test:basic:test_set_get";
     let test_value = "answer_42";
-    let pool = create_pool();
     let mut conn = pool.get().await.unwrap();
     let _ = conn.delete(test_key).await;
     assert_eq!(conn.get(test_key).await.unwrap(), None);
