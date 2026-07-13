@@ -2,7 +2,7 @@
 name = "deadpool-sqlite"
 version = "0.13.0"
 edition = "2024"
-rust-version = "1.85"
+rust-version = "1.95"
 authors = ["Michael P. Jung <michael.jung@terreon.de>"]
 description = "Dead simple async pool for rusqlite"
 keywords = ["async", "database", "pool", "sqlite"]

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Bump up MSRV to `1.95` to match the one of `rusqlite`
 - Update `rusqlite` dependency to version `0.40`
 - Re-export `rusqlite` feature:
   - `pointer`
