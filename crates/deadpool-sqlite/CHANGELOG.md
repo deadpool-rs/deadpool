@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update `rusqlite` dependency to version `0.40`
 - Re-export `rusqlite` feature:
   - `pointer`
+  - `ffi-sqlite-wasm-rs`
 
 ## [0.13.0] - 2026-02-17
 
