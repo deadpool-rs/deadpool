@@ -1,6 +1,6 @@
 use std::convert::Infallible;
 
-use crate::{CreatePoolError, Manager, Pool, PoolBuilder, PoolConfig};
+use crate::{CreatePoolError, Manager, Pool, PoolBuilder, PoolConfig, Runtime};
 
 /// Configuration object.
 ///
@@ -49,14 +49,21 @@ impl Config {
 
     /// Creates a new [`Pool`] using this [`Config`].
     ///
+    /// A [`Runtime`] is required if any [`Timeouts`] are configured on the
+    /// [`PoolConfig`] (`wait`, `create` or `recycle`). Pass `None` if you do
+    /// not need timeouts.
+    ///
+    /// [`Timeouts`]: deadpool::managed::Timeouts
+    ///
     /// # Errors
     ///
     /// See [`CreatePoolError`] for details.
-    pub fn create_pool(&self) -> Result<Pool, CreatePoolError> {
-        self.builder()
-            .map_err(CreatePoolError::Config)?
-            .build()
-            .map_err(CreatePoolError::Build)
+    pub fn create_pool(&self, runtime: Option<Runtime>) -> Result<Pool, CreatePoolError> {
+        let mut builder = self.builder().map_err(CreatePoolError::Config)?;
+        if let Some(runtime) = runtime {
+            builder = builder.runtime(runtime);
+        }
+        builder.build().map_err(CreatePoolError::Build)
     }
 
     /// Creates a new [`PoolBuilder`] using this [`Config`].
