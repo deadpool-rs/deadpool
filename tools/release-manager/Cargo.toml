@@ -1,0 +1,11 @@
+[package]
+name = "release-manager"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+clap = { version = "4.5", features = ["derive"] }
+console = "0.15"
+serde = { version = "1", features = ["derive"] }
+toml = "0.8"
