@@ -16,7 +16,7 @@ async fn basic() {
     let pool = create_pool().await;
     let conn = pool.get().await.unwrap();
 
-    let mut stmt = conn.prepare("SELECT 1").await.unwrap();
+    let stmt = conn.prepare("SELECT 1").await.unwrap();
     let mut rows = stmt.query(params![]).await.unwrap();
     let row = rows.next().await.unwrap().unwrap();
     let result: i64 = row.get(0).unwrap();
