@@ -20,6 +20,10 @@ for CRATE_PATH in crates/*; do
         -V crate="$CRATE" \
         -V rust_version="$RUST_VERSION" \
         -V config="$CONFIG" \
-        | yq -P \
+        | yq -P '
+            (.. | select(tag == "!!map" and has("_version"))) |= (
+              .uses line_comment = ._version | del(._version)
+            )
+          ' \
         > "${WORKFLOW_YML}"
 done

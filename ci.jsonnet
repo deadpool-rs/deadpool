@@ -2,11 +2,20 @@ local config = std.parseJson(std.extVar("config"));
 local rust_version = std.extVar("rust_version");
 local crate = std.extVar("crate");
 
-// Pinned action references
-local action_checkout = "actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd"; // v5.0.1
-local action_rust_toolchain = "dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9"; // v1
-local action_install_jq = "dcarbone/install-jq-action@b7ef57d46ece78760b4019dbc4080a1ba2a40b45"; // v3.2.0
-local action_install_yq = "dcarbone/install-yq-action@4075b4dca348d74bd83f2bf82d30f25d7c54539b"; // v1.3.1
+// Pinned action references. Updating an action is just a matter of
+// changing the corresponding line here. The `version` is emitted as a
+// trailing comment on the generated `uses:` line (see gen-ci.sh) so that
+// tools like Dependabot can track the pinned version.
+local actions = {
+  checkout: { ref: "actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0", version: "v7.0.0" },
+  rust_toolchain: { ref: "dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9", version: "v1" },
+  install_jq: { ref: "dcarbone/install-jq-action@4fcb5062d7ce9bc4382d1a352d19ba3ba2c317c1", version: "v4.0.1" },
+  install_yq: { ref: "dcarbone/install-yq-action@4075b4dca348d74bd83f2bf82d30f25d7c54539b", version: "v1.3.1" },
+};
+
+// Build a `uses:` step. `_version` is tagged onto the step so the YAML
+// generation pass can turn it into a trailing line comment.
+local step(action, extra={}) = { uses: action.ref, _version: action.version } + extra;
 
 local getPathOrDefault(obj, path, default) =
   if std.length(path) == 0 then
@@ -81,17 +90,15 @@ local genFeaturesFlag(features) =
       name: "Clippy",
       "runs-on": "ubuntu-latest",
       steps: [
-        {
-          uses: action_checkout,
+        step(actions.checkout, {
           with: { "persist-credentials": false },
-        },
-        {
-          uses: action_rust_toolchain,
+        }),
+        step(actions.rust_toolchain, {
           with: {
             toolchain: "stable",
             components: "rustc,rust-std,cargo,clippy",
           }
-        },
+        }),
         {
           run: "cargo clippy --no-deps" + genFeaturesFlag(features) + " -- -D warnings"
         }
@@ -101,17 +108,15 @@ local genFeaturesFlag(features) =
       name: "rustfmt",
       "runs-on": "ubuntu-latest",
       steps: [
-        {
-          uses: action_checkout,
+        step(actions.checkout, {
           with: { "persist-credentials": false },
-        },
-        {
-          uses: action_rust_toolchain,
+        }),
+        step(actions.rust_toolchain, {
           with: {
             toolchain: "stable",
             components: "rustc,rust-std,cargo,rustfmt",
           }
-        },
+        }),
         {
           run: "cargo fmt --check",
         },
@@ -134,17 +139,15 @@ local genFeaturesFlag(features) =
       },
       "runs-on": "${{ matrix.os }}",
       steps: [
-        {
-          uses: action_checkout,
+        step(actions.checkout, {
           with: { "persist-credentials": false },
-        },
-        {
-          uses: action_rust_toolchain,
+        }),
+        step(actions.rust_toolchain, {
           with: {
             toolchain: "stable",
             components: "rustc,rust-std,cargo",
           }
-        },
+        }),
       ] + check_extra_steps + [
         # We don't use `--no-default-features` here as integration crates don't
         # work with it at all.
@@ -158,24 +161,21 @@ local genFeaturesFlag(features) =
       name: "MSRV",
       "runs-on": "ubuntu-latest",
       steps: [
-        {
-          uses: action_checkout,
+        step(actions.checkout, {
           with: { "persist-credentials": false },
-        },
-        {
-          uses: action_rust_toolchain,
+        }),
+        step(actions.rust_toolchain, {
           with: {
             toolchain: "nightly",
             components: "rustc,rust-std,cargo",
           }
-        },
-        {
-          uses: action_rust_toolchain,
+        }),
+        step(actions.rust_toolchain, {
           with: {
             toolchain: rust_version,
             components: "rustc,rust-std,cargo",
           }
-        },
+        }),
         {
           run: "../../tools/cargo-update-minimal-versions.sh " + rust_version,
         },
@@ -190,17 +190,15 @@ local genFeaturesFlag(features) =
       "runs-on": "ubuntu-latest",
       services: test_services,
       steps: [
-        {
-          uses: action_checkout,
+        step(actions.checkout, {
           with: { "persist-credentials": false },
-        },
-        {
-          uses: action_rust_toolchain,
+        }),
+        step(actions.rust_toolchain, {
           with: {
             toolchain: "stable",
             components: "rustc,rust-std,cargo",
           }
-        },
+        }),
         {
           run: "cargo test" + genFeaturesFlag(test_features),
           env: test_env,
@@ -212,23 +210,17 @@ local genFeaturesFlag(features) =
       name: "Check re-exported features",
       "runs-on": "ubuntu-latest",
       steps: [
-        {
-          uses: action_checkout,
+        step(actions.checkout, {
           with: { "persist-credentials": false },
-        },
-        {
-          uses: action_rust_toolchain,
+        }),
+        step(actions.rust_toolchain, {
           with: {
             toolchain: "stable",
             components: "rustc,rust-std,cargo",
           }
-        },
-        {
-          uses: action_install_jq,
-        },
-        {
-          uses: action_install_yq,
-        },
+        }),
+        step(actions.install_jq),
+        step(actions.install_yq),
         { run: "../../tools/check-reexported-features.sh" },
       ]
     },
@@ -241,17 +233,15 @@ local genFeaturesFlag(features) =
       name: "Doc",
       "runs-on": "ubuntu-latest",
       steps: [
-        {
-          uses: action_checkout,
+        step(actions.checkout, {
           with: { "persist-credentials": false },
-        },
-        {
-          uses: action_rust_toolchain,
+        }),
+        step(actions.rust_toolchain, {
           with: {
             toolchain: "stable",
             components: "rustc,rust-std,cargo",
           }
-        },
+        }),
         {
           run: "cargo doc --no-deps" + genFeaturesFlag(features),
         }
