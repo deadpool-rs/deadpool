@@ -2,8 +2,8 @@
 
 use std::time::Duration;
 
-use deadpool_redis::{Manager, Pool, Runtime};
-use redis::{AsyncCommands, AsyncConnectionConfig};
+use deadpool_redis::Runtime;
+use redis::AsyncCommands;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Default, Deserialize, Serialize)]
@@ -27,63 +27,44 @@ fn redis_url() -> String {
     Config::from_env().redis.url.unwrap_or_default()
 }
 
-fn create_pool_with_config(connection_config: AsyncConnectionConfig) -> Pool {
-    let manager = Manager::new_with_config(redis_url(), connection_config).unwrap();
-    Pool::builder(manager)
-        .max_size(1)
-        .runtime(Runtime::Tokio1)
-        .build()
-        .unwrap()
-}
-
-fn create_pool_default() -> Pool {
-    let manager = Manager::new(redis_url()).unwrap();
-    Pool::builder(manager)
-        .max_size(1)
-        .runtime(Runtime::Tokio1)
-        .build()
-        .unwrap()
-}
-
-/// Verifies that `new_with_config` with `set_response_timeout(None)` allows commands that take
-/// longer than the default 500ms timeout.
-///
-/// Uses `BLPOP` on an empty list with a 1-second timeout. With the default `AsyncConnectionConfig`
-/// (500ms response timeout), this would fail. With `set_response_timeout(None)`, it waits the full
-/// second and returns nil.
+/// Verifies that disabling the response timeout allows commands that take longer than the
+/// default timeout. Uses `BLPOP` on an empty list with a 1-second server-side timeout.
 #[tokio::test]
-async fn test_response_timeout_can_be_disabled() {
-    let config = AsyncConnectionConfig::new().set_response_timeout(None);
-    let pool = create_pool_with_config(config);
+async fn test_response_timeout_disabled() {
+    let pool = deadpool_redis::Config::from_url(redis_url())
+        .with_response_timeout(None)
+        .create_pool(Some(Runtime::Tokio1))
+        .unwrap();
+
     let mut conn = pool.get().await.unwrap();
 
     let result: Option<(String, String)> = conn
-        .blpop("deadpool/nonexistent_timeout_test_key", 1.0)
+        .blpop("deadpool/test_timeout_disabled", 1.0)
         .await
         .unwrap();
+
     assert_eq!(result, None);
 }
 
-/// Verifies that the default `Manager::new` (without config) uses the redis crate's default
-/// timeouts, which causes blocking commands exceeding 500ms to fail.
+/// Verifies that setting an explicit response timeout causes commands exceeding it to fail.
 #[tokio::test]
-async fn test_default_manager_times_out_on_slow_commands() {
-    let pool = create_pool_default();
+async fn test_response_timeout_causes_timeout() {
+    let pool = deadpool_redis::Config::from_url(redis_url())
+        .with_response_timeout(Some(Duration::from_millis(100)))
+        .create_pool(Some(Runtime::Tokio1))
+        .unwrap();
+
     let mut conn = pool.get().await.unwrap();
 
     let start = std::time::Instant::now();
-    let result: Result<Option<(String, String)>, _> = conn
-        .blpop("deadpool/nonexistent_default_timeout_key", 1.0)
-        .await;
+    let result: Result<Option<(String, String)>, _> =
+        conn.blpop("deadpool/test_timeout_short", 1.0).await;
     let elapsed = start.elapsed();
 
+    assert!(result.is_err(), "expected timeout error");
     assert!(
-        result.is_err(),
-        "expected timeout error with default config"
-    );
-    assert!(
-        elapsed < Duration::from_millis(900),
-        "should have timed out before the 1s BLPOP completed, took {:?}",
+        elapsed < Duration::from_millis(500),
+        "should have timed out well before the 1s BLPOP, took {:?}",
         elapsed
     );
 }

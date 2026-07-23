@@ -1,10 +1,13 @@
-use std::{fmt, path::PathBuf};
+use std::{fmt, path::PathBuf, time::Duration};
 
 use redis::RedisError;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
-use crate::{CreatePoolError, Pool, PoolBuilder, PoolConfig, RedisResult, Runtime};
+use crate::{
+    CreatePoolError, DEFAULT_CONNECTION_TIMEOUT, DEFAULT_RESPONSE_TIMEOUT, ManagerConfig, Pool,
+    PoolBuilder, PoolConfig, RedisResult, Runtime,
+};
 
 /// Configuration object.
 ///
@@ -17,6 +20,10 @@ use crate::{CreatePoolError, Pool, PoolBuilder, PoolConfig, RedisResult, Runtime
 /// REDIS__POOL__MAX_SIZE=16
 /// REDIS__POOL__TIMEOUTS__WAIT__SECS=2
 /// REDIS__POOL__TIMEOUTS__WAIT__NANOS=0
+/// REDIS__CONNECTION_TIMEOUT__SECS=1
+/// REDIS__CONNECTION_TIMEOUT__NANOS=0
+/// REDIS__RESPONSE_TIMEOUT__SECS=0
+/// REDIS__RESPONSE_TIMEOUT__NANOS=500000000
 /// ```
 /// ```rust
 /// #[derive(serde::Deserialize)]
@@ -47,6 +54,18 @@ pub struct Config {
 
     /// Pool configuration.
     pub pool: Option<PoolConfig>,
+
+    /// Connection timeout applied when creating new Redis connections.
+    ///
+    /// Set to `None` to disable the timeout. Defaults to 1 second.
+    #[cfg_attr(feature = "serde", serde(default = "default_connection_timeout"))]
+    pub connection_timeout: Option<Duration>,
+
+    /// Response timeout applied when waiting for Redis responses.
+    ///
+    /// Set to `None` to disable the timeout. Defaults to 500 milliseconds.
+    #[cfg_attr(feature = "serde", serde(default = "default_response_timeout"))]
+    pub response_timeout: Option<Duration>,
 }
 
 impl Config {
@@ -70,13 +89,28 @@ impl Config {
     /// See [`ConfigError`] for details.
     pub fn builder(&self) -> Result<PoolBuilder, ConfigError> {
         let manager = match (&self.url, &self.connection) {
-            (Some(url), None) => crate::Manager::new(url.as_str())?,
-            (None, Some(connection)) => crate::Manager::new(connection.clone())?,
-            (None, None) => crate::Manager::new(ConnectionInfo::default())?,
+            (Some(url), None) => self.build_manager(url.as_str())?,
+            (None, Some(connection)) => self.build_manager(connection.clone())?,
+            (None, None) => self.build_manager(ConnectionInfo::default())?,
             (Some(_), Some(_)) => return Err(ConfigError::UrlAndConnectionSpecified),
         };
+
         let pool_config = self.get_pool_config();
+
         Ok(Pool::builder(manager).config(pool_config))
+    }
+
+    fn build_manager<T: redis::IntoConnectionInfo>(
+        &self,
+        params: T,
+    ) -> Result<crate::Manager, ConfigError> {
+        Ok(crate::Manager::new_with_config(
+            params,
+            ManagerConfig {
+                connection_timeout: self.connection_timeout,
+                response_timeout: self.response_timeout,
+            },
+        )?)
     }
 
     /// Returns [`deadpool::managed::PoolConfig`] which can be used to construct
@@ -93,7 +127,7 @@ impl Config {
         Config {
             url: Some(url.into()),
             connection: None,
-            pool: None,
+            ..Default::default()
         }
     }
 
@@ -104,8 +138,28 @@ impl Config {
         Config {
             url: None,
             connection: Some(connection_info.into()),
-            pool: None,
+            ..Default::default()
         }
+    }
+
+    /// Sets the connection timeout.
+    ///
+    /// Pass `Some(duration)` to set a specific timeout, or `None` to
+    /// disable it.
+    #[must_use]
+    pub fn with_connection_timeout(mut self, timeout: Option<Duration>) -> Self {
+        self.connection_timeout = timeout;
+        self
+    }
+
+    /// Sets the response timeout.
+    ///
+    /// Pass `Some(duration)` to set a specific timeout, or `None` to
+    /// disable it.
+    #[must_use]
+    pub fn with_response_timeout(mut self, timeout: Option<Duration>) -> Self {
+        self.response_timeout = timeout;
+        self
     }
 }
 
@@ -115,8 +169,20 @@ impl Default for Config {
             url: None,
             connection: Some(ConnectionInfo::default()),
             pool: None,
+            connection_timeout: DEFAULT_CONNECTION_TIMEOUT,
+            response_timeout: DEFAULT_RESPONSE_TIMEOUT,
         }
     }
+}
+
+#[cfg(feature = "serde")]
+fn default_connection_timeout() -> Option<Duration> {
+    DEFAULT_CONNECTION_TIMEOUT
+}
+
+#[cfg(feature = "serde")]
+fn default_response_timeout() -> Option<Duration> {
+    DEFAULT_RESPONSE_TIMEOUT
 }
 
 /// This is a 1:1 copy of the [`redis::ConnectionAddr`] enumeration (excluding `tls_params` since it is entirely opaque to consumers).
