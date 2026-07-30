@@ -1,7 +1,7 @@
 use crate::ConnectionInfo;
 pub use crate::config::ConfigError;
 
-use super::{CreatePoolError, Pool, PoolBuilder, PoolConfig, Runtime};
+use super::{CreatePoolError, ManagerConfig, Pool, PoolBuilder, PoolConfig, Runtime};
 
 /// Configuration object.
 ///
@@ -50,6 +50,9 @@ pub struct Config {
     /// Pool configuration.
     pub pool: Option<PoolConfig>,
 
+    /// Manager configuration.
+    pub manager: Option<ManagerConfig>,
+
     /// Enables or disables reading from replica nodes in a Redis cluster.
     ///
     /// When set to `true`, read operations may be distributed across
@@ -83,17 +86,24 @@ impl Config {
     ///
     /// See [`ConfigError`] for details.
     pub fn builder(&self) -> Result<PoolBuilder, ConfigError> {
+        let recycling_method = self.manager.unwrap_or_default().recycling_method;
+
         let manager = match (&self.urls, &self.connections) {
-            (Some(urls), None) => super::Manager::new(
+            (Some(urls), None) => super::Manager::new_with_recycling_method(
                 urls.iter().map(|url| url.as_str()).collect(),
                 self.read_from_replicas,
+                recycling_method,
             )?,
-            (None, Some(connections)) => {
-                super::Manager::new(connections.clone(), self.read_from_replicas)?
-            }
-            (None, None) => {
-                super::Manager::new(vec![ConnectionInfo::default()], self.read_from_replicas)?
-            }
+            (None, Some(connections)) => super::Manager::new_with_recycling_method(
+                connections.clone(),
+                self.read_from_replicas,
+                recycling_method,
+            )?,
+            (None, None) => super::Manager::new_with_recycling_method(
+                vec![ConnectionInfo::default()],
+                self.read_from_replicas,
+                recycling_method,
+            )?,
             (Some(_), Some(_)) => return Err(ConfigError::UrlAndConnectionSpecified),
         };
         let pool_config = self.get_pool_config();
@@ -115,6 +125,7 @@ impl Config {
             urls: Some(urls.into()),
             connections: None,
             pool: None,
+            manager: None,
             read_from_replicas: false,
         }
     }
@@ -126,6 +137,7 @@ impl Default for Config {
             urls: None,
             connections: Some(vec![ConnectionInfo::default()]),
             pool: None,
+            manager: None,
             read_from_replicas: false,
         }
     }

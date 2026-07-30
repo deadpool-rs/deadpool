@@ -47,6 +47,9 @@ pub struct Config {
 
     /// Pool configuration.
     pub pool: Option<PoolConfig>,
+
+    /// Manager configuration.
+    pub manager: Option<ManagerConfig>,
 }
 
 impl Config {
@@ -69,10 +72,19 @@ impl Config {
     ///
     /// See [`ConfigError`] for details.
     pub fn builder(&self) -> Result<PoolBuilder, ConfigError> {
+        let recycling_method = self.manager.unwrap_or_default().recycling_method;
+
         let manager = match (&self.url, &self.connection) {
-            (Some(url), None) => crate::Manager::new(url.as_str())?,
-            (None, Some(connection)) => crate::Manager::new(connection.clone())?,
-            (None, None) => crate::Manager::new(ConnectionInfo::default())?,
+            (Some(url), None) => {
+                crate::Manager::new_with_recycling_method(url.as_str(), recycling_method)?
+            }
+            (None, Some(connection)) => {
+                crate::Manager::new_with_recycling_method(connection.clone(), recycling_method)?
+            }
+            (None, None) => crate::Manager::new_with_recycling_method(
+                ConnectionInfo::default(),
+                recycling_method,
+            )?,
             (Some(_), Some(_)) => return Err(ConfigError::UrlAndConnectionSpecified),
         };
         let pool_config = self.get_pool_config();
@@ -94,6 +106,7 @@ impl Config {
             url: Some(url.into()),
             connection: None,
             pool: None,
+            manager: None,
         }
     }
 
@@ -105,6 +118,7 @@ impl Config {
             url: None,
             connection: Some(connection_info.into()),
             pool: None,
+            manager: None,
         }
     }
 }
@@ -115,6 +129,7 @@ impl Default for Config {
             url: None,
             connection: Some(ConnectionInfo::default()),
             pool: None,
+            manager: None,
         }
     }
 }
@@ -304,6 +319,50 @@ impl From<redis::RedisConnectionInfo> for RedisConnectionInfo {
             protocol,
         }
     }
+}
+
+/// Possible methods of how a connection is recycled.
+///
+/// The default is [`Fast`] which does not check the connection health or
+/// perform any clean-up queries.
+///
+/// [`Fast`]: RecyclingMethod::Fast
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+pub enum RecyclingMethod {
+    /// Do not execute any commands.
+    Fast,
+
+    /// Send a [`PING`] command to the server and make sure correct PONG
+    /// response is received.
+    ///
+    /// [`PING`]: https://redis.io/commands/ping
+    #[default]
+    Ping,
+}
+
+impl RecyclingMethod {
+    /// Returns commands to be executed when recycling a connection.
+    pub fn cmd(&self, ping: &str) -> Option<redis::Cmd> {
+        match self {
+            Self::Fast => None,
+            Self::Ping => {
+                let mut cmd = redis::cmd("PING");
+                let _ = cmd.arg(ping);
+                Some(cmd)
+            }
+        }
+    }
+}
+
+/// Configuration object for a [`Manager`].
+///
+/// [`Manager`]: super::Manager
+#[derive(Clone, Copy, Debug, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+pub struct ManagerConfig {
+    /// Method of how a connection is recycled. See [`RecyclingMethod`].
+    pub recycling_method: RecyclingMethod,
 }
 
 /// This error is returned if the configuration contains an error
