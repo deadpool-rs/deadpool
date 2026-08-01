@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Coalesce concurrent statement preparations. Tasks racing to prepare the same
+  query now share a single `PREPARE` instead of each sending their own. If that
+  preparation fails or is cancelled, one of the waiting tasks starts a fresh one
+  instead of failing along with it.
 - Bump up MSRV to `1.85` and Rust edition to `2024`
 - Re-export `tokio-postgres` features:
   - `with-bit-vec-0_9`
