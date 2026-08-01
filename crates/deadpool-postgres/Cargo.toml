@@ -53,7 +53,7 @@ deadpool = { path = "../deadpool", version = "0.13.0", default-features = false,
 serde = { package = "serde", version = "1.0", features = [
     "derive",
 ], optional = true }
-tokio = { version = "1.29", features = ["rt"] }
+tokio = { version = "1.29", features = ["rt", "sync"] }
 tracing = "0.1.37"
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
@@ -68,4 +68,4 @@ config = { version = "0.15", features = ["json"] }
 dotenvy = "0.15.0"
 futures = "0.3.1"
 futures-util = "0.3.30"
-tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
+tokio = { version = "1.0", features = ["macros", "rt-multi-thread", "sync"] }
