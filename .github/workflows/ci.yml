@@ -39,6 +39,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -51,6 +53,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -81,6 +85,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -115,6 +121,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -140,6 +148,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -171,6 +181,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -238,6 +250,8 @@ jobs:
           RABBITMQ_DEFAULT_VHOST: deadpool
     steps:
       - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -273,6 +287,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -303,6 +319,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
