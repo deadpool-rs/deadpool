@@ -2,7 +2,7 @@
 name = "deadpool-redis"
 version = "0.23.0"
 edition = "2024"
-rust-version = "1.85"
+rust-version = "1.88"
 authors = [
     "Michael P. Jung <michael.jung@terreon.de>",
     "Subeom Choi <subumm1@gmail.com>",
@@ -27,6 +27,7 @@ serde = ["deadpool/serde", "dep:serde"]
 acl = ["redis/acl"]
 ahash = ["redis/ahash"]
 bigdecimal = ["redis/bigdecimal"]
+bloom = ["redis/bloom"]
 cache-aio = ["redis/cache-aio"]
 cluster = ["redis/cluster-async"]
 cluster-async = ["cluster"]
@@ -37,6 +38,7 @@ json = ["redis/json"]
 num-bigint = ["redis/num-bigint"]
 rust_decimal = ["redis/rust_decimal"]
 script = ["redis/script"]
+search_unfinished = ["redis/search_unfinished"]
 sentinel = ["redis/sentinel", "dep:tokio", "tokio/sync"]
 smol-comp = ["redis/smol-comp"]
 smol-native-tls-comp = ["redis/smol-native-tls-comp"]
@@ -57,7 +59,7 @@ vector-sets = ["redis/vector-sets"]
 deadpool = { path = "../deadpool", version = "0.13.0", default-features = false, features = [
     "managed",
 ] }
-redis = { version = "1.2", default-features = false, features = ["aio"] }
+redis = { version = "1.6", default-features = false, features = ["aio"] }
 serde = { package = "serde", version = "1.0", features = [
     "derive",
 ], optional = true }
