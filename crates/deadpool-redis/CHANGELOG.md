@@ -12,7 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add `Manager::new_with_config` method
 - Update `redis` dependency to version `1.2`
 - Re-export `redis` features:
+  - `bloom`
   - `entra-id`
+  - `search_unfinished`
   - `token-based-authentication`
 
 ## [0.23.0] - 2026-02-18
