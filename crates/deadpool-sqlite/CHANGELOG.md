@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Add `Config::flags` and the `OpenFlags` type to allow opening read-only
+  connections (and other `rusqlite::OpenFlags` combinations)
 - Bump up MSRV to `1.95` to match the one of `rusqlite`
 - Update `rusqlite` dependency to version `0.40`
 - Re-export `rusqlite` feature:
