@@ -36,7 +36,7 @@ tokio = { version = "1.5", features = ["sync"] }
 async-std = { version = "1.0", features = ["attributes"] }
 config = { version = "0.15", features = ["json"] }
 criterion = { version = "0.8", features = ["html_reports", "async_tokio"] }
-itertools = "0.14"
+itertools = "0.15"
 macro_rules_attribute = "0.2.2"
 smol-macros = "0.1.1"
 tokio = { version = "1.5.0", features = [

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Remove `num_cpus` dependency
+- Update `itertools` dependency to version `0.15`
 
 ## [0.13.0] - 2026-02-17
 
