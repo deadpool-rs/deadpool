@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Update `async-memcached` dependency to version `0.6`
+- Update `async-memcached` dependency to version `0.7`
 - Bump up MSRV to `1.85` and Rust edition to `2024`
 - Add `Runtime` parameter to `Config::create_pool` so pool timeouts
   (`wait`, `create`, `recycle`) configured via `PoolConfig::timeouts` are
