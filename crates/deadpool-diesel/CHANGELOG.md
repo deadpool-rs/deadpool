@@ -10,8 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Fix deprecation warning introduced in diesel `2.2.0`
-- Update `diesel` dependency to version `2.2.0`
-- Bump up MSRV to `1.85` and Rust edition to `2024`
+- Update `diesel` dependency to version `2.3`
+- Bump up MSRV to `1.86` and Rust edition to `2024`
 - Re-export `diesel` features
 - Mimick `default` features of `diesel` crate
 - Remove `RecyclingMethod::Fast` which does not detect broken connections

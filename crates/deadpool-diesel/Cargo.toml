@@ -2,7 +2,7 @@
 name = "deadpool-diesel"
 version = "0.6.1"
 edition = "2024"
-rust-version = "1.85"
+rust-version = "1.86"
 authors = ["Michael P. Jung <michael.jung@terreon.de>"]
 description = "Dead simple async pool for diesel"
 keywords = ["async", "database", "pool", "diesel"]
@@ -51,8 +51,8 @@ deadpool = { path = "../deadpool", version = "0.13.0", default-features = false,
     "managed",
 ] }
 deadpool-sync = { path = "../deadpool-sync", version = "0.2" }
-diesel = { version = "2.2.3", default-features = false }
+diesel = { version = "2.3", default-features = false }
 
 [dev-dependencies]
-diesel = { version = "2.2.3", default-features = false, features = ["sqlite"] }
+diesel = { version = "2.3", default-features = false, features = ["sqlite"] }
 tokio = { version = "1.0", features = ["macros", "rt", "rt-multi-thread"] }
