@@ -1,6 +1,6 @@
 [package]
 name = "deadpool"
-version = "0.13.0"
+version = "0.13.1"
 edition = "2024"
 rust-version = "1.85"
 authors = ["Michael P. Jung <michael.jung@terreon.de>"]

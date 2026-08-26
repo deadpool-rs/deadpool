@@ -1,6 +1,6 @@
 [package]
 name = "deadpool-memcached"
-version = "0.4.0"
+version = "0.5.0"
 edition = "2024"
 rust-version = "1.85"
 authors = [
@@ -27,7 +27,7 @@ udp = ["async-memcached/udp"]
 
 [dependencies]
 async-memcached = { version = "0.7", default-features = false }
-deadpool = { path = "../deadpool", version = "0.13.0", default-features = false, features = [
+deadpool = { path = "../deadpool", version = "0.13.1", default-features = false, features = [
     "managed",
 ] }
 # This crate doesn't directly depend on tokio but async-memcached 0.1.7

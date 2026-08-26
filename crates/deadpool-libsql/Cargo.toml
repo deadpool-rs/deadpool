@@ -1,6 +1,6 @@
 [package]
 name = "deadpool-libsql"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 rust-version = "1.85"
 authors = ["Michael P. Jung <michael.jung@terreon.de>"]
@@ -36,7 +36,7 @@ wasm = ["libsql/wasm"]
 [dependencies]
 async-executor-trait = { version = "2.1", optional = true }
 bytes = "1.10.1"
-deadpool = { path = "../deadpool", version = "0.13.0", default-features = false, features = [
+deadpool = { path = "../deadpool", version = "0.13.1", default-features = false, features = [
     "managed",
 ] }
 libsql = { version = "0.9.18", default-features = false }

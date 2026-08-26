@@ -1,6 +1,6 @@
 [package]
 name = "deadpool-r2d2"
-version = "0.4.1"
+version = "0.4.2"
 edition = "2024"
 rust-version = "1.85"
 authors = ["Michael P. Jung <michael.jung@terreon.de>"]
@@ -22,7 +22,7 @@ serde = ["deadpool/serde"]
 tracing = ["deadpool-sync/tracing"]
 
 [dependencies]
-deadpool = { path = "../deadpool", version = "0.13.0", default-features = false, features = [
+deadpool = { path = "../deadpool", version = "0.13.1", default-features = false, features = [
     "managed",
 ] }
 deadpool-sync = { path = "../deadpool-sync", version = "0.2" }

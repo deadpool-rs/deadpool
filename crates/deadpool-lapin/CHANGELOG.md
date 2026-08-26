@@ -9,12 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.14.0] - 2026-08-26
+
 - Update `lapin` dependency to version `4`
 - Remove `async-std` support
 - Bump up MSRV to `1.88` and Rust edition to `2024`
 - Re-export `lapin` features:
   - `hickory-dns`
   - `rustls-platform-verifier`
+- Update `deadpool` dependency to version `0.13.1`
 
 ## [0.13.1] - 2024-08-11
 
@@ -92,7 +95,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - First release
 
 <!-- next-url -->
-[Unreleased]: https://github.com/deadpool-rs/deadpool/compare/deadpool-lapin-v0.13.1...HEAD
+[Unreleased]: https://github.com/deadpool-rs/deadpool/compare/deadpool-lapin-v0.14.0...HEAD
+[0.14.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-lapin-v0.13.1...deadpool-lapin-v0.14.0
 [0.13.1]: https://github.com/deadpool-rs/deadpool/compare/deadpool-lapin-v0.13.0...deadpool-lapin-v0.13.1
 [0.13.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-lapin-v0.12.1...deadpool-lapin-v0.13.0
 [0.12.1]: https://github.com/deadpool-rs/deadpool/compare/deadpool-lapin-v0.12.0...deadpool-lapin-v0.12.1

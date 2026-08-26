@@ -1,6 +1,6 @@
 [package]
 name = "deadpool-redis"
-version = "0.23.0"
+version = "0.23.1"
 edition = "2024"
 rust-version = "1.88"
 authors = [
@@ -56,7 +56,7 @@ uuid = ["redis/uuid"]
 vector-sets = ["redis/vector-sets"]
 
 [dependencies]
-deadpool = { path = "../deadpool", version = "0.13.0", default-features = false, features = [
+deadpool = { path = "../deadpool", version = "0.13.1", default-features = false, features = [
     "managed",
 ] }
 redis = { version = "1.6", default-features = false, features = ["aio"] }

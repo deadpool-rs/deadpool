@@ -1,6 +1,6 @@
 [package]
 name = "deadpool-lapin"
-version = "0.13.1"
+version = "0.14.0"
 edition = "2024"
 rust-version = "1.88"
 authors = ["Michael P. Jung <michael.jung@terreon.de>"]
@@ -37,7 +37,7 @@ vendored-openssl = ["lapin/vendored-openssl"]
 
 [dependencies]
 async-rs = { version = "0.8", default-features = false }
-deadpool = { path = "../deadpool", version = "0.13.0", default-features = false, features = [
+deadpool = { path = "../deadpool", version = "0.13.1", default-features = false, features = [
     "managed",
 ] }
 lapin = { version = "4", default-features = false }

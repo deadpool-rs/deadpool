@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.23.1] - 2026-08-26
+
 - Add `Manager::new_with_config` method
 - Update `redis` dependency to version `1.6`
 - Bump up MSRV to `1.88` to match the one of `redis`
@@ -17,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `entra-id`
   - `search_unfinished`
   - `token-based-authentication`
+- Update `deadpool` dependency to version `0.13.1`
 
 ## [0.23.0] - 2026-02-18
 
@@ -231,7 +234,9 @@ Release of 0.6 and 0.7 with the following feature backported:
 - First release
 
 <!-- next-url -->
-[Unreleased]: https://github.com/deadpool-rs/deadpool/compare/deadpool-redis-v0.22.1...HEAD
+[Unreleased]: https://github.com/deadpool-rs/deadpool/compare/deadpool-redis-v0.23.1...HEAD
+[0.23.1]: https://github.com/deadpool-rs/deadpool/compare/deadpool-redis-v0.23.0...deadpool-redis-v0.23.1
+[0.23.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-redis-v0.22.1...deadpool-redis-v0.23.0
 [0.22.1]: https://github.com/deadpool-rs/deadpool/compare/deadpool-redis-v0.22.0...deadpool-redis-v0.22.1
 [0.22.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-redis-v0.21.1...deadpool-redis-v0.22.0
 [0.21.1]: https://github.com/deadpool-rs/deadpool/compare/deadpool-redis-v0.21.0...deadpool-redis-v0.21.1

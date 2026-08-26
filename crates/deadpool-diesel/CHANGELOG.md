@@ -9,12 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-08-26
+
 - Fix deprecation warning introduced in diesel `2.2.0`
 - Update `diesel` dependency to version `2.3`
 - Bump up MSRV to `1.86` and Rust edition to `2024`
 - Re-export `diesel` features
 - Mimick `default` features of `diesel` crate
 - Remove `RecyclingMethod::Fast` which does not detect broken connections
+- Update `deadpool` dependency to version `0.13.1`
 
 ## [0.6.1] - 2024-05-04
 
@@ -74,7 +77,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - First release
 
 <!-- next-url -->
-[Unreleased]: https://github.com/deadpool-rs/deadpool/compare/deadpool-diesel-v0.6.1...HEAD
+[Unreleased]: https://github.com/deadpool-rs/deadpool/compare/deadpool-diesel-v0.7.0...HEAD
+[0.7.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-diesel-v0.6.1...deadpool-diesel-v0.7.0
 [0.6.1]: https://github.com/deadpool-rs/deadpool/compare/deadpool-diesel-v0.6.0...deadpool-diesel-v0.6.1
 [0.6.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-diesel-v0.5.0...deadpool-diesel-v0.6.0
 [0.5.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-diesel-v0.4.1...deadpool-diesel-v0.5.0

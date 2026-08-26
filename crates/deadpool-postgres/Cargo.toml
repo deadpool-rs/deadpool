@@ -1,6 +1,6 @@
 [package]
 name = "deadpool-postgres"
-version = "0.14.1"
+version = "0.14.2"
 edition = "2024"
 rust-version = "1.85"
 authors = ["Michael P. Jung <michael.jung@terreon.de>"]
@@ -47,7 +47,7 @@ with-uuid-1 = ["tokio-postgres/with-uuid-1"]
 
 [dependencies]
 async-trait = "0.1.80"
-deadpool = { path = "../deadpool", version = "0.13.0", default-features = false, features = [
+deadpool = { path = "../deadpool", version = "0.13.1", default-features = false, features = [
     "managed",
 ] }
 serde = { package = "serde", version = "1.0", features = [

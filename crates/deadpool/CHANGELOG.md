@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.13.1] - 2026-08-26
+
 - Remove `num_cpus` dependency
 - Update `itertools` dependency to version `0.15`
 
@@ -232,7 +234,8 @@ a breaking `deadpool` release.
 - First release
 
 <!-- next-url -->
-[Unreleased]: https://github.com/deadpool-rs/deadpool/compare/deadpool-v0.13.0...HEAD
+[Unreleased]: https://github.com/deadpool-rs/deadpool/compare/deadpool-v0.13.1...HEAD
+[0.13.1]: https://github.com/deadpool-rs/deadpool/compare/deadpool-v0.13.0...deadpool-v0.13.1
 [0.13.0]: https://github.com/deadpool-rs/deadpool/compare/deadpool-v0.12.4...deadpool-v0.13.0
 [0.12.4]: https://github.com/deadpool-rs/deadpool/compare/deadpool-v0.12.3...deadpool-v0.12.4
 [0.12.3]: https://github.com/deadpool-rs/deadpool/compare/deadpool-v0.12.2...deadpool-v0.12.3
