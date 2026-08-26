@@ -1,9 +1,10 @@
-use deadpool_sqlite::{Config, InteractError, Pool, Runtime};
+use deadpool_sqlite::{Config, InteractError, OpenFlags, Pool, Runtime};
 
 fn create_pool() -> Pool {
     let cfg = Config {
         path: "db.sqlite3".into(),
         pool: None,
+        flags: None,
     };
     cfg.create_pool(Runtime::Tokio1).unwrap()
 }
@@ -23,6 +24,34 @@ async fn basic() {
         .unwrap()
         .unwrap();
     assert_eq!(result, 1);
+}
+
+#[tokio::test]
+async fn read_only() {
+    let cfg = Config {
+        path: "db.sqlite3".into(),
+        pool: None,
+        flags: Some(OpenFlags {
+            read_only: true,
+            read_write: false,
+            create: false,
+        }),
+    };
+    let pool = cfg.create_pool(Runtime::Tokio1).unwrap();
+    let conn = pool.get().await.unwrap();
+    // Reads still work on a read-only connection.
+    let result: i64 = conn
+        .interact(|conn| conn.query_row("SELECT 1", [], |row| row.get(0)))
+        .await
+        .unwrap()
+        .unwrap();
+    assert_eq!(result, 1);
+    // Writes are rejected because the connection was opened read-only.
+    let write = conn
+        .interact(|conn| conn.execute("CREATE TABLE example (id INTEGER)", []))
+        .await
+        .unwrap();
+    assert!(write.is_err());
 }
 
 #[tokio::test]

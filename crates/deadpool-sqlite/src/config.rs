@@ -36,6 +36,12 @@ pub struct Config {
 
     /// [`Pool`] configuration.
     pub pool: Option<PoolConfig>,
+
+    /// [`OpenFlags`] used when opening the SQLite connection.
+    ///
+    /// When set to `None` the rusqlite default flags are used, which is the
+    /// same behaviour as calling [`rusqlite::Connection::open`].
+    pub flags: Option<OpenFlags>,
 }
 
 impl Config {
@@ -45,6 +51,7 @@ impl Config {
         Self {
             path: path.into(),
             pool: None,
+            flags: None,
         }
     }
 
@@ -77,6 +84,46 @@ impl Config {
     #[must_use]
     pub fn get_pool_config(&self) -> PoolConfig {
         self.pool.unwrap_or_default()
+    }
+}
+
+/// (De)serializable representation of the [`rusqlite::OpenFlags`] used when
+/// opening a connection.
+///
+/// This mirrors the subset of flags most commonly needed and keeps the
+/// [`Config`] usable with the [`config`](https://crates.io/crates/config)
+/// crate, which [`rusqlite::OpenFlags`] does not support on its own.
+#[derive(Copy, Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+pub struct OpenFlags {
+    /// Open the database in read-only mode. See
+    /// [`rusqlite::OpenFlags::SQLITE_OPEN_READ_ONLY`].
+    pub read_only: bool,
+
+    /// Open the database for reading and writing. See
+    /// [`rusqlite::OpenFlags::SQLITE_OPEN_READ_WRITE`].
+    pub read_write: bool,
+
+    /// Create the database file if it does not exist. See
+    /// [`rusqlite::OpenFlags::SQLITE_OPEN_CREATE`].
+    pub create: bool,
+}
+
+impl OpenFlags {
+    pub(crate) fn to_rusqlite(self) -> rusqlite::OpenFlags {
+        (if self.read_only {
+            rusqlite::OpenFlags::SQLITE_OPEN_READ_ONLY
+        } else {
+            rusqlite::OpenFlags::empty()
+        }) | (if self.read_write {
+            rusqlite::OpenFlags::SQLITE_OPEN_READ_WRITE
+        } else {
+            rusqlite::OpenFlags::empty()
+        }) | (if self.create {
+            rusqlite::OpenFlags::SQLITE_OPEN_CREATE
+        } else {
+            rusqlite::OpenFlags::empty()
+        })
     }
 }
 

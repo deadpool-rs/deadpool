@@ -40,7 +40,7 @@ deadpool::managed_reexports!(
     ConfigError
 );
 
-pub use self::config::{Config, ConfigError};
+pub use self::config::{Config, ConfigError, OpenFlags};
 
 /// Type alias for [`Object`]
 pub type Connection = Object;
@@ -74,7 +74,12 @@ impl managed::Manager for Manager {
 
     async fn create(&self) -> Result<Self::Type, Self::Error> {
         let path = self.config.path.clone();
-        SyncWrapper::new(self.runtime, move || rusqlite::Connection::open(path)).await
+        let flags = self.config.flags.map(OpenFlags::to_rusqlite);
+        SyncWrapper::new(self.runtime, move || match flags {
+            Some(flags) => rusqlite::Connection::open_with_flags(path, flags),
+            None => rusqlite::Connection::open(path),
+        })
+        .await
     }
 
     async fn recycle(
