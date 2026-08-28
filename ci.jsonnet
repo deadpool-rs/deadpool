@@ -7,8 +7,8 @@ local crate = std.extVar("crate");
 // trailing comment on the generated `uses:` line (see gen-ci.sh) so that
 // tools like Dependabot can track the pinned version.
 local actions = {
-  checkout: { ref: "actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0", version: "v7.0.0" },
-  rust_toolchain: { ref: "dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9", version: "v1" },
+  checkout: { ref: "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1", version: "v7.0.1" },
+  rust_toolchain: { ref: "dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772", version: "v1" },
   install_jq: { ref: "dcarbone/install-jq-action@4fcb5062d7ce9bc4382d1a352d19ba3ba2c317c1", version: "v4.0.1" },
   install_yq: { ref: "dcarbone/install-yq-action@4075b4dca348d74bd83f2bf82d30f25d7c54539b", version: "v1.3.1" },
 };
