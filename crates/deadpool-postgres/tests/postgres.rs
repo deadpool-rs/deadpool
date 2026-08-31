@@ -42,15 +42,31 @@ fn create_pool() -> Pool {
         .unwrap()
 }
 
-#[tokio::test]
-async fn basic() {
-    let pool = create_pool();
+fn create_pool_defaultdb() -> Pool {
+    let mut cfg = Config::from_env();
+    cfg.pg.dbname = None;
+    cfg.pg
+        .create_pool(Some(Runtime::Tokio1), tokio_postgres::NoTls)
+        .unwrap()
+}
+
+async fn basic_tests(pool: Pool) {
     let client = pool.get().await.unwrap();
     let stmt = client.prepare_cached("SELECT 1 + 2").await.unwrap();
     let rows = client.query(&stmt, &[]).await.unwrap();
     let value: i32 = rows[0].get(0);
     assert_eq!(value, 3);
     assert_eq!(client.statement_cache.size(), 1);
+}
+
+#[tokio::test]
+async fn basic() {
+    basic_tests(create_pool()).await;
+}
+
+#[tokio::test]
+async fn basic_defaultdb() {
+    basic_tests(create_pool_defaultdb()).await;
 }
 
 #[tokio::test]
