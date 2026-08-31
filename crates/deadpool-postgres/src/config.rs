@@ -122,8 +122,6 @@ pub struct Config {
 pub enum ConfigError {
     /// This variant is returned if the `url` is invalid
     InvalidUrl(tokio_postgres::Error),
-    /// This variant is returned if the `dbname` is missing from the config
-    DbnameMissing,
     /// This variant is returned if the `dbname` contains an empty string
     DbnameEmpty,
 }
@@ -131,8 +129,9 @@ pub enum ConfigError {
 impl fmt::Display for ConfigError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::InvalidUrl(e) => write!(f, "configuration property \"url\" is invalid: {e}"),
-            Self::DbnameMissing => write!(f, "configuration property \"dbname\" not found"),
+            Self::InvalidUrl(e) => {
+                write!(f, "configuration property \"url\" is invalid: {e}")
+            }
             Self::DbnameEmpty => write!(
                 f,
                 "configuration property \"dbname\" contains an empty string",
@@ -215,9 +214,6 @@ impl Config {
             cfg.dbname(dbname);
         }
         match cfg.get_dbname() {
-            None => {
-                return Err(ConfigError::DbnameMissing);
-            }
             Some("") => {
                 return Err(ConfigError::DbnameEmpty);
             }
