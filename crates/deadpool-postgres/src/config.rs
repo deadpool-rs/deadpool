@@ -213,11 +213,8 @@ impl Config {
         if let Some(dbname) = self.dbname.as_ref().filter(|s| !s.is_empty()) {
             cfg.dbname(dbname);
         }
-        match cfg.get_dbname() {
-            Some("") => {
-                return Err(ConfigError::DbnameEmpty);
-            }
-            _ => {}
+        if let Some("") = cfg.get_dbname() {
+            return Err(ConfigError::DbnameEmpty);
         }
         if let Some(options) = &self.options {
             cfg.options(options.as_str());
