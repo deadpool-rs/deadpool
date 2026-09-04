@@ -2,20 +2,41 @@ local config = std.parseJson(std.extVar("config"));
 local rust_version = std.extVar("rust_version");
 local crate = std.extVar("crate");
 
-// Pinned action references. Updating an action is just a matter of
-// changing the corresponding line here. The `version` is emitted as a
-// trailing comment on the generated `uses:` line (see gen-ci.sh) so that
-// tools like Dependabot can track the pinned version.
+// Pinned action references, keyed by the action name as it is written in a
+// `uses:` step. Updating an action is just a matter of changing the
+// corresponding line here. The `version` is emitted as a trailing comment on
+// the generated `uses:` line (see gen-ci.sh) so that tools like Dependabot can
+// track the pinned version.
 local actions = {
-  checkout: { ref: "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1", version: "v7.0.1" },
-  rust_toolchain: { ref: "dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772", version: "v1" },
-  install_jq: { ref: "dcarbone/install-jq-action@4fcb5062d7ce9bc4382d1a352d19ba3ba2c317c1", version: "v4.0.1" },
-  install_yq: { ref: "dcarbone/install-yq-action@4075b4dca348d74bd83f2bf82d30f25d7c54539b", version: "v1.3.1" },
+  "actions/checkout": { sha: "3d3c42e5aac5ba805825da76410c181273ba90b1", version: "v7.0.1" },
+  "dtolnay/rust-toolchain": { sha: "6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772", version: "v1" },
+  "dcarbone/install-jq-action": { sha: "4fcb5062d7ce9bc4382d1a352d19ba3ba2c317c1", version: "v4.0.1" },
+  "dcarbone/install-yq-action": { sha: "4075b4dca348d74bd83f2bf82d30f25d7c54539b", version: "v1.3.1" },
 };
 
-// Build a `uses:` step. `_version` is tagged onto the step so the YAML
-// generation pass can turn it into a trailing line comment.
-local step(action, extra={}) = { uses: action.ref, _version: action.version } + extra;
+// Pin a `uses:` step to the SHA above and tag on `_version`, which the YAML
+// generation pass turns into a trailing line comment (see gen-ci.sh). Comments
+// written in a crate's `ci.config.yml` are lost when the config is converted to
+// JSON, so the map above is the only place a revision may be spelled out --
+// naming an action that is not listed there is an error rather than something
+// that silently ends up unpinned in a workflow.
+local pinAction(name) =
+  if std.objectHas(actions, name) then {
+    uses: name + "@" + actions[name].sha,
+    _version: actions[name].version,
+  } else
+    error "unpinned action `%s`: add it to the `actions` map in ci.jsonnet" % name;
+
+// Pin every `uses:` step in the document, both the ones defined below and the
+// ones coming from a crate's `ci.config.yml`.
+local pinActions(node) =
+  if std.isArray(node) then
+    [pinActions(item) for item in node]
+  else if std.isObject(node) then
+    { [k]: pinActions(node[k]) for k in std.objectFields(node) }
+    + (if std.objectHas(node, "uses") then pinAction(node.uses) else {})
+  else
+    node;
 
 local getPathOrDefault(obj, path, default) =
   if std.length(path) == 0 then
@@ -57,7 +78,7 @@ local genFeaturesFlag(features) =
   else
     " --all-features";
 
-{
+pinActions({
   name: crate,
   permissions: {},
   on: {
@@ -90,15 +111,17 @@ local genFeaturesFlag(features) =
       name: "Clippy",
       "runs-on": "ubuntu-latest",
       steps: [
-        step(actions.checkout, {
+        {
+          uses: "actions/checkout",
           with: { "persist-credentials": false },
-        }),
-        step(actions.rust_toolchain, {
+        },
+        {
+          uses: "dtolnay/rust-toolchain",
           with: {
             toolchain: "stable",
             components: "rustc,rust-std,cargo,clippy",
           }
-        }),
+        },
         {
           run: "cargo clippy --no-deps" + genFeaturesFlag(features) + " -- -D warnings"
         }
@@ -108,15 +131,17 @@ local genFeaturesFlag(features) =
       name: "rustfmt",
       "runs-on": "ubuntu-latest",
       steps: [
-        step(actions.checkout, {
+        {
+          uses: "actions/checkout",
           with: { "persist-credentials": false },
-        }),
-        step(actions.rust_toolchain, {
+        },
+        {
+          uses: "dtolnay/rust-toolchain",
           with: {
             toolchain: "stable",
             components: "rustc,rust-std,cargo,rustfmt",
           }
-        }),
+        },
         {
           run: "cargo fmt --check",
         },
@@ -139,15 +164,17 @@ local genFeaturesFlag(features) =
       },
       "runs-on": "${{ matrix.os }}",
       steps: [
-        step(actions.checkout, {
+        {
+          uses: "actions/checkout",
           with: { "persist-credentials": false },
-        }),
-        step(actions.rust_toolchain, {
+        },
+        {
+          uses: "dtolnay/rust-toolchain",
           with: {
             toolchain: "stable",
             components: "rustc,rust-std,cargo",
           }
-        }),
+        },
       ] + check_extra_steps + [
         # We don't use `--no-default-features` here as integration crates don't
         # work with it at all.
@@ -161,21 +188,24 @@ local genFeaturesFlag(features) =
       name: "MSRV",
       "runs-on": "ubuntu-latest",
       steps: [
-        step(actions.checkout, {
+        {
+          uses: "actions/checkout",
           with: { "persist-credentials": false },
-        }),
-        step(actions.rust_toolchain, {
+        },
+        {
+          uses: "dtolnay/rust-toolchain",
           with: {
             toolchain: "nightly",
             components: "rustc,rust-std,cargo",
           }
-        }),
-        step(actions.rust_toolchain, {
+        },
+        {
+          uses: "dtolnay/rust-toolchain",
           with: {
             toolchain: rust_version,
             components: "rustc,rust-std,cargo",
           }
-        }),
+        },
         {
           run: "../../tools/cargo-update-minimal-versions.sh " + rust_version,
         },
@@ -190,15 +220,17 @@ local genFeaturesFlag(features) =
       "runs-on": "ubuntu-latest",
       services: test_services,
       steps: [
-        step(actions.checkout, {
+        {
+          uses: "actions/checkout",
           with: { "persist-credentials": false },
-        }),
-        step(actions.rust_toolchain, {
+        },
+        {
+          uses: "dtolnay/rust-toolchain",
           with: {
             toolchain: "stable",
             components: "rustc,rust-std,cargo",
           }
-        }),
+        },
         {
           run: "cargo test" + genFeaturesFlag(test_features),
           env: test_env,
@@ -210,17 +242,19 @@ local genFeaturesFlag(features) =
       name: "Check re-exported features",
       "runs-on": "ubuntu-latest",
       steps: [
-        step(actions.checkout, {
+        {
+          uses: "actions/checkout",
           with: { "persist-credentials": false },
-        }),
-        step(actions.rust_toolchain, {
+        },
+        {
+          uses: "dtolnay/rust-toolchain",
           with: {
             toolchain: "stable",
             components: "rustc,rust-std,cargo",
           }
-        }),
-        step(actions.install_jq),
-        step(actions.install_yq),
+        },
+        { uses: "dcarbone/install-jq-action" },
+        { uses: "dcarbone/install-yq-action" },
         { run: "../../tools/check-reexported-features.sh" },
       ]
     },
@@ -233,15 +267,17 @@ local genFeaturesFlag(features) =
       name: "Doc",
       "runs-on": "ubuntu-latest",
       steps: [
-        step(actions.checkout, {
+        {
+          uses: "actions/checkout",
           with: { "persist-credentials": false },
-        }),
-        step(actions.rust_toolchain, {
+        },
+        {
+          uses: "dtolnay/rust-toolchain",
           with: {
             toolchain: "stable",
             components: "rustc,rust-std,cargo",
           }
-        }),
+        },
         {
           run: "cargo doc --no-deps" + genFeaturesFlag(features),
         }
@@ -249,4 +285,4 @@ local genFeaturesFlag(features) =
     },
   }
   + jobs
-}
+})

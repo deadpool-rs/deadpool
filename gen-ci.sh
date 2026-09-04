@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
+
+# Generate into a temporary file and move it into place, so that a failing
+# `jsonnet` run (an unpinned action, say) aborts without leaving a truncated
+# workflow behind.
+trap 'rm -f .github/workflows/*.yml.tmp' EXIT
 
 for CRATE_PATH in crates/*; do
     CRATE_NAME=$(basename "${CRATE_PATH}")
@@ -25,5 +30,6 @@ for CRATE_PATH in crates/*; do
               .uses line_comment = ._version | del(._version)
             )
           ' \
-        > "${WORKFLOW_YML}"
+        > "${WORKFLOW_YML}.tmp"
+    mv "${WORKFLOW_YML}.tmp" "${WORKFLOW_YML}"
 done
