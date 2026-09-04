@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Allow the `dbname` to be missing from the configuration. `create_pool` now
+  leaves it unset so that `tokio-postgres` applies its default of connecting to
+  a database named after the user. An empty `dbname` is still rejected.
+  **Breaking:** `ConfigError::DbnameMissing` was removed.
+
 ## [0.14.2] - 2026-08-26
 
 - Coalesce concurrent statement preparations. Tasks racing to prepare the same
