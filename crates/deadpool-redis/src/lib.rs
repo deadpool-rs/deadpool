@@ -31,7 +31,11 @@ pub mod sentinel;
 use std::{
     ops::{Deref, DerefMut},
     sync::atomic::{AtomicUsize, Ordering},
+    time::Duration,
 };
+
+const DEFAULT_CONNECTION_TIMEOUT: Option<Duration> = Some(Duration::from_secs(1));
+const DEFAULT_RESPONSE_TIMEOUT: Option<Duration> = Some(Duration::from_millis(500));
 
 use deadpool::managed;
 use redis::{
@@ -142,6 +146,45 @@ impl std::fmt::Debug for Manager {
     }
 }
 
+/// Connection configuration for the [`Manager`].
+///
+/// # Example
+///
+/// ```rust
+/// use std::time::Duration;
+/// use deadpool_redis::{ManagerConfig, Manager};
+///
+/// let manager = Manager::new_with_config(
+///     "redis://127.0.0.1",
+///     ManagerConfig {
+///         connection_timeout: Some(Duration::from_secs(5)),
+///         response_timeout: None,
+///     },
+/// )
+/// .unwrap();
+/// ```
+#[derive(Clone, Copy, Debug)]
+pub struct ManagerConfig {
+    /// Timeout for establishing a connection.
+    ///
+    /// Set to `None` to disable. Defaults to 1 second.
+    pub connection_timeout: Option<Duration>,
+
+    /// Timeout for waiting for a response.
+    ///
+    /// Set to `None` to disable. Defaults to 500 milliseconds.
+    pub response_timeout: Option<Duration>,
+}
+
+impl Default for ManagerConfig {
+    fn default() -> Self {
+        Self {
+            connection_timeout: DEFAULT_CONNECTION_TIMEOUT,
+            response_timeout: DEFAULT_RESPONSE_TIMEOUT,
+        }
+    }
+}
+
 impl Manager {
     /// Creates a new [`Manager`] from the given `params`.
     ///
@@ -157,18 +200,19 @@ impl Manager {
     }
 
     /// Creates a new [`Manager`] from the given `params` and
-    /// [`AsyncConnectionConfig`].
-    ///
-    /// This allows configuring connection-level settings such as response timeouts and connection
-    /// timeouts.
+    /// [`ManagerConfig`].
     ///
     /// # Errors
     ///
     /// If establishing a new [`Client`] fails.
     pub fn new_with_config<T: IntoConnectionInfo>(
         params: T,
-        connection_config: AsyncConnectionConfig,
+        config: ManagerConfig,
     ) -> RedisResult<Self> {
+        let connection_config = AsyncConnectionConfig::new()
+            .set_connection_timeout(config.connection_timeout)
+            .set_response_timeout(config.response_timeout);
+
         Ok(Self {
             client: Client::open(params)?,
             connection_config: Some(connection_config),
