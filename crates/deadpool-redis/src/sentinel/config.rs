@@ -1,7 +1,7 @@
 pub use crate::config::ConfigError;
 use crate::{ConnectionAddr, ConnectionInfo, RedisConnectionInfo};
 
-use super::{CreatePoolError, Pool, PoolBuilder, PoolConfig, Runtime};
+use super::{CreatePoolError, ManagerConfig, Pool, PoolBuilder, PoolConfig, Runtime};
 
 /// Configuration object.
 ///
@@ -58,6 +58,8 @@ pub struct Config {
     pub node_connection_info: Option<SentinelNodeConnectionInfo>,
     /// Pool configuration.
     pub pool: Option<PoolConfig>,
+    /// Manager configuration.
+    pub manager: Option<ManagerConfig>,
 }
 
 impl Config {
@@ -80,24 +82,29 @@ impl Config {
     ///
     /// See [`ConfigError`] for details.
     pub fn builder(&self) -> Result<PoolBuilder, ConfigError> {
+        let recycling_method = self.manager.unwrap_or_default().recycling_method;
+
         let manager = match (&self.urls, &self.connections) {
-            (Some(urls), None) => super::Manager::new(
+            (Some(urls), None) => super::Manager::new_with_recycling_method(
                 urls.iter().map(|url| url.as_str()).collect(),
                 self.master_name.clone(),
                 self.node_connection_info.clone(),
                 self.server_type,
+                recycling_method,
             )?,
-            (None, Some(connections)) => super::Manager::new(
+            (None, Some(connections)) => super::Manager::new_with_recycling_method(
                 connections.clone(),
                 self.master_name.clone(),
                 self.node_connection_info.clone(),
                 self.server_type,
+                recycling_method,
             )?,
-            (None, None) => super::Manager::new(
+            (None, None) => super::Manager::new_with_recycling_method(
                 vec![ConnectionInfo::default()],
                 self.master_name.clone(),
                 self.node_connection_info.clone(),
                 self.server_type,
+                recycling_method,
             )?,
             (Some(_), Some(_)) => return Err(ConfigError::UrlAndConnectionSpecified),
         };
@@ -127,6 +134,7 @@ impl Config {
             server_type,
             pool: None,
             node_connection_info: None,
+            manager: None,
         }
     }
 
@@ -154,6 +162,7 @@ impl Default for Config {
             master_name: default_master_name(),
             pool: None,
             node_connection_info: None,
+            manager: None,
         }
     }
 }

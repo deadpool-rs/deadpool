@@ -42,7 +42,8 @@ use redis::{
 pub use redis;
 
 pub use self::config::{
-    Config, ConfigError, ConnectionAddr, ConnectionInfo, ProtocolVersion, RedisConnectionInfo,
+    Config, ConfigError, ConnectionAddr, ConnectionInfo, ManagerConfig, ProtocolVersion,
+    RecyclingMethod, RedisConnectionInfo,
 };
 
 pub use deadpool::managed::reexports::*;
@@ -129,6 +130,7 @@ impl ConnectionLike for Connection {
 /// [`Manager`]: managed::Manager
 pub struct Manager {
     client: Client,
+    config: ManagerConfig,
     connection_config: Option<AsyncConnectionConfig>,
     ping_number: AtomicUsize,
 }
@@ -151,6 +153,7 @@ impl Manager {
     pub fn new<T: IntoConnectionInfo>(params: T) -> RedisResult<Self> {
         Ok(Self {
             client: Client::open(params)?,
+            config: ManagerConfig::default(),
             connection_config: None,
             ping_number: AtomicUsize::new(0),
         })
@@ -171,6 +174,48 @@ impl Manager {
     ) -> RedisResult<Self> {
         Ok(Self {
             client: Client::open(params)?,
+            config: ManagerConfig::default(),
+            connection_config: Some(connection_config),
+            ping_number: AtomicUsize::new(0),
+        })
+    }
+
+    /// Creates a new [`Manager`] from the given `params` and
+    /// [`RecyclingMethod`].
+    ///
+    /// This allows configuring the recycling method for connections.
+    ///
+    /// # Errors
+    ///
+    /// If establishing a new [`Client`] fails.
+    pub fn new_with_recycling_method<T: IntoConnectionInfo>(
+        params: T,
+        recycling_method: RecyclingMethod,
+    ) -> RedisResult<Self> {
+        Ok(Self {
+            client: Client::open(params)?,
+            config: ManagerConfig { recycling_method },
+            connection_config: None,
+            ping_number: AtomicUsize::new(0),
+        })
+    }
+
+    /// Creates a new [`Manager`] from the given `params`,
+    /// [`AsyncConnectionConfig`] and  [`RecyclingMethod`].
+    ///
+    /// This allows configuring the recycling method for connections.
+    ///
+    /// # Errors
+    ///
+    /// If establishing a new [`Client`] fails.
+    pub fn new_with_config_and_recycling_method<T: IntoConnectionInfo>(
+        params: T,
+        connection_config: AsyncConnectionConfig,
+        recycling_method: RecyclingMethod,
+    ) -> RedisResult<Self> {
+        Ok(Self {
+            client: Client::open(params)?,
+            config: ManagerConfig { recycling_method },
             connection_config: Some(connection_config),
             ping_number: AtomicUsize::new(0),
         })
@@ -196,14 +241,17 @@ impl managed::Manager for Manager {
 
     async fn recycle(&self, conn: &mut MultiplexedConnection, _: &Metrics) -> RecycleResult {
         let ping_number = self.ping_number.fetch_add(1, Ordering::Relaxed).to_string();
+
+        let cmd = self.config.recycling_method.cmd(&ping_number);
+
         // Using pipeline to avoid roundtrip for UNWATCH
-        let (n,) = redis::Pipeline::with_capacity(2)
-            .cmd("UNWATCH")
-            .ignore()
-            .cmd("PING")
-            .arg(&ping_number)
-            .query_async::<(String,)>(conn)
-            .await?;
+        let mut pipeline = redis::Pipeline::with_capacity(2);
+        let _ = pipeline.cmd("UNWATCH").ignore();
+        if let Some(cmd) = cmd {
+            let _ = pipeline.add_command(cmd);
+        }
+
+        let (n,) = pipeline.query_async::<(String,)>(conn).await?;
         if n == ping_number {
             Ok(())
         } else {

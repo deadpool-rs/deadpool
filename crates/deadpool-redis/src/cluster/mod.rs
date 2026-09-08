@@ -16,6 +16,8 @@ use redis;
 pub use redis::cluster::{ClusterClient, ClusterClientBuilder};
 pub use redis::cluster_async::ClusterConnection;
 
+pub use crate::config::{ManagerConfig, RecyclingMethod};
+
 pub use self::config::{Config, ConfigError};
 
 pub use deadpool::managed::reexports::*;
@@ -117,6 +119,7 @@ impl ConnectionLike for Connection {
 /// [`Manager`]: managed::Manager
 pub struct Manager {
     client: ClusterClient,
+    config: ManagerConfig,
     ping_number: AtomicUsize,
 }
 
@@ -146,6 +149,28 @@ impl Manager {
         }
         Ok(Self {
             client: client.build()?,
+            config: ManagerConfig::default(),
+            ping_number: AtomicUsize::new(0),
+        })
+    }
+
+    /// Creates a new [`Manager`] from the given `params` and [`RecyclingMethod`].
+    ///
+    /// # Errors
+    ///
+    /// If establishing a new [`ClusterClientBuilder`] fails.
+    pub fn new_with_recycling_method<T: IntoConnectionInfo>(
+        params: Vec<T>,
+        read_from_replicas: bool,
+        recycling_method: RecyclingMethod,
+    ) -> RedisResult<Self> {
+        let mut client = ClusterClientBuilder::new(params);
+        if read_from_replicas {
+            client = client.read_routing_strategy(RandomReplicaStrategy);
+        }
+        Ok(Self {
+            client: client.build()?,
+            config: ManagerConfig { recycling_method },
             ping_number: AtomicUsize::new(0),
         })
     }
@@ -162,14 +187,16 @@ impl managed::Manager for Manager {
 
     async fn recycle(&self, conn: &mut ClusterConnection, _: &Metrics) -> RecycleResult {
         let ping_number = self.ping_number.fetch_add(1, Ordering::Relaxed).to_string();
-        let n = redis::cmd("PING")
-            .arg(&ping_number)
-            .query_async::<String>(conn)
-            .await?;
-        if n == ping_number {
-            Ok(())
+
+        if let Some(cmd) = self.config.recycling_method.cmd(&ping_number) {
+            let n = cmd.query_async::<String>(conn).await?;
+            if n == ping_number {
+                Ok(())
+            } else {
+                Err(managed::RecycleError::message("Invalid PING response"))
+            }
         } else {
-            Err(managed::RecycleError::message("Invalid PING response"))
+            Ok(())
         }
     }
 }

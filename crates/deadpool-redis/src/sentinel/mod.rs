@@ -13,6 +13,8 @@ use tokio::sync::Mutex;
 use deadpool::managed;
 pub use deadpool::managed::reexports::*;
 
+pub use crate::config::ManagerConfig;
+pub use crate::config::RecyclingMethod;
 pub use crate::sentinel::config::SentinelNodeConnectionInfo;
 pub use crate::sentinel::config::SentinelServerType;
 pub use crate::sentinel::config::TlsMode;
@@ -109,6 +111,7 @@ impl ConnectionLike for Connection {
 /// [`Manager`]: managed::Manager
 pub struct Manager {
     client: Mutex<SentinelClient>,
+    config: ManagerConfig,
     ping_number: AtomicUsize,
 }
 
@@ -140,6 +143,31 @@ impl Manager {
                 node_connection_info.map(|i| i.into()),
                 server_type.into(),
             )?),
+            config: ManagerConfig::default(),
+            ping_number: AtomicUsize::new(0),
+        })
+    }
+
+    /// Creates a new [`Manager`] from the given `params` and [`RecyclingMethod`].
+    ///
+    /// # Errors
+    ///
+    /// If establishing a new [`SentinelClient`] fails.
+    pub fn new_with_recycling_method<T: IntoConnectionInfo>(
+        param: Vec<T>,
+        service_name: String,
+        node_connection_info: Option<SentinelNodeConnectionInfo>,
+        server_type: SentinelServerType,
+        recycling_method: RecyclingMethod,
+    ) -> RedisResult<Self> {
+        Ok(Self {
+            client: Mutex::new(SentinelClient::build(
+                param,
+                service_name,
+                node_connection_info.map(|i| i.into()),
+                server_type.into(),
+            )?),
+            config: ManagerConfig { recycling_method },
             ping_number: AtomicUsize::new(0),
         })
     }
@@ -157,14 +185,16 @@ impl managed::Manager for Manager {
 
     async fn recycle(&self, conn: &mut MultiplexedConnection, _: &Metrics) -> RecycleResult {
         let ping_number = self.ping_number.fetch_add(1, Ordering::Relaxed).to_string();
-        let n = redis::cmd("PING")
-            .arg(&ping_number)
-            .query_async::<String>(conn)
-            .await?;
-        if n == ping_number {
-            Ok(())
+
+        if let Some(cmd) = self.config.recycling_method.cmd(&ping_number) {
+            let n = cmd.query_async::<String>(conn).await?;
+            if n == ping_number {
+                Ok(())
+            } else {
+                Err(managed::RecycleError::message("Invalid PING response"))
+            }
         } else {
-            Err(managed::RecycleError::message("Invalid PING response"))
+            Ok(())
         }
     }
 }
