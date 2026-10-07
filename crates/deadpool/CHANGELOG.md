@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fix `Pool::resize` method causing the pool to exceed its `max_size`
+- Update `tokio` dependency to version `1.37`
+
 ## [0.13.1] - 2026-08-26
 
 - Remove `num_cpus` dependency

@@ -30,7 +30,7 @@ deadpool-runtime = { version = "0.3", path = "../deadpool-runtime" }
 # The dependency of tokio::sync is non-optional. Deadpool depends on
 # `tokio::sync::Semaphore`. No other features of `tokio` are enabled or used
 # unless the `rt_tokio_1` feature is enabled.
-tokio = { version = "1.5", features = ["sync"] }
+tokio = { version = "1.37", features = ["sync"] }
 
 [dev-dependencies]
 async-std = { version = "1.0", features = ["attributes"] }
@@ -39,7 +39,7 @@ criterion = { version = "0.8", features = ["html_reports", "async_tokio"] }
 itertools = "0.15"
 macro_rules_attribute = "0.2.2"
 smol-macros = "0.1.1"
-tokio = { version = "1.5.0", features = [
+tokio = { version = "1.37", features = [
     "macros",
     "rt",
     "rt-multi-thread",
