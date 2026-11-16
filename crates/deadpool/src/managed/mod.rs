@@ -58,6 +58,7 @@ mod metrics;
 mod object;
 mod pool;
 pub mod reexports;
+mod slots;
 
 pub use crate::Status;
 
